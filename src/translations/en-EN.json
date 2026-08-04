@@ -102,6 +102,58 @@
         "expired_label": "Expired",
         "expired_unit": "Types"
       }
+    },
+    "screen_transactions": {
+      "title": "Stock In / Out",
+      "history": "History",
+      "filter": "Filter",
+      "search_placeholder": "Search receipts, suppliers, notes...",
+      "range_today": "Today",
+      "empty": "No receipts found",
+      "tabs": {
+        "import": "Stock in",
+        "export": "Stock out"
+      },
+      "actions": {
+        "receive": {
+          "label": "Receive",
+          "caption": "From supplier"
+        },
+        "return": {
+          "label": "Return",
+          "caption": "Back to supplier"
+        },
+        "other": {
+          "label": "Other in",
+          "caption": "Internal"
+        },
+        "transfer": {
+          "label": "Transfer",
+          "caption": "Between stores"
+        }
+      },
+      "today": {
+        "title": "Today's summary",
+        "import_label": "Total in",
+        "export_label": "Total out",
+        "receipt_count": "{{count}} receipts"
+      },
+      "filters": {
+        "all": "All",
+        "import": "Stock in",
+        "export": "Stock out",
+        "transfer": "Transfer"
+      },
+      "kinds": {
+        "import": "Stock in",
+        "export": "Stock out",
+        "transfer": "Transfer"
+      },
+      "statuses": {
+        "done": "Completed",
+        "pending": "Pending",
+        "draft": "Draft"
+      }
     }
   }
 }

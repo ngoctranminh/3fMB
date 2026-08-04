@@ -13,7 +13,6 @@ type Properties = {
 } & TouchableOpacityProps;
 
 const CHEVRON_SIZE = 16;
-const COLUMN_WIDTH = 76;
 const THUMB_SIZE = 44;
 
 function IngredientDetailRow({ item, style, ...props }: Properties) {
@@ -66,26 +65,23 @@ function IngredientDetailRow({ item, style, ...props }: Properties) {
         <Text style={[fonts.size_12, fonts.gray200]}>
           {t(`screen_ingredients.categories.${item.category}`)}
         </Text>
-      </View>
 
-      <Text style={[fonts.size_12, fonts.gray400]}>{item.unit}</Text>
-
-      <View style={[gutters.gap_4, { width: COLUMN_WIDTH }]}>
-        <Text style={[fonts.size_10, fonts.gray200]}>
-          {t('screen_ingredients.stock_label')}
-        </Text>
-        <Text
-          style={[fonts.size_14, item.isLow ? fonts.red500 : fonts.gray800]}
+        <View
+          style={[layout.row, layout.itemsCenter, layout.wrap, gutters.gap_8]}
         >
-          {item.quantity}
-        </Text>
-      </View>
-
-      <View style={[gutters.gap_4, { width: COLUMN_WIDTH }]}>
-        <Text style={[fonts.size_10, fonts.gray200]}>
-          {t('screen_ingredients.value_label')}
-        </Text>
-        <Text style={[fonts.size_14, fonts.gray800]}>{item.value}</Text>
+          <Text style={[fonts.size_10, fonts.gray200]}>
+            {t('screen_ingredients.stock_label')}
+          </Text>
+          <Text
+            style={[fonts.size_12, item.isLow ? fonts.red500 : fonts.gray800]}
+          >
+            {item.quantity} {item.unit}
+          </Text>
+          <Text style={[fonts.size_10, fonts.gray200]}>
+            {t('screen_ingredients.value_label')}
+          </Text>
+          <Text style={[fonts.size_12, fonts.gray800]}>{item.value}</Text>
+        </View>
       </View>
 
       <StatusPill

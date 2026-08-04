@@ -102,6 +102,58 @@
         "expired_label": "Périmé",
         "expired_unit": "Types"
       }
+    },
+    "screen_transactions": {
+      "title": "Entrées / Sorties",
+      "history": "Historique",
+      "filter": "Filtrer",
+      "search_placeholder": "Rechercher bons, fournisseurs, notes...",
+      "range_today": "Aujourd'hui",
+      "empty": "Aucun bon trouvé",
+      "tabs": {
+        "import": "Entrées",
+        "export": "Sorties"
+      },
+      "actions": {
+        "receive": {
+          "label": "Réception",
+          "caption": "Du fournisseur"
+        },
+        "return": {
+          "label": "Retour",
+          "caption": "Au fournisseur"
+        },
+        "other": {
+          "label": "Autre entrée",
+          "caption": "Interne"
+        },
+        "transfer": {
+          "label": "Transfert",
+          "caption": "Entre dépôts"
+        }
+      },
+      "today": {
+        "title": "Résumé du jour",
+        "import_label": "Total entrées",
+        "export_label": "Total sorties",
+        "receipt_count": "{{count}} bons"
+      },
+      "filters": {
+        "all": "Tous",
+        "import": "Entrées",
+        "export": "Sorties",
+        "transfer": "Transfert"
+      },
+      "kinds": {
+        "import": "Entrée",
+        "export": "Sortie",
+        "transfer": "Transfert"
+      },
+      "statuses": {
+        "done": "Terminé",
+        "pending": "En attente",
+        "draft": "Brouillon"
+      }
     }
   }
 }

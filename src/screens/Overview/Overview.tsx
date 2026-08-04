@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { ScrollView, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useTheme } from '@/theme';
 
@@ -9,16 +10,18 @@ import {
   InventoryCard,
   OverviewHeader,
   StockValueChart,
+  TAB_BAR_BASE_HEIGHT,
 } from '@/components/organisms';
 import { SafeScreen } from '@/components/templates';
 
 import { ALERTS, INVENTORY, STOCK_VALUE_POINTS } from './mockData';
 
 const ALERT_COUNT = 3;
-const BOTTOM_PADDING = 120;
+const CONTENT_GAP = 16;
 
 function Overview() {
   const { t } = useTranslation();
+  const insets = useSafeAreaInsets();
   const { backgrounds, gutters, layout } = useTheme();
 
   const stats = [
@@ -62,7 +65,9 @@ function Overview() {
           contentContainerStyle={[
             gutters.gap_16,
             gutters.paddingVertical_16,
-            { paddingBottom: BOTTOM_PADDING },
+            {
+              paddingBottom: TAB_BAR_BASE_HEIGHT + insets.bottom + CONTENT_GAP,
+            },
           ]}
           showsVerticalScrollIndicator={false}
         >

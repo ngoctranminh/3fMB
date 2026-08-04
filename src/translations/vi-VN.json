@@ -102,6 +102,58 @@
         "expired_label": "Hết hạn",
         "expired_unit": "Loại"
       }
+    },
+    "screen_transactions": {
+      "title": "Nhập / Xuất kho",
+      "history": "Lịch sử",
+      "filter": "Lọc",
+      "search_placeholder": "Tìm phiếu nhập / xuất, NCC, ghi chú...",
+      "range_today": "Hôm nay",
+      "empty": "Không tìm thấy phiếu nào",
+      "tabs": {
+        "import": "Nhập kho",
+        "export": "Xuất kho"
+      },
+      "actions": {
+        "receive": {
+          "label": "Nhập hàng",
+          "caption": "Nhập từ NCC"
+        },
+        "return": {
+          "label": "Trả hàng",
+          "caption": "Trả lại NCC"
+        },
+        "other": {
+          "label": "Nhập khác",
+          "caption": "Nhập nội bộ"
+        },
+        "transfer": {
+          "label": "Điều chuyển",
+          "caption": "Chuyển kho"
+        }
+      },
+      "today": {
+        "title": "Thông tin hôm nay",
+        "import_label": "Tổng nhập",
+        "export_label": "Tổng xuất",
+        "receipt_count": "{{count}} phiếu"
+      },
+      "filters": {
+        "all": "Tất cả",
+        "import": "Nhập kho",
+        "export": "Xuất kho",
+        "transfer": "Điều chuyển"
+      },
+      "kinds": {
+        "import": "Nhập kho",
+        "export": "Xuất kho",
+        "transfer": "Điều chuyển"
+      },
+      "statuses": {
+        "done": "Hoàn thành",
+        "pending": "Chờ xử lý",
+        "draft": "Nháp"
+      }
     }
   }
 }

@@ -17,7 +17,8 @@
       "Bash(cd /Users/tmn/.claude/file-history && grep -rl \"Ingredients\\\\|Nguyên liệu\\\\|nguyên liệu\" . 2>/dev/null | head -40)",
       "Bash(cd /Users/tmn/.claude/file-history/28237c93-d2d2-4a34-855d-65c6a37247ee && ls -la | head -40)",
       "Read(//Users/tmn/.claude/file-history/28237c93-d2d2-4a34-855d-65c6a37247ee/**)",
-      "Bash(python3 -c ' *)"
+      "Bash(python3 -c ' *)",
+      "Bash(grep -oE \"^\\\\s{2,4}[a-zA-Z0-9_]+:\" src/theme/layout.ts)"
     ]
   }
 }

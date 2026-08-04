@@ -3,25 +3,35 @@ import type { CategoryFilter } from './mockData';
 import { Fragment, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useTheme } from '@/theme';
 
 import { Card, CategoryChip, IconByVariant } from '@/components/atoms';
 import { IngredientDetailRow, SearchBar } from '@/components/molecules';
-import { IngredientsHeader, IngredientsSummary } from '@/components/organisms';
+import {
+  IngredientsHeader,
+  IngredientsSummary,
+  TAB_BAR_BASE_HEIGHT,
+} from '@/components/organisms';
 import { SafeScreen } from '@/components/templates';
 
 import { CATEGORY_FILTERS, INGREDIENTS } from './mockData';
 
-const BOTTOM_PADDING = 180;
 const ON_BLUE = '#FFFFFF';
+const PILL_GAP = 16;
+const PILL_HEIGHT = 52;
 const PLUS_SIZE = 20;
 const TOTAL_COUNT = 128;
 const TOTAL_VALUE = '45.250.000đ';
 
 function Ingredients() {
   const { t } = useTranslation();
+  const insets = useSafeAreaInsets();
   const { backgrounds, components, gutters, layout } = useTheme();
+
+  const tabBarHeight = TAB_BAR_BASE_HEIGHT + insets.bottom;
+  const pillBottom = tabBarHeight + PILL_GAP;
 
   const [category, setCategory] = useState<CategoryFilter>('all');
   const [query, setQuery] = useState('');
@@ -53,7 +63,7 @@ function Ingredients() {
           contentContainerStyle={[
             gutters.gap_16,
             gutters.paddingVertical_16,
-            { paddingBottom: BOTTOM_PADDING },
+            { paddingBottom: pillBottom + PILL_HEIGHT + PILL_GAP },
           ]}
           showsVerticalScrollIndicator={false}
         >
@@ -124,7 +134,7 @@ function Ingredients() {
             layout.left0,
             layout.right0,
             layout.itemsCenter,
-            { bottom: BOTTOM_PADDING / 2 },
+            { bottom: pillBottom },
           ]}
         >
           <TouchableOpacity

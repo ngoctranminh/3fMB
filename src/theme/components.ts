@@ -107,6 +107,17 @@ const generateComponentStyles = ({
       height: 250,
       width: 250,
     },
+    dateChip: {
+      ...layout.row,
+      ...layout.itemsCenter,
+      ...borders.rounded_12,
+      ...borders.w_1,
+      backgroundColor: colors.surface,
+      borderColor: variant === 'dark' ? colors.purple100 : colors.gray100,
+      gap: 6,
+      height: 44,
+      paddingHorizontal: 12,
+    },
     iconButtonSquare: {
       ...layout.justifyCenter,
       ...layout.itemsCenter,
@@ -116,6 +127,25 @@ const generateComponentStyles = ({
       borderColor: variant === 'dark' ? colors.purple100 : colors.gray100,
       height: 44,
       width: 44,
+    },
+    quickAction: {
+      ...layout.justifyCenter,
+      ...layout.itemsCenter,
+      ...borders.rounded_12,
+      ...borders.w_1,
+      backgroundColor: colors.surface,
+      borderColor: variant === 'dark' ? colors.purple100 : colors.gray100,
+      flex: 1,
+      gap: 6,
+      paddingHorizontal: 4,
+      paddingVertical: 12,
+    },
+    quickActionIcon: {
+      ...layout.justifyCenter,
+      ...layout.itemsCenter,
+      ...borders.rounded_8,
+      height: 36,
+      width: 36,
     },
     searchInput: {
       ...layout.flex_1,
@@ -133,6 +163,17 @@ const generateComponentStyles = ({
       gap: 8,
       height: 44,
       paddingHorizontal: 12,
+    },
+    segmentTab: {
+      ...layout.itemsCenter,
+      flex: 1,
+      paddingBottom: 10,
+    },
+    segmentTabIndicator: {
+      borderRadius: 2,
+      height: 2,
+      marginTop: 10,
+      width: '100%',
     },
     statTile: {
       ...borders.rounded_16,
@@ -168,6 +209,10 @@ const generateComponentStyles = ({
       ...fonts.bold,
       fontSize: 20,
     },
+    summaryValueLarge: {
+      ...fonts.bold,
+      fontSize: 22,
+    },
     tabBarFab: {
       ...layout.justifyCenter,
       ...layout.itemsCenter,
@@ -186,6 +231,16 @@ const generateComponentStyles = ({
       ...borders.wTop_1,
       backgroundColor: colors.surface,
       borderTopColor: variant === 'dark' ? colors.purple100 : colors.gray100,
+    },
+    tagChip: {
+      ...layout.justifyCenter,
+      ...layout.itemsCenter,
+      ...borders.rounded_4,
+      paddingHorizontal: 6,
+      paddingVertical: 2,
+    },
+    tagChipLabel: {
+      fontSize: 10,
     },
     textInput: {
       ...borders.rounded_16,

@@ -4,5 +4,8 @@ export { default as IngredientsHeader } from './IngredientsHeader/IngredientsHea
 export { default as IngredientsSummary } from './IngredientsSummary/IngredientsSummary';
 export { default as InventoryCard } from './InventoryCard/InventoryCard';
 export { default as MainTabBar } from './MainTabBar/MainTabBar';
+export { TAB_BAR_BASE_HEIGHT } from './MainTabBar/MainTabBar';
 export { default as OverviewHeader } from './OverviewHeader/OverviewHeader';
 export { default as StockValueChart } from './StockValueChart/StockValueChart';
+export { default as TodayTotalsCard } from './TodayTotalsCard/TodayTotalsCard';
+export { default as TransactionsHeader } from './TransactionsHeader/TransactionsHeader';

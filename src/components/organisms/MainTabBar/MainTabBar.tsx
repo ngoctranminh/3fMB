@@ -13,6 +13,9 @@ const FAB_ICON_SIZE = 28;
 const FAB_LIFT = 20;
 const ICON_SIZE = 24;
 
+// Height above the safe-area inset; screens add insets.bottom to clear the bar.
+export const TAB_BAR_BASE_HEIGHT = BAR_HEIGHT + FAB_LIFT;
+
 const FAB_ROUTE: string = Paths.Transactions;
 
 const TAB_ICONS: Record<string, string | undefined> = {
