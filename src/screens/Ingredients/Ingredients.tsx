@@ -1,3 +1,5 @@
+import type { CategoryFilter } from './mockData';
+
 import { Fragment, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
@@ -6,13 +8,9 @@ import { useTheme } from '@/theme';
 
 import { Card, CategoryChip, IconByVariant } from '@/components/atoms';
 import { IngredientDetailRow, SearchBar } from '@/components/molecules';
-import {
-  IngredientsHeader,
-  IngredientsSummary,
-} from '@/components/organisms';
+import { IngredientsHeader, IngredientsSummary } from '@/components/organisms';
 import { SafeScreen } from '@/components/templates';
 
-import type { CategoryFilter } from './mockData';
 import { CATEGORY_FILTERS, INGREDIENTS } from './mockData';
 
 const BOTTOM_PADDING = 180;
@@ -32,11 +30,9 @@ function Ingredients() {
     const normalized = query.trim().toLowerCase();
 
     return INGREDIENTS.filter((item) => {
-      const matchesCategory =
-        category === 'all' || item.category === category;
+      const matchesCategory = category === 'all' || item.category === category;
       const matchesQuery =
-        normalized.length === 0 ||
-        item.name.toLowerCase().includes(normalized);
+        normalized.length === 0 || item.name.toLowerCase().includes(normalized);
 
       return matchesCategory && matchesQuery;
     });
@@ -111,9 +107,7 @@ function Ingredients() {
                   visibleItems.map((item, index) => (
                     <Fragment key={item.id}>
                       {index > 0 ? (
-                        <View
-                          style={[backgrounds.gray100, { height: 1 }]}
-                        />
+                        <View style={[backgrounds.gray100, { height: 1 }]} />
                       ) : undefined}
                       <IngredientDetailRow item={item} />
                     </Fragment>

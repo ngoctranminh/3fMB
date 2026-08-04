@@ -39,21 +39,6 @@ const generateComponentStyles = ({
       height: 64,
       width: 64,
     },
-    buttonPrimary: {
-      ...layout.justifyCenter,
-      ...layout.itemsCenter,
-      ...borders.rounded_16,
-      backgroundColor: colors.purple500,
-      height: 56,
-    },
-    buttonPrimaryDisabled: {
-      opacity: 0.5,
-    },
-    buttonPrimaryLabel: {
-      ...fonts.bold,
-      color: variant === 'dark' ? colors.purple50 : colors.gray50,
-      fontSize: 16,
-    },
     buttonPill: {
       ...layout.row,
       ...layout.justifyCenter,
@@ -67,6 +52,21 @@ const generateComponentStyles = ({
     buttonPillLabel: {
       ...fonts.bold,
       color: '#FFFFFF',
+      fontSize: 16,
+    },
+    buttonPrimary: {
+      ...layout.justifyCenter,
+      ...layout.itemsCenter,
+      ...borders.rounded_16,
+      backgroundColor: colors.purple500,
+      height: 56,
+    },
+    buttonPrimaryDisabled: {
+      opacity: 0.5,
+    },
+    buttonPrimaryLabel: {
+      ...fonts.bold,
+      color: variant === 'dark' ? colors.purple50 : colors.gray50,
       fontSize: 16,
     },
     card: {

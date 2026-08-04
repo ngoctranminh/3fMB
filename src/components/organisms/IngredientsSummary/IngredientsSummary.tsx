@@ -60,11 +60,7 @@ function IngredientsSummary({
             <View style={[backgrounds.gray100, { width: 1 }]} />
           ) : undefined}
           <View
-            style={[
-              layout.flex_1,
-              gutters.gap_4,
-              gutters.paddingHorizontal_12,
-            ]}
+            style={[layout.flex_1, gutters.gap_4, gutters.paddingHorizontal_12]}
           >
             <Text style={[fonts.size_12, fonts.gray400]}>{entry.label}</Text>
             <Text style={[components.summaryValue, { color: entry.color }]}>
