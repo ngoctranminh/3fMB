@@ -2,7 +2,7 @@
   "threefffapp": {
     "common_appName": {
       "full": "threefffApp React Native",
-      "initials": "RNB"
+      "initials": "3F"
     },
     "common_error": "Quelque chose s'est mal passé.",
     "screen_example": {
@@ -10,10 +10,69 @@
       "title": "Bienvenue sur Le $t(common_appName.full)",
       "description": "Vous voulez découvrir des fonctionnalités ? Cliquez sur l'un des trois boutons en bas de l'écran. Le premier vous permet d'appeler une API REST. Le deuxième de changer la couleur du thème. Et le troisième de changer la langue"
     },
+    "screen_login": {
+      "title": "Connexion",
+      "subtitle": "Connectez-vous pour continuer à utiliser l'application",
+      "username_label": "Nom d'utilisateur",
+      "username_placeholder": "Saisissez votre nom d'utilisateur",
+      "password_label": "Mot de passe",
+      "password_placeholder": "Saisissez votre mot de passe",
+      "submit": "Se connecter",
+      "hint": "Compte de démonstration : emilys / emilyspass",
+      "validation": {
+        "username_required": "Veuillez saisir votre nom d'utilisateur",
+        "username_too_short": "Le nom d'utilisateur doit contenir au moins 3 caractères",
+        "password_required": "Veuillez saisir votre mot de passe",
+        "password_too_short": "Le mot de passe doit contenir au moins 3 caractères"
+      },
+      "error": {
+        "invalid_credentials": "Nom d'utilisateur ou mot de passe incorrect",
+        "network": "Serveur inaccessible. Vérifiez votre connexion et réessayez."
+      }
+    },
     "error_boundary": {
       "title": "Oups ! Quelque chose s'est mal passé.",
       "description": "Nous sommes désolés pour le désagrément. Veuillez réessayer plus tard.",
       "cta": "Recharger l'écran"
+    },
+    "screen_overview": {
+      "title": "Vue d'ensemble",
+      "subtitle": "Stock du restaurant",
+      "stats": {
+        "total_label": "Total ingrédients",
+        "total_unit": "Types",
+        "value_label": "Valeur du stock",
+        "value_unit": "VND",
+        "low_label": "Bientôt épuisé",
+        "low_unit": "Types",
+        "expired_label": "Périmé",
+        "expired_unit": "Types"
+      },
+      "chart": {
+        "title": "Valeur du stock",
+        "range_7d": "7 derniers jours"
+      },
+      "alerts": {
+        "title": "Alertes",
+        "see_all": "Tout voir",
+        "low_stock": "Bientôt épuisé ({{quantity}})",
+        "expired_on": "Périmé le {{date}}"
+      },
+      "inventory": {
+        "title": "Ingrédients en stock",
+        "search_placeholder": "Rechercher un ingrédient...",
+        "see_all": "Voir tous les ingrédients →",
+        "status_low": "Bientôt épuisé",
+        "status_expired": "Périmé",
+        "status_ok": "En stock"
+      },
+      "tabs": {
+        "overview": "Vue d'ensemble",
+        "ingredients": "Ingrédients",
+        "transactions": "Entrée/Sortie",
+        "alerts": "Alertes",
+        "more": "Plus"
+      }
     }
   }
 }

@@ -72,6 +72,19 @@ export default defineConfig(
         ERROR,
         { ignore: [-1, 0, 1, 2, 3, 4, 5, 6], ignoreArrayIndexes: true },
       ],
+      'no-restricted-imports': [
+        ERROR,
+        {
+          paths: [
+            {
+              message:
+                'Importing the package root pulls in BarChart, which requires the legacy-architecture native module react-native-linear-gradient and throws at import time on RN 0.84. Deep-import instead: react-native-gifted-charts/dist/LineChart',
+              name: 'react-native-gifted-charts',
+            },
+          ],
+        },
+      ],
+
       'perfectionist/sort-imports': [
         'error',
         {

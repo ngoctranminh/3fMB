@@ -2,7 +2,7 @@
   "threefffapp": {
     "common_appName": {
       "full": "React Native threefffApp",
-      "initials": "RNB"
+      "initials": "3F"
     },
     "common_error": "Oops! Something went wrong.",
     "screen_example": {
@@ -10,10 +10,69 @@
       "title": "Welcome on The $t(common_appName.full)",
       "description": "Do you want to discover some features? Just click on one of the three buttons at the bottom of the screen. The first allows you to call a REST API. The second lets you change the theme color. And the third allows you to change the language."
     },
+    "screen_login": {
+      "title": "Sign in",
+      "subtitle": "Sign in to continue using the app",
+      "username_label": "Username",
+      "username_placeholder": "Enter your username",
+      "password_label": "Password",
+      "password_placeholder": "Enter your password",
+      "submit": "Sign in",
+      "hint": "Demo account: emilys / emilyspass",
+      "validation": {
+        "username_required": "Please enter your username",
+        "username_too_short": "Username must be at least 3 characters",
+        "password_required": "Please enter your password",
+        "password_too_short": "Password must be at least 3 characters"
+      },
+      "error": {
+        "invalid_credentials": "Incorrect username or password",
+        "network": "Cannot reach the server. Please check your connection and try again."
+      }
+    },
     "error_boundary": {
       "title": "Oops! Something went wrong.",
       "description": "We are sorry for the inconvenience. Please try again later.",
       "cta": "Reload the screen"
+    },
+    "screen_overview": {
+      "title": "Overview",
+      "subtitle": "Restaurant Storage",
+      "stats": {
+        "total_label": "Total ingredients",
+        "total_unit": "Types",
+        "value_label": "Stock value",
+        "value_unit": "VND",
+        "low_label": "Running low",
+        "low_unit": "Types",
+        "expired_label": "Expired",
+        "expired_unit": "Types"
+      },
+      "chart": {
+        "title": "Stock value",
+        "range_7d": "Last 7 days"
+      },
+      "alerts": {
+        "title": "Alerts",
+        "see_all": "See all",
+        "low_stock": "Running low ({{quantity}})",
+        "expired_on": "Expired {{date}}"
+      },
+      "inventory": {
+        "title": "Stocked ingredients",
+        "search_placeholder": "Search ingredients...",
+        "see_all": "See all ingredients →",
+        "status_low": "Running low",
+        "status_expired": "Expired",
+        "status_ok": "In stock"
+      },
+      "tabs": {
+        "overview": "Overview",
+        "ingredients": "Ingredients",
+        "transactions": "In/Out",
+        "alerts": "Alerts",
+        "more": "More"
+      }
     }
   }
 }

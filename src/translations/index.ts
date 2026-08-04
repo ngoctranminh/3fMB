@@ -7,18 +7,20 @@ import type { Language } from '@/hooks/language/schema';
 
 import en from './en-EN.json';
 import fr from './fr-FR.json';
+import vi from './vi-VN.json';
 
 export const defaultNS = 'threefffapp';
 
 export const resources = {
   'en-EN': en,
   'fr-FR': fr,
+  'vi-VN': vi,
 } as const satisfies Record<Language, unknown>;
 
 void i18n.use(initReactI18next).init({
   defaultNS,
-  fallbackLng: 'fr-FR',
-  lng: 'fr-FR',
+  fallbackLng: 'vi-VN',
+  lng: 'vi-VN',
   resources,
 });
 

@@ -1,0 +1,78 @@
+{
+  "threefffapp": {
+    "common_appName": {
+      "full": "React Native threefffApp",
+      "initials": "3F"
+    },
+    "common_error": "Rất tiếc! Đã có lỗi xảy ra.",
+    "screen_example": {
+      "hello_user": "Xin chào, tôi tên là {{name}}",
+      "title": "Chào mừng đến với $t(common_appName.full)",
+      "description": "Bạn muốn khám phá một số tính năng? Hãy bấm vào một trong ba nút ở cuối màn hình. Nút đầu tiên gọi một REST API. Nút thứ hai đổi màu chủ đề. Và nút thứ ba đổi ngôn ngữ."
+    },
+    "screen_login": {
+      "title": "Đăng nhập",
+      "subtitle": "Đăng nhập để tiếp tục sử dụng ứng dụng",
+      "username_label": "Tên đăng nhập",
+      "username_placeholder": "Nhập tên đăng nhập",
+      "password_label": "Mật khẩu",
+      "password_placeholder": "Nhập mật khẩu",
+      "submit": "Đăng nhập",
+      "hint": "Tài khoản dùng thử: emilys / emilyspass",
+      "validation": {
+        "username_required": "Vui lòng nhập tên đăng nhập",
+        "username_too_short": "Tên đăng nhập phải có ít nhất 3 ký tự",
+        "password_required": "Vui lòng nhập mật khẩu",
+        "password_too_short": "Mật khẩu phải có ít nhất 3 ký tự"
+      },
+      "error": {
+        "invalid_credentials": "Tên đăng nhập hoặc mật khẩu không đúng",
+        "network": "Không kết nối được tới server. Vui lòng kiểm tra mạng và thử lại."
+      }
+    },
+    "error_boundary": {
+      "title": "Rất tiếc! Đã có lỗi xảy ra.",
+      "description": "Chúng tôi xin lỗi vì sự bất tiện này. Vui lòng thử lại sau.",
+      "cta": "Tải lại màn hình"
+    },
+    "screen_overview": {
+      "title": "Tổng quan",
+      "subtitle": "Kho Quán Ăn",
+      "stats": {
+        "total_label": "Tổng nguyên liệu",
+        "total_unit": "Loại",
+        "value_label": "Giá trị tồn kho",
+        "value_unit": "VND",
+        "low_label": "Sắp hết hàng",
+        "low_unit": "Loại",
+        "expired_label": "Hết hạn",
+        "expired_unit": "Loại"
+      },
+      "chart": {
+        "title": "Giá trị tồn kho",
+        "range_7d": "7 ngày qua"
+      },
+      "alerts": {
+        "title": "Cảnh báo",
+        "see_all": "Xem tất cả",
+        "low_stock": "Sắp hết ({{quantity}})",
+        "expired_on": "Hết hạn {{date}}"
+      },
+      "inventory": {
+        "title": "Nguyên liệu tồn kho",
+        "search_placeholder": "Tìm nguyên liệu...",
+        "see_all": "Xem tất cả nguyên liệu →",
+        "status_low": "Sắp hết",
+        "status_expired": "Hết hạn",
+        "status_ok": "Đủ"
+      },
+      "tabs": {
+        "overview": "Tổng quan",
+        "ingredients": "Nguyên liệu",
+        "transactions": "Nhập/Xuất",
+        "alerts": "Cảnh báo",
+        "more": "Thêm"
+      }
+    }
+  }
+}

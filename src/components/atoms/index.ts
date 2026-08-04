@@ -1,3 +1,8 @@
 export { default as AssetByVariant } from './AssetByVariant/AssetByVariant';
+export { default as Badge } from './Badge/Badge';
+export { default as Card } from './Card/Card';
+export { default as IconButton } from './IconButton/IconButton';
 export { default as IconByVariant } from './IconByVariant/IconByVariant';
+export { default as Logo } from './Logo/Logo';
 export { default as Skeleton } from './Skeleton/Skeleton';
+export { default as StatusPill } from './StatusPill/StatusPill';

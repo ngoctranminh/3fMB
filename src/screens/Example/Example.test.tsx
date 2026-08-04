@@ -43,7 +43,7 @@ describe('Example screen should render correctly', () => {
 
     render(component);
 
-    expect(i18n.language).toBe(SupportedLanguages.FR_FR);
+    expect(i18n.language).toBe(SupportedLanguages.VI_VN);
 
     const button = screen.getByTestId('change-language-button');
     expect(button).toBeDefined();
