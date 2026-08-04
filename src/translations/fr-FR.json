@@ -73,6 +73,35 @@
         "alerts": "Alertes",
         "more": "Plus"
       }
+    },
+    "screen_ingredients": {
+      "title": "Ingrédients",
+      "subtitle": "Stock du restaurant",
+      "add": "Ajouter un ingrédient",
+      "stock_label": "En stock",
+      "value_label": "Valeur",
+      "empty": "Aucun ingrédient trouvé",
+      "status_low": "Bientôt épuisé",
+      "status_expired": "Périmé",
+      "status_ok": "En stock",
+      "categories": {
+        "all": "Tous",
+        "dairy": "Lait, œufs",
+        "meat": "Viande, poisson",
+        "spice": "Épices",
+        "starch": "Féculents",
+        "vegetable": "Légumes"
+      },
+      "summary": {
+        "total_label": "Total ingrédients",
+        "total_unit": "Types",
+        "value_label": "Stock total",
+        "value_unit": "Valeur",
+        "low_label": "Bientôt épuisé",
+        "low_unit": "Types",
+        "expired_label": "Périmé",
+        "expired_unit": "Types"
+      }
     }
   }
 }

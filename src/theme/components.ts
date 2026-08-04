@@ -54,6 +54,21 @@ const generateComponentStyles = ({
       color: variant === 'dark' ? colors.purple50 : colors.gray50,
       fontSize: 16,
     },
+    buttonPill: {
+      ...layout.row,
+      ...layout.justifyCenter,
+      ...layout.itemsCenter,
+      backgroundColor: colors.blue500,
+      borderRadius: 26,
+      gap: 8,
+      height: 52,
+      paddingHorizontal: 24,
+    },
+    buttonPillLabel: {
+      ...fonts.bold,
+      color: '#FFFFFF',
+      fontSize: 16,
+    },
     card: {
       ...borders.rounded_16,
       ...borders.w_1,
@@ -65,6 +80,27 @@ const generateComponentStyles = ({
       ...fonts.bold,
       color: colors.gray800,
       fontSize: 16,
+    },
+    categoryChip: {
+      ...layout.justifyCenter,
+      ...layout.itemsCenter,
+      ...borders.rounded_20,
+      ...borders.w_1,
+      borderColor: variant === 'dark' ? colors.purple100 : colors.gray100,
+      height: 40,
+      paddingHorizontal: 16,
+    },
+    categoryChipActive: {
+      backgroundColor: colors.blue500,
+      borderColor: colors.blue500,
+    },
+    categoryChipLabel: {
+      color: colors.gray400,
+      fontSize: 14,
+    },
+    categoryChipLabelActive: {
+      ...fonts.bold,
+      color: '#FFFFFF',
     },
     circle250: {
       borderRadius: 140,
@@ -118,6 +154,18 @@ const generateComponentStyles = ({
     statValue: {
       ...fonts.bold,
       color: colors.gray800,
+      fontSize: 20,
+    },
+    summaryStrip: {
+      ...layout.row,
+      ...borders.rounded_16,
+      ...borders.w_1,
+      backgroundColor: colors.surface,
+      borderColor: variant === 'dark' ? colors.purple100 : colors.gray100,
+      paddingVertical: 12,
+    },
+    summaryValue: {
+      ...fonts.bold,
       fontSize: 20,
     },
     tabBarFab: {

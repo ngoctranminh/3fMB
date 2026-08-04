@@ -73,6 +73,35 @@
         "alerts": "Alerts",
         "more": "More"
       }
+    },
+    "screen_ingredients": {
+      "title": "Ingredients",
+      "subtitle": "Restaurant Storage",
+      "add": "Add ingredient",
+      "stock_label": "In stock",
+      "value_label": "Value",
+      "empty": "No ingredients found",
+      "status_low": "Running low",
+      "status_expired": "Expired",
+      "status_ok": "In stock",
+      "categories": {
+        "all": "All",
+        "dairy": "Dairy, eggs",
+        "meat": "Meat, fish",
+        "spice": "Seasoning",
+        "starch": "Starch",
+        "vegetable": "Vegetables"
+      },
+      "summary": {
+        "total_label": "Total ingredients",
+        "total_unit": "Types",
+        "value_label": "Total stock",
+        "value_unit": "Value",
+        "low_label": "Running low",
+        "low_unit": "Types",
+        "expired_label": "Expired",
+        "expired_unit": "Types"
+      }
     }
   }
 }

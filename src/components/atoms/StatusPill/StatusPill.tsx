@@ -7,12 +7,21 @@ import { useTheme } from '@/theme';
 export type StatusTone = 'danger' | 'success' | 'warning';
 
 type Properties = {
+  readonly hasDot?: boolean;
   readonly label: string;
   readonly tone: StatusTone;
 } & ViewProps;
 
-function StatusPill({ label, style, tone, ...props }: Properties) {
-  const { colors, components } = useTheme();
+const DOT_SIZE = 6;
+
+function StatusPill({
+  hasDot = false,
+  label,
+  style,
+  tone,
+  ...props
+}: Properties) {
+  const { colors, components, layout } = useTheme();
 
   const tones: Record<StatusTone, { background: string; text: string }> = {
     danger: { background: colors.red50, text: colors.red500 },
@@ -25,8 +34,25 @@ function StatusPill({ label, style, tone, ...props }: Properties) {
   return (
     <View
       {...props}
-      style={[components.statusPill, { backgroundColor: background }, style]}
+      style={[
+        components.statusPill,
+        layout.row,
+        { backgroundColor: background, gap: 4 },
+        style,
+      ]}
     >
+      {hasDot ? (
+        <View
+          style={[
+            {
+              backgroundColor: text,
+              borderRadius: DOT_SIZE / 2,
+              height: DOT_SIZE,
+              width: DOT_SIZE,
+            },
+          ]}
+        />
+      ) : undefined}
       <Text style={[components.statusPillLabel, { color: text }]}>{label}</Text>
     </View>
   );

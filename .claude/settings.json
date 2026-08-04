@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(echo \"LINT_EXIT=$?\")",
+      "Bash(echo \"TSC_EXIT=$?\")",
+      "Bash(ls -la /Users/tmn/.claude/projects/-Users-tmn-Documents-code-threefffapp/memory/ 2>/dev/null || echo \"NO MEMORY DIR\")",
+      "Read(//Users/tmn/.claude/projects/-Users-tmn-Documents-code-threefffApp/memory/**)",
+      "Bash(ls -la /Users/tmn/.claude/projects/-Users-tmn-Documents-code-threefffapp/)",
+      "Read(//Users/tmn/.claude/projects/-Users-tmn-Documents-code-threefffApp/**)",
+      "Bash(find /Users/tmn/.claude -maxdepth 2 -type d | head -40)",
+      "Read(//Users/tmn/.claude/**)",
+      "Bash(find /Users/tmn/.claude/file-history /Users/tmn/.claude/backups -iname \"*ngredient*\" 2>/dev/null | head -40)",
+      "Read(//Users/tmn/.claude/file-history/**)",
+      "Bash(ls -la /Users/tmn/.claude/file-history/0991783c-bd81-4fc7-a550-182fc1968957/ 2>/dev/null | head -30; echo \"=== BACKUPS ===\"; ls -la /Users/tmn/.claude/backups/ | head -20)",
+      "Read(//Users/tmn/.claude/file-history/0991783c-bd81-4fc7-a550-182fc1968957/**)",
+      "Read(//Users/tmn/.claude/backups/**)",
+      "Bash(cd /Users/tmn/.claude/file-history && grep -rl \"Ingredients\\\\|Nguyên liệu\\\\|nguyên liệu\" . 2>/dev/null | head -40)",
+      "Bash(cd /Users/tmn/.claude/file-history/28237c93-d2d2-4a34-855d-65c6a37247ee && ls -la | head -40)",
+      "Read(//Users/tmn/.claude/file-history/28237c93-d2d2-4a34-855d-65c6a37247ee/**)",
+      "Bash(python3 -c ' *)"
+    ]
+  }
+}
