@@ -3,10 +3,10 @@ import type { TouchableOpacityProps } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { Text, TouchableOpacity, View } from 'react-native';
 
+import type { InventoryItem } from '@/hooks/domain/inventory/schema';
 import { useTheme } from '@/theme';
 
 import { IconByVariant, StatusPill } from '@/components/atoms';
-import type { InventoryItem } from '@/screens/Overview/mockData';
 
 type Properties = {
   readonly item: InventoryItem;
@@ -50,7 +50,9 @@ function IngredientRow({ item, style, ...props }: Properties) {
           },
         ]}
       >
-        <Text style={[fonts.size_20]}>{item.emoji}</Text>
+        <Text style={[fonts.size_16, fonts.gray400, fonts.bold]}>
+          {item.name.slice(0, 1).toUpperCase()}
+        </Text>
       </View>
 
       <Text style={[layout.flex_1, fonts.size_14, fonts.gray800]}>

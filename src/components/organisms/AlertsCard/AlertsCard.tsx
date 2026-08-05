@@ -2,11 +2,11 @@ import { Fragment } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
+import type { AlertItem } from '@/hooks/domain/inventory/schema';
 import { useTheme } from '@/theme';
 
 import { Card } from '@/components/atoms';
 import { AlertRow, SectionHeader } from '@/components/molecules';
-import type { AlertItem } from '@/screens/Overview/mockData';
 
 type Properties = {
   readonly alerts: readonly AlertItem[];

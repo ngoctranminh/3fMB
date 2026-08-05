@@ -5,10 +5,10 @@ import { useTranslation } from 'react-i18next';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { LineChart } from 'react-native-gifted-charts/dist/LineChart';
 
+import type { ChartPoint } from '@/hooks/domain/inventory/schema';
 import { useTheme } from '@/theme';
 
 import { Card, IconByVariant } from '@/components/atoms';
-import type { ChartPoint } from '@/screens/Overview/mockData';
 
 type Properties = {
   readonly points: readonly ChartPoint[];

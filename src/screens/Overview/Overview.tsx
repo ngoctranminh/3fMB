@@ -2,6 +2,8 @@ import { useTranslation } from 'react-i18next';
 import { ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { useInventory } from '@/hooks';
+import { formatCurrency } from '@/hooks/domain/inventory/adapters';
 import { useTheme } from '@/theme';
 
 import { StatTile } from '@/components/molecules';
@@ -14,15 +16,27 @@ import {
 } from '@/components/organisms';
 import { SafeScreen } from '@/components/templates';
 
-import { ALERTS, INVENTORY, STOCK_VALUE_POINTS } from './mockData';
-
-const ALERT_COUNT = 3;
+const ALERTS_LIMIT = 4;
+const CHART_DAYS = 7;
 const CONTENT_GAP = 16;
 
 function Overview() {
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
   const { backgrounds, gutters, layout } = useTheme();
+  const {
+    useFetchAlertsQuery,
+    useFetchItemsQuery,
+    useFetchSummaryQuery,
+    useFetchValueHistoryQuery,
+  } = useInventory();
+
+  const summaryQuery = useFetchSummaryQuery();
+  const historyQuery = useFetchValueHistoryQuery(CHART_DAYS);
+  const alertsQuery = useFetchAlertsQuery(ALERTS_LIMIT);
+  const itemsQuery = useFetchItemsQuery();
+
+  const summary = summaryQuery.data;
 
   const stats = [
     {
@@ -30,33 +44,50 @@ function Overview() {
       iconPath: 'box',
       label: t('screen_overview.stats.total_label'),
       tone: 'blue',
-      value: '128',
+      value: summary ? String(summary.total_items) : '—',
     },
     {
       caption: t('screen_overview.stats.value_unit'),
       iconPath: 'clipboard-check',
       label: t('screen_overview.stats.value_label'),
       tone: 'green',
-      value: '45.250.000đ',
+      value: summary ? formatCurrency(summary.total_value) : '—',
     },
     {
       caption: t('screen_overview.stats.low_unit'),
       iconPath: 'warning-triangle',
       label: t('screen_overview.stats.low_label'),
       tone: 'amber',
-      value: '12',
+      value: summary ? String(summary.low_stock_count) : '—',
     },
     {
       caption: t('screen_overview.stats.expired_unit'),
       iconPath: 'calendar',
       label: t('screen_overview.stats.expired_label'),
       tone: 'red',
-      value: '5',
+      value: summary ? String(summary.overdue_count) : '—',
     },
   ] as const;
 
+  const isError =
+    summaryQuery.isError ||
+    historyQuery.isError ||
+    alertsQuery.isError ||
+    itemsQuery.isError;
+
+  const handleResetError = () => {
+    void summaryQuery.refetch();
+    void historyQuery.refetch();
+    void alertsQuery.refetch();
+    void itemsQuery.refetch();
+  };
+
   return (
-    <SafeScreen edges={['top', 'left', 'right']}>
+    <SafeScreen
+      edges={['top', 'left', 'right']}
+      isError={isError}
+      onResetError={handleResetError}
+    >
       <View
         style={[layout.flex_1, backgrounds.surfaceSunken]}
         testID="overview-screen"
@@ -72,7 +103,7 @@ function Overview() {
           showsVerticalScrollIndicator={false}
         >
           <View style={[gutters.paddingHorizontal_16]}>
-            <OverviewHeader alertCount={ALERT_COUNT} />
+            <OverviewHeader alertCount={summary?.alert_count ?? 0} />
           </View>
 
           <ScrollView
@@ -96,9 +127,9 @@ function Overview() {
           </ScrollView>
 
           <View style={[gutters.gap_16, gutters.paddingHorizontal_16]}>
-            <StockValueChart points={STOCK_VALUE_POINTS} />
-            <AlertsCard alerts={ALERTS} />
-            <InventoryCard items={INVENTORY} />
+            <StockValueChart points={historyQuery.data ?? []} />
+            <AlertsCard alerts={alertsQuery.data ?? []} />
+            <InventoryCard items={itemsQuery.data ?? []} />
           </View>
         </ScrollView>
       </View>

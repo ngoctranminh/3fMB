@@ -1,4 +1,5 @@
 import { NavigationContainer } from '@react-navigation/native';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react-native';
 import { I18nextProvider } from 'react-i18next';
 import { createMMKV, MMKV } from 'react-native-mmkv';
@@ -25,6 +26,10 @@ describe('MainTabs navigator', () => {
   });
 
   it('renders every tab plus the centre action button', () => {
+    const queryClient = new QueryClient({
+      defaultOptions: { queries: { retry: false } },
+    });
+
     render(
       <SafeAreaProvider
         initialMetrics={{
@@ -32,13 +37,15 @@ describe('MainTabs navigator', () => {
           insets: { bottom: 34, left: 0, right: 0, top: 44 },
         }}
       >
-        <ThemeProvider storage={storage}>
-          <I18nextProvider i18n={i18n}>
-            <NavigationContainer>
-              <MainTabs />
-            </NavigationContainer>
-          </I18nextProvider>
-        </ThemeProvider>
+        <QueryClientProvider client={queryClient}>
+          <ThemeProvider storage={storage}>
+            <I18nextProvider i18n={i18n}>
+              <NavigationContainer>
+                <MainTabs />
+              </NavigationContainer>
+            </I18nextProvider>
+          </ThemeProvider>
+        </QueryClientProvider>
       </SafeAreaProvider>,
     );
 

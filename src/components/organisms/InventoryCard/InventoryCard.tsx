@@ -2,6 +2,7 @@ import { Fragment, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Text, TouchableOpacity, View } from 'react-native';
 
+import type { InventoryItem } from '@/hooks/domain/inventory/schema';
 import { useTheme } from '@/theme';
 
 import { Card } from '@/components/atoms';
@@ -10,7 +11,6 @@ import {
   SearchBar,
   SectionHeader,
 } from '@/components/molecules';
-import type { InventoryItem } from '@/screens/Overview/mockData';
 
 type Properties = {
   readonly items: readonly InventoryItem[];
