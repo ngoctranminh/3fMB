@@ -20,6 +20,9 @@ export const resources = {
 void i18n.use(initReactI18next).init({
   defaultNS,
   fallbackLng: 'vi-VN',
+  // React Native renders text nodes, so HTML escaping would leak entities
+  // like &#x2F; into interpolated dates and quantities.
+  interpolation: { escapeValue: false },
   lng: 'vi-VN',
   resources,
 });

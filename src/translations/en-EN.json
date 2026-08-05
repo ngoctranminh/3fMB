@@ -154,6 +154,46 @@
         "pending": "Pending",
         "draft": "Draft"
       }
+    },
+    "screen_alerts": {
+      "title": "Alerts",
+      "subtitle": "Restaurant Storage",
+      "search_placeholder": "Search ingredients, codes, packaging...",
+      "filter": "Filters",
+      "empty": "No alerts found",
+      "summary": {
+        "low_label": "Running low",
+        "out_label": "Out of stock",
+        "expiring_label": "Expiring",
+        "overdue_label": "Overdue restock",
+        "unit": "Types"
+      },
+      "tabs": {
+        "all": "All",
+        "low": "Running low",
+        "out": "Out of stock",
+        "expiring": "Expiring",
+        "overdue": "Overdue restock"
+      },
+      "groups": {
+        "today": "Today",
+        "yesterday": "Yesterday",
+        "earlier": "Earlier"
+      },
+      "statuses": {
+        "low": "Running low ({{quantity}})",
+        "out": "Out of stock",
+        "expiring_from": "Expired since {{date}}",
+        "expiring_on": "Expires on {{date}}",
+        "overdue": "Restock overdue by {{days}} days"
+      },
+      "meta": {
+        "remaining_label": "Left:",
+        "reorder_label": "Reorder at:",
+        "expired_days": "Expired {{days}} days ago",
+        "remaining_days": "{{days}} days left",
+        "last_import_label": "Last restock:"
+      }
     }
   }
 }

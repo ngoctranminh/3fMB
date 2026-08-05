@@ -1,4 +1,6 @@
 export { default as AlertsCard } from './AlertsCard/AlertsCard';
+export { default as AlertsHeader } from './AlertsHeader/AlertsHeader';
+export { default as AlertsSummary } from './AlertsSummary/AlertsSummary';
 export { default as ErrorBoundary } from './ErrorBoundary/ErrorBoundary';
 export { default as IngredientsHeader } from './IngredientsHeader/IngredientsHeader';
 export { default as IngredientsSummary } from './IngredientsSummary/IngredientsSummary';

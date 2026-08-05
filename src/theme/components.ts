@@ -175,6 +175,14 @@ const generateComponentStyles = ({
       marginTop: 10,
       width: '100%',
     },
+    severityTile: {
+      ...layout.justifyCenter,
+      ...layout.itemsCenter,
+      ...borders.rounded_8,
+      ...borders.w_1,
+      height: 44,
+      width: 44,
+    },
     statTile: {
       ...borders.rounded_16,
       ...borders.w_1,
@@ -231,6 +239,18 @@ const generateComponentStyles = ({
       ...borders.wTop_1,
       backgroundColor: colors.surface,
       borderTopColor: variant === 'dark' ? colors.purple100 : colors.gray100,
+    },
+    tabCountBadge: {
+      ...layout.justifyCenter,
+      ...layout.itemsCenter,
+      borderRadius: 10,
+      height: 20,
+      minWidth: 20,
+      paddingHorizontal: 6,
+    },
+    tabCountLabel: {
+      ...fonts.bold,
+      fontSize: 11,
     },
     tagChip: {
       ...layout.justifyCenter,

@@ -154,6 +154,46 @@
         "pending": "En attente",
         "draft": "Brouillon"
       }
+    },
+    "screen_alerts": {
+      "title": "Alertes",
+      "subtitle": "Stock du restaurant",
+      "search_placeholder": "Rechercher ingrédients, codes, conditionnements...",
+      "filter": "Filtres",
+      "empty": "Aucune alerte trouvée",
+      "summary": {
+        "low_label": "Bientôt épuisé",
+        "out_label": "En rupture",
+        "expiring_label": "Périme",
+        "overdue_label": "Réappro en retard",
+        "unit": "Types"
+      },
+      "tabs": {
+        "all": "Toutes",
+        "low": "Bientôt épuisé",
+        "out": "En rupture",
+        "expiring": "Périme",
+        "overdue": "Réappro en retard"
+      },
+      "groups": {
+        "today": "Aujourd'hui",
+        "yesterday": "Hier",
+        "earlier": "Avant"
+      },
+      "statuses": {
+        "low": "Bientôt épuisé ({{quantity}})",
+        "out": "En rupture",
+        "expiring_from": "Périmé depuis le {{date}}",
+        "expiring_on": "Périme le {{date}}",
+        "overdue": "Réappro en retard de {{days}} jours"
+      },
+      "meta": {
+        "remaining_label": "Reste :",
+        "reorder_label": "Seuil :",
+        "expired_days": "Périmé depuis {{days}} jours",
+        "remaining_days": "{{days}} jours restants",
+        "last_import_label": "Dernier réappro :"
+      }
     }
   }
 }

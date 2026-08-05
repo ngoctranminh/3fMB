@@ -1,3 +1,5 @@
+export { default as AlertDetailRow } from './AlertDetailRow/AlertDetailRow';
+export { default as AlertGroupHeader } from './AlertGroupHeader/AlertGroupHeader';
 export { default as AlertRow } from './AlertRow/AlertRow';
 export { default as DefaultError } from './DefaultError/DefaultError';
 export { default as IngredientDetailRow } from './IngredientDetailRow/IngredientDetailRow';

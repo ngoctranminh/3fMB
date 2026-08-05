@@ -154,6 +154,46 @@
         "pending": "Chờ xử lý",
         "draft": "Nháp"
       }
+    },
+    "screen_alerts": {
+      "title": "Cảnh báo",
+      "subtitle": "Kho Quán Ăn",
+      "search_placeholder": "Tìm nguyên liệu, mã, quy cách...",
+      "filter": "Bộ lọc",
+      "empty": "Không có cảnh báo nào",
+      "summary": {
+        "low_label": "Sắp hết hàng",
+        "out_label": "Hết hàng",
+        "expiring_label": "Hết hạn",
+        "overdue_label": "Quá hạn nhập",
+        "unit": "Loại"
+      },
+      "tabs": {
+        "all": "Tất cả",
+        "low": "Sắp hết hàng",
+        "out": "Hết hàng",
+        "expiring": "Hết hạn",
+        "overdue": "Quá hạn nhập"
+      },
+      "groups": {
+        "today": "Hôm nay",
+        "yesterday": "Hôm qua",
+        "earlier": "Trước đó"
+      },
+      "statuses": {
+        "low": "Sắp hết ({{quantity}})",
+        "out": "Hết hàng",
+        "expiring_from": "Hết hạn từ {{date}}",
+        "expiring_on": "Hết hạn vào {{date}}",
+        "overdue": "Quá hạn nhập {{days}} ngày"
+      },
+      "meta": {
+        "remaining_label": "Còn:",
+        "reorder_label": "Định mức:",
+        "expired_days": "Hết hạn {{days}} ngày",
+        "remaining_days": "Còn {{days}} ngày",
+        "last_import_label": "Nhập lần cuối:"
+      }
     }
   }
 }
