@@ -1,5 +1,3 @@
-import type { TransactionFilter, TransactionTab } from './mockData';
-
 import { Fragment, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -11,6 +9,11 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { useInventory } from '@/hooks';
+import type {
+  DocumentSubtype,
+  TransactionKind,
+} from '@/hooks/domain/inventory/schema';
 import { useTheme } from '@/theme';
 
 import { Card, CategoryChip, IconByVariant } from '@/components/atoms';
@@ -26,47 +29,84 @@ import {
 } from '@/components/organisms';
 import { SafeScreen } from '@/components/templates';
 
-import {
-  QUICK_ACTIONS,
-  TODAY_TOTALS,
-  TRANSACTION_FILTERS,
-  TRANSACTION_TABS,
-  TRANSACTIONS,
-} from './mockData';
+type SubtypeFilter = 'all' | DocumentSubtype;
 
+const ALL_SUBTYPES = 'all';
 const CONTENT_GAP = 16;
 const ICON_SIZE = 18;
+const TRANSACTION_TABS = ['import', 'export'] as const;
+
+// Chip lọc bám theo subtype thật của server, đổi theo tab đang mở
+const SUBTYPES_BY_TAB = {
+  export: ['usage', 'waste', 'other_out'],
+  import: ['purchase', 'return', 'other_in'],
+} as const satisfies Record<TransactionKind, readonly DocumentSubtype[]>;
+
+const QUICK_ACTIONS = [
+  { iconPath: 'tray-down', id: 'receive', tone: 'blue' },
+  { iconPath: 'box', id: 'return', tone: 'purple' },
+  { iconPath: 'document', id: 'other', tone: 'green' },
+] as const;
 
 function Transactions() {
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
   const { backgrounds, colors, components, gutters, layout } = useTheme();
+  const { useFetchTodayTotalsQuery, useFetchTransactionsQuery } =
+    useInventory();
 
-  const [tab, setTab] = useState<TransactionTab>('import');
-  const [filter, setFilter] = useState<TransactionFilter>('all');
+  const transactionsQuery = useFetchTransactionsQuery();
+  const todayTotalsQuery = useFetchTodayTotalsQuery();
+
+  const [tab, setTab] = useState<TransactionKind>('import');
+  const [subtype, setSubtype] = useState<SubtypeFilter>(ALL_SUBTYPES);
   const [query, setQuery] = useState('');
+
+  const transactions = useMemo(
+    () => transactionsQuery.data ?? [],
+    [transactionsQuery.data],
+  );
 
   const visibleItems = useMemo(() => {
     const normalized = query.trim().toLowerCase();
 
-    return TRANSACTIONS.filter((item) => {
-      const matchesFilter = filter === 'all' || item.kind === filter;
+    return transactions.filter((item) => {
+      const matchesTab = item.kind === tab;
+      const matchesSubtype =
+        subtype === ALL_SUBTYPES || item.subtype === subtype;
       const matchesQuery =
         normalized.length === 0 ||
         item.code.toLowerCase().includes(normalized) ||
         item.partner.toLowerCase().includes(normalized);
 
-      return matchesFilter && matchesQuery;
+      return matchesTab && matchesSubtype && matchesQuery;
     });
-  }, [filter, query]);
+  }, [query, subtype, tab, transactions]);
 
   const tabOptions = TRANSACTION_TABS.map((id) => ({
     id,
     label: t(`screen_transactions.tabs.${id}`),
   }));
 
+  const subtypeFilters: readonly SubtypeFilter[] = [
+    ALL_SUBTYPES,
+    ...SUBTYPES_BY_TAB[tab],
+  ];
+
+  const todayTotals = todayTotalsQuery.data;
+  const isError = transactionsQuery.isError || todayTotalsQuery.isError;
+
+  const handleResetError = () => {
+    void transactionsQuery.refetch();
+    void todayTotalsQuery.refetch();
+  };
+
   return (
-    <SafeScreen edges={['top', 'left', 'right']}>
+    <SafeScreen
+      edges={['top', 'left', 'right']}
+      isError={isError}
+      onResetError={handleResetError}
+    >
       <View
         style={[layout.flex_1, backgrounds.surfaceSunken]}
         testID="transactions-screen"
@@ -87,7 +127,8 @@ function Transactions() {
             <SegmentTabs
               activeId={tab}
               onSelect={(id) => {
-                setTab(id as TransactionTab);
+                setTab(id as TransactionKind);
+                setSubtype(ALL_SUBTYPES);
               }}
               options={tabOptions}
             />
@@ -110,10 +151,10 @@ function Transactions() {
             </View>
 
             <TodayTotalsCard
-              exportCount={TODAY_TOTALS.exportCount}
-              exportValue={TODAY_TOTALS.exportValue}
-              importCount={TODAY_TOTALS.importCount}
-              importValue={TODAY_TOTALS.importValue}
+              exportCount={todayTotals?.exportCount ?? 0}
+              exportValue={todayTotals?.exportValue ?? '—'}
+              importCount={todayTotals?.importCount ?? 0}
+              importValue={todayTotals?.importValue ?? '—'}
             />
 
             <View style={[layout.row, layout.itemsCenter, gutters.gap_8]}>
@@ -170,13 +211,13 @@ function Transactions() {
                 horizontal
                 showsHorizontalScrollIndicator={false}
               >
-                {TRANSACTION_FILTERS.map((option) => (
+                {subtypeFilters.map((option) => (
                   <CategoryChip
-                    isActive={option === filter}
+                    isActive={option === subtype}
                     key={option}
                     label={t(`screen_transactions.filters.${option}`)}
                     onPress={() => {
-                      setFilter(option);
+                      setSubtype(option);
                     }}
                     testID={`filter-${option}`}
                   />

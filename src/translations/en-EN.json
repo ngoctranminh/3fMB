@@ -126,10 +126,6 @@
         "other": {
           "label": "Other in",
           "caption": "Internal"
-        },
-        "transfer": {
-          "label": "Transfer",
-          "caption": "Between stores"
         }
       },
       "today": {
@@ -140,19 +136,20 @@
       },
       "filters": {
         "all": "All",
-        "import": "Stock in",
-        "export": "Stock out",
-        "transfer": "Transfer"
+        "purchase": "Purchase",
+        "return": "Return",
+        "other_in": "Other in",
+        "usage": "Usage",
+        "waste": "Waste",
+        "other_out": "Other out"
       },
       "kinds": {
         "import": "Stock in",
-        "export": "Stock out",
-        "transfer": "Transfer"
+        "export": "Stock out"
       },
       "statuses": {
         "done": "Completed",
-        "pending": "Pending",
-        "draft": "Draft"
+        "cancelled": "Cancelled"
       }
     },
     "screen_alerts": {

@@ -1,12 +1,65 @@
-import { fireEvent, render, screen } from '@testing-library/react-native';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from '@testing-library/react-native';
 import { I18nextProvider } from 'react-i18next';
 import { createMMKV, MMKV } from 'react-native-mmkv';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+import { InventoryServices } from '@/hooks/domain/inventory/inventoryService';
 import { ThemeProvider } from '@/theme';
 import i18n from '@/translations';
 
 import Ingredients from './Ingredients';
+
+jest.mock('@/hooks/domain/inventory/inventoryService', () => ({
+  InventoryServices: {
+    fetchIngredients: jest.fn(),
+    fetchSummary: jest.fn(),
+  },
+}));
+
+const mockedServices = jest.mocked(InventoryServices);
+
+const SUMMARY = {
+  alert_count: 11,
+  expiring_count: 1,
+  low_stock_count: 10,
+  overdue_count: 0,
+  total_items: 66,
+  total_value: 34_449_500,
+};
+
+const INGREDIENTS = {
+  groups: ['Đông lạnh', 'Rau củ quả'],
+  items: [
+    {
+      fullName: 'Đông lạnh / Mực / Chưa làm',
+      group: 'Đông lạnh',
+      id: '3',
+      isLow: false,
+      name: 'Mực chưa làm',
+      quantity: '6',
+      status: 'ok' as const,
+      unit: 'kg',
+      value: '1.080.000đ',
+    },
+    {
+      fullName: 'Rau củ quả / Hành lá',
+      group: 'Rau củ quả',
+      id: '40',
+      isLow: true,
+      name: 'Hành lá',
+      quantity: '0.5',
+      status: 'low' as const,
+      unit: 'kg',
+      value: '15.000đ',
+    },
+  ],
+};
 
 describe('Ingredients screen', () => {
   let storage: MMKV;
@@ -15,7 +68,20 @@ describe('Ingredients screen', () => {
     storage = createMMKV();
   });
 
+  beforeEach(() => {
+    mockedServices.fetchIngredients.mockResolvedValue(INGREDIENTS);
+    mockedServices.fetchSummary.mockResolvedValue(SUMMARY);
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   const renderScreen = () => {
+    const queryClient = new QueryClient({
+      defaultOptions: { queries: { retry: false } },
+    });
+
     render(
       <SafeAreaProvider
         initialMetrics={{
@@ -23,50 +89,67 @@ describe('Ingredients screen', () => {
           insets: { bottom: 34, left: 0, right: 0, top: 44 },
         }}
       >
-        <ThemeProvider storage={storage}>
-          <I18nextProvider i18n={i18n}>
-            <Ingredients />
-          </I18nextProvider>
-        </ThemeProvider>
+        <QueryClientProvider client={queryClient}>
+          <ThemeProvider storage={storage}>
+            <I18nextProvider i18n={i18n}>
+              <Ingredients />
+            </I18nextProvider>
+          </ThemeProvider>
+        </QueryClientProvider>
       </SafeAreaProvider>,
     );
   };
 
-  it('renders the header, summary and ingredient list', () => {
+  it('renders the header, summary and ingredient list', async () => {
     renderScreen();
 
     expect(screen.getByText('Nguyên liệu')).toBeOnTheScreen();
     expect(screen.getByText('Kho Quán Ăn')).toBeOnTheScreen();
 
-    expect(screen.getByTestId('ingredients-summary')).toBeOnTheScreen();
-    expect(screen.getByText('128')).toBeOnTheScreen();
-    expect(screen.getByText('45.250.000đ')).toBeOnTheScreen();
+    await waitFor(() => {
+      expect(screen.getByText('66')).toBeOnTheScreen();
+    });
 
-    expect(screen.getByText('Thịt bò')).toBeOnTheScreen();
-    expect(screen.getByText('Gạo tấm thơm')).toBeOnTheScreen();
+    expect(screen.getByTestId('ingredients-summary')).toBeOnTheScreen();
+    expect(screen.getByText('34.449.500đ')).toBeOnTheScreen();
+
+    expect(screen.getByText('Mực chưa làm')).toBeOnTheScreen();
+    expect(screen.getByText('Hành lá')).toBeOnTheScreen();
     expect(screen.getByText('Thêm nguyên liệu')).toBeOnTheScreen();
   });
 
-  it('filters the list by category', () => {
+  it('filters the list by tree root group', async () => {
     renderScreen();
 
-    fireEvent.press(screen.getByTestId('category-starch'));
+    await waitFor(() => {
+      expect(screen.getByTestId('category-Rau củ quả')).toBeOnTheScreen();
+    });
 
-    expect(screen.getByText('Gạo tấm thơm')).toBeOnTheScreen();
-    expect(screen.queryByText('Thịt bò')).not.toBeOnTheScreen();
+    fireEvent.press(screen.getByTestId('category-Rau củ quả'));
+
+    expect(screen.getByText('Hành lá')).toBeOnTheScreen();
+    expect(screen.queryByText('Mực chưa làm')).not.toBeOnTheScreen();
   });
 
-  it('filters the list by the search query', () => {
+  it('filters the list by the search query', async () => {
     renderScreen();
 
-    fireEvent.changeText(screen.getByTestId('inventory-search-input'), 'tỏi');
+    await waitFor(() => {
+      expect(screen.getByText('Hành lá')).toBeOnTheScreen();
+    });
 
-    expect(screen.getByText('Tỏi')).toBeOnTheScreen();
-    expect(screen.queryByText('Sữa tươi')).not.toBeOnTheScreen();
+    fireEvent.changeText(screen.getByTestId('inventory-search-input'), 'hành');
+
+    expect(screen.getByText('Hành lá')).toBeOnTheScreen();
+    expect(screen.queryByText('Mực chưa làm')).not.toBeOnTheScreen();
   });
 
-  it('shows the empty state when nothing matches', () => {
+  it('shows the empty state when nothing matches', async () => {
     renderScreen();
+
+    await waitFor(() => {
+      expect(screen.getByText('Hành lá')).toBeOnTheScreen();
+    });
 
     fireEvent.changeText(
       screen.getByTestId('inventory-search-input'),

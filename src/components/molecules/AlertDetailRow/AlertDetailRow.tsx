@@ -3,10 +3,10 @@ import type { TouchableOpacityProps } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { Text, TouchableOpacity, View } from 'react-native';
 
+import type { AlertDetail } from '@/hooks/domain/inventory/schema';
 import { useTheme } from '@/theme';
 
 import { IconByVariant, TagChip } from '@/components/atoms';
-import type { AlertItem } from '@/screens/Alerts/mockData';
 
 type MetaLine = {
   readonly color: string;
@@ -17,7 +17,7 @@ type MetaLine = {
 };
 
 type Properties = {
-  readonly item: AlertItem;
+  readonly item: AlertDetail;
 } & TouchableOpacityProps;
 
 const CHEVRON_SIZE = 16;
@@ -44,71 +44,20 @@ function AlertDetailRow({ item, style, ...props }: Properties) {
       iconPath: 'x-circle',
       tint: colors.red500,
     },
-    overdue: {
-      background: colors.purple100,
-      iconPath: 'arrow-path',
-      tint: colors.purple500,
-    },
   } as const;
 
   const { background, iconPath, tint } = severities[item.severity];
-
-  const getStatus = () => {
-    switch (item.severity) {
-      case 'expiring': {
-        return item.isExpired
-          ? {
-              color: colors.red500,
-              text: t('screen_alerts.statuses.expiring_from', {
-                date: item.expiryDate,
-              }),
-            }
-          : {
-              color: colors.blue500,
-              text: t('screen_alerts.statuses.expiring_on', {
-                date: item.expiryDate,
-              }),
-            };
-      }
-      case 'low': {
-        return {
-          color: colors.amber500,
-          text: t('screen_alerts.statuses.low', { quantity: item.quantity }),
-        };
-      }
-      case 'out': {
-        return { color: colors.red500, text: t('screen_alerts.statuses.out') };
-      }
-      case 'overdue': {
-        return {
-          color: colors.purple500,
-          text: t('screen_alerts.statuses.overdue', { days: item.days }),
-        };
-      }
-    }
-  };
 
   const getMetaLines = (): readonly MetaLine[] => {
     switch (item.severity) {
       case 'expiring': {
         return [
-          item.isExpired
-            ? {
-                color: colors.red500,
-                id: 'expired',
-                isStrong: false,
-                value: t('screen_alerts.meta.expired_days', {
-                  days: item.days,
-                }),
-              }
-            : {
-                color: colors.blue500,
-                id: 'remaining',
-                isStrong: false,
-                value: t('screen_alerts.meta.remaining_days', {
-                  days: item.days,
-                }),
-              },
+          {
+            color: colors.blue500,
+            id: 'expiry',
+            isStrong: false,
+            value: item.date,
+          },
         ];
       }
       case 'low': {
@@ -140,21 +89,10 @@ function AlertDetailRow({ item, style, ...props }: Properties) {
           },
         ];
       }
-      case 'overdue': {
-        return [
-          {
-            color: colors.gray400,
-            id: 'last-import',
-            isStrong: false,
-            label: t('screen_alerts.meta.last_import_label'),
-            value: item.lastImportDate,
-          },
-        ];
-      }
     }
   };
 
-  const status = getStatus();
+  const status = { color: tint, text: item.statusLabel };
 
   return (
     <TouchableOpacity
@@ -202,7 +140,9 @@ function AlertDetailRow({ item, style, ...props }: Properties) {
           },
         ]}
       >
-        <Text style={[fonts.size_24]}>{item.emoji}</Text>
+        <Text style={[fonts.size_20, fonts.gray400, fonts.bold]}>
+          {item.name.slice(0, 1).toUpperCase()}
+        </Text>
       </View>
 
       <View style={[layout.flex_1, gutters.gap_4]}>
@@ -215,7 +155,7 @@ function AlertDetailRow({ item, style, ...props }: Properties) {
         <View style={[layout.row]}>
           <TagChip
             background={colors.surfaceSunken}
-            label={item.warehouse}
+            label={item.fullName}
             tint={colors.gray400}
           />
         </View>

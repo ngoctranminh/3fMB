@@ -3,10 +3,10 @@ import type { TouchableOpacityProps } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { Text, TouchableOpacity, View } from 'react-native';
 
+import type { IngredientItem } from '@/hooks/domain/inventory/schema';
 import { useTheme } from '@/theme';
 
 import { IconByVariant, StatusPill } from '@/components/atoms';
-import type { IngredientItem } from '@/screens/Ingredients/mockData';
 
 type Properties = {
   readonly item: IngredientItem;
@@ -55,16 +55,16 @@ function IngredientDetailRow({ item, style, ...props }: Properties) {
           },
         ]}
       >
-        <Text style={[fonts.size_24]}>{item.emoji}</Text>
+        <Text style={[fonts.size_20, fonts.gray400, fonts.bold]}>
+          {item.name.slice(0, 1).toUpperCase()}
+        </Text>
       </View>
 
       <View style={[layout.flex_1, gutters.gap_4]}>
         <Text style={[fonts.size_14, fonts.gray800, fonts.bold]}>
           {item.name}
         </Text>
-        <Text style={[fonts.size_12, fonts.gray200]}>
-          {t(`screen_ingredients.categories.${item.category}`)}
-        </Text>
+        <Text style={[fonts.size_12, fonts.gray200]}>{item.fullName}</Text>
 
         <View
           style={[layout.row, layout.itemsCenter, layout.wrap, gutters.gap_8]}

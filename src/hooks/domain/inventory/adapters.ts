@@ -1,9 +1,18 @@
 import type {
+  AlertDetail,
+  AlertGroup,
   AlertItem,
+  AlertSeverity,
+  AlertTotals,
   ChartPoint,
+  DocumentsSummary,
+  IngredientItem,
   InventoryItem,
   ServerAlert,
+  ServerDocument,
   ServerItem,
+  TodayTotals,
+  TransactionItem,
   ValuePoint,
 } from './schema';
 
@@ -53,6 +62,13 @@ const todayIsoDate = () => {
   return `${String(now.getFullYear())}-${month}-${day}`;
 };
 
+// Cộng ngày bằng UTC để đổi giờ mùa không làm lệch mất một ngày
+const shiftIsoDate = (isoDate: string, days: number) => {
+  const shifted = new Date(`${isoDate}T00:00:00Z`);
+  shifted.setUTCDate(shifted.getUTCDate() + days);
+  return shifted.toISOString().slice(0, DATE_LENGTH);
+};
+
 const toStatus = (item: ServerItem, today: string): InventoryItem['status'] => {
   if (
     item.expires_at !== null &&
@@ -83,31 +99,147 @@ const buildTrail = (item: ServerItem, byId: Map<number, ServerItem>) => {
   return names.join(' / ');
 };
 
+// Server không trả nhóm ngày, tự suy từ updated_at ("2026-08-06 00:44:09")
+const toAlertGroup = (updatedAt: string, today: string): AlertGroup => {
+  const date = updatedAt.slice(0, DATE_LENGTH);
+
+  if (date === today) {
+    return 'today';
+  }
+  return date === shiftIsoDate(today, -1) ? 'yesterday' : 'earlier';
+};
+
+// quantity 0 là hết hàng hẳn, khác với sắp hết — UI tách thành 2 tab riêng
+const toAlertSeverity = (alert: ServerAlert): AlertSeverity => {
+  if (alert.kind === 'low_stock') {
+    return alert.quantity <= 0 ? 'out' : 'low';
+  }
+  return 'expiring';
+};
+
+export const toAlertDetails = (
+  alerts: readonly ServerAlert[],
+): readonly AlertDetail[] => {
+  const today = todayIsoDate();
+
+  return alerts.map((alert) => ({
+    date: alert.date,
+    fullName: alert.full_name,
+    group: toAlertGroup(alert.updated_at, today),
+    id: String(alert.id),
+    name: alert.name,
+    quantity: `${String(alert.quantity)} ${alert.unit}`.trim(),
+    reorderLevel: `${String(alert.min_quantity)} ${alert.unit}`.trim(),
+    severity: toAlertSeverity(alert),
+    statusLabel: alert.label,
+  }));
+};
+
+export const toAlertTotals = (
+  alerts: readonly ServerAlert[],
+): AlertTotals => ({
+  expiring: alerts.filter((alert) => toAlertSeverity(alert) === 'expiring')
+    .length,
+  low: alerts.filter((alert) => toAlertSeverity(alert) === 'low').length,
+  out: alerts.filter((alert) => toAlertSeverity(alert) === 'out').length,
+});
+
+// Transactions hiển thị tiền có khoảng trắng trước "đ", khác Overview/Ingredients
+const formatDocumentValue = (value: number) =>
+  `${formatCurrency(value).slice(0, -1)} đ`;
+
+export const toTransactionItem = (
+  document: ServerDocument,
+): TransactionItem => ({
+  code: document.code,
+  date: document.occurred_at_label,
+  id: String(document.id),
+  kind: document.type === 'in' ? 'import' : 'export',
+  partner: document.party,
+  status: document.status === 'completed' ? 'done' : 'cancelled',
+  subtype: document.subtype,
+  subtypeLabel: document.subtype_label,
+  user: document.created_by,
+  value: formatDocumentValue(document.total_value),
+});
+
+export const toTodayTotals = (summary: DocumentsSummary): TodayTotals => ({
+  exportCount: summary.out.count,
+  exportValue: formatDocumentValue(summary.out.total),
+  importCount: summary.in.count,
+  importValue: formatDocumentValue(summary.in.total),
+});
+
+// Gốc cây là nhóm hiển thị trên UI (Đông lạnh / Rau củ quả / Vệ sinh)
+const buildRootName = (item: ServerItem, byId: Map<number, ServerItem>) => {
+  let current = item;
+
+  while (current.parent_id !== null) {
+    const parent = byId.get(current.parent_id);
+    if (!parent) {
+      break;
+    }
+    current = parent;
+  }
+
+  return current.name;
+};
+
 // Node nhóm có quantity 0 và unit rỗng nên hiển thị vô nghĩa; chỉ giữ lá
-export const toLeafInventoryItems = (
-  items: readonly ServerItem[],
-): readonly InventoryItem[] => {
-  const byId = new Map(items.map((item) => [item.id, item]));
+const selectLeaves = (items: readonly ServerItem[]) => {
   const parentIds = new Set(
     items
       .map((item) => item.parent_id)
       .filter((id): id is number => id !== null),
   );
+
+  return items.filter((item) => !parentIds.has(item.id));
+};
+
+export const toLeafInventoryItems = (
+  items: readonly ServerItem[],
+): readonly InventoryItem[] => {
+  const byId = new Map(items.map((item) => [item.id, item]));
   const today = todayIsoDate();
 
-  return items
-    .filter((item) => !parentIds.has(item.id))
-    .map((item) => {
-      const status = toStatus(item, today);
+  return selectLeaves(items).map((item) => {
+    const status = toStatus(item, today);
 
-      return {
-        fullName: buildTrail(item, byId),
-        id: String(item.id),
-        isLow: status === 'low',
-        name: item.name,
-        quantity: String(item.quantity),
-        status,
-        unit: item.unit,
-      };
-    });
+    return {
+      fullName: buildTrail(item, byId),
+      id: String(item.id),
+      isLow: status === 'low',
+      name: item.name,
+      quantity: String(item.quantity),
+      status,
+      unit: item.unit,
+    };
+  });
 };
+
+export const toIngredientItems = (
+  items: readonly ServerItem[],
+): readonly IngredientItem[] => {
+  const byId = new Map(items.map((item) => [item.id, item]));
+  const today = todayIsoDate();
+
+  return selectLeaves(items).map((item) => {
+    const status = toStatus(item, today);
+
+    return {
+      fullName: buildTrail(item, byId),
+      group: buildRootName(item, byId),
+      id: String(item.id),
+      isLow: status === 'low',
+      name: item.name,
+      quantity: String(item.quantity),
+      status,
+      unit: item.unit,
+      value: formatCurrency(item.quantity * item.unit_price),
+    };
+  });
+};
+
+// Chip lọc dựng từ gốc cây thật thay vì danh sách category cố định
+export const toGroupNames = (items: readonly ServerItem[]) =>
+  items.filter((item) => item.parent_id === null).map((item) => item.name);

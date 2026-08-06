@@ -1,10 +1,10 @@
-import type { CategoryFilter } from './mockData';
-
 import { Fragment, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { useInventory } from '@/hooks';
+import { formatCurrency } from '@/hooks/domain/inventory/adapters';
 import { useTheme } from '@/theme';
 
 import { Card, CategoryChip, IconByVariant } from '@/components/atoms';
@@ -16,45 +16,59 @@ import {
 } from '@/components/organisms';
 import { SafeScreen } from '@/components/templates';
 
-import { CATEGORY_FILTERS, INGREDIENTS } from './mockData';
-
+const ALL_GROUPS = 'all';
 const ON_BLUE = '#FFFFFF';
 const PILL_GAP = 16;
 const PILL_HEIGHT = 52;
 const PLUS_SIZE = 20;
-const TOTAL_COUNT = 128;
-const TOTAL_VALUE = '45.250.000đ';
 
 function Ingredients() {
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
   const { backgrounds, components, gutters, layout } = useTheme();
+  const { useFetchIngredientsQuery, useFetchSummaryQuery } = useInventory();
+
+  const ingredientsQuery = useFetchIngredientsQuery();
+  const summaryQuery = useFetchSummaryQuery();
 
   const tabBarHeight = TAB_BAR_BASE_HEIGHT + insets.bottom;
   const pillBottom = tabBarHeight + PILL_GAP;
 
-  const [category, setCategory] = useState<CategoryFilter>('all');
+  const [group, setGroup] = useState<string>(ALL_GROUPS);
   const [query, setQuery] = useState('');
+
+  const items = useMemo(
+    () => ingredientsQuery.data?.items ?? [],
+    [ingredientsQuery.data],
+  );
+  const groupFilters = [ALL_GROUPS, ...(ingredientsQuery.data?.groups ?? [])];
 
   const visibleItems = useMemo(() => {
     const normalized = query.trim().toLowerCase();
 
-    return INGREDIENTS.filter((item) => {
-      const matchesCategory = category === 'all' || item.category === category;
+    return items.filter((item) => {
+      const matchesGroup = group === ALL_GROUPS || item.group === group;
       const matchesQuery =
         normalized.length === 0 || item.name.toLowerCase().includes(normalized);
 
-      return matchesCategory && matchesQuery;
+      return matchesGroup && matchesQuery;
     });
-  }, [category, query]);
+  }, [group, items, query]);
 
-  const lowCount = INGREDIENTS.filter((item) => item.status === 'low').length;
-  const expiredCount = INGREDIENTS.filter(
-    (item) => item.status === 'expired',
-  ).length;
+  const summary = summaryQuery.data;
+  const isError = ingredientsQuery.isError || summaryQuery.isError;
+
+  const handleResetError = () => {
+    void ingredientsQuery.refetch();
+    void summaryQuery.refetch();
+  };
 
   return (
-    <SafeScreen edges={['top', 'left', 'right']}>
+    <SafeScreen
+      edges={['top', 'left', 'right']}
+      isError={isError}
+      onResetError={handleResetError}
+    >
       <View
         style={[layout.flex_1, backgrounds.surfaceSunken]}
         testID="ingredients-screen"
@@ -79,13 +93,17 @@ function Ingredients() {
             horizontal
             showsHorizontalScrollIndicator={false}
           >
-            {CATEGORY_FILTERS.map((filter) => (
+            {groupFilters.map((filter) => (
               <CategoryChip
-                isActive={filter === category}
+                isActive={filter === group}
                 key={filter}
-                label={t(`screen_ingredients.categories.${filter}`)}
+                label={
+                  filter === ALL_GROUPS
+                    ? t('screen_ingredients.categories.all')
+                    : filter
+                }
                 onPress={() => {
-                  setCategory(filter);
+                  setGroup(filter);
                 }}
                 testID={`category-${filter}`}
               />
@@ -94,10 +112,10 @@ function Ingredients() {
 
           <View style={[gutters.gap_16, gutters.paddingHorizontal_16]}>
             <IngredientsSummary
-              expiredCount={expiredCount}
-              lowCount={lowCount}
-              totalCount={TOTAL_COUNT}
-              totalValue={TOTAL_VALUE}
+              expiredCount={summary?.overdue_count ?? 0}
+              lowCount={summary?.low_stock_count ?? 0}
+              totalCount={summary?.total_items ?? 0}
+              totalValue={summary ? formatCurrency(summary.total_value) : '—'}
             />
 
             <Card>

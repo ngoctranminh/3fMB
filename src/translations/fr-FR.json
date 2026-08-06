@@ -126,10 +126,6 @@
         "other": {
           "label": "Autre entrée",
           "caption": "Interne"
-        },
-        "transfer": {
-          "label": "Transfert",
-          "caption": "Entre dépôts"
         }
       },
       "today": {
@@ -140,19 +136,20 @@
       },
       "filters": {
         "all": "Tous",
-        "import": "Entrées",
-        "export": "Sorties",
-        "transfer": "Transfert"
+        "purchase": "Achat",
+        "return": "Retour",
+        "other_in": "Autre entrée",
+        "usage": "Utilisation",
+        "waste": "Perte",
+        "other_out": "Autre sortie"
       },
       "kinds": {
         "import": "Entrée",
-        "export": "Sortie",
-        "transfer": "Transfert"
+        "export": "Sortie"
       },
       "statuses": {
         "done": "Terminé",
-        "pending": "En attente",
-        "draft": "Brouillon"
+        "cancelled": "Annulé"
       }
     },
     "screen_alerts": {

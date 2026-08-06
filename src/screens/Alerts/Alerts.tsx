@@ -1,5 +1,3 @@
-import type { AlertGroup, AlertTab } from './mockData';
-
 import { Fragment, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -11,6 +9,11 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { useInventory } from '@/hooks';
+import type {
+  AlertGroup,
+  AlertSeverity,
+} from '@/hooks/domain/inventory/schema';
 import { useTheme } from '@/theme';
 
 import { Card, IconButton, IconByVariant } from '@/components/atoms';
@@ -26,8 +29,10 @@ import {
 } from '@/components/organisms';
 import { SafeScreen } from '@/components/templates';
 
-import { ALERT_GROUPS, ALERT_TABS, ALERT_TOTALS, ALERTS } from './mockData';
+type AlertTab = 'all' | AlertSeverity;
 
+const ALERT_GROUPS = ['today', 'yesterday', 'earlier'] as const;
+const ALERT_TABS = ['all', 'low', 'out', 'expiring'] as const;
 const CONTENT_GAP = 16;
 const ICON_SIZE = 18;
 
@@ -35,6 +40,9 @@ function Alerts() {
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
   const { backgrounds, colors, components, gutters, layout } = useTheme();
+  const { useFetchAlertBoardQuery } = useInventory();
+
+  const alertBoardQuery = useFetchAlertBoardQuery();
 
   const [tab, setTab] = useState<AlertTab>('all');
   const [query, setQuery] = useState('');
@@ -42,34 +50,39 @@ function Alerts() {
     [],
   );
 
-  const totalCount =
-    ALERT_TOTALS.low +
-    ALERT_TOTALS.out +
-    ALERT_TOTALS.expiring +
-    ALERT_TOTALS.overdue;
+  const alerts = useMemo(
+    () => alertBoardQuery.data?.items ?? [],
+    [alertBoardQuery.data],
+  );
+  const totals = alertBoardQuery.data?.totals ?? {
+    expiring: 0,
+    low: 0,
+    out: 0,
+  };
+
+  const totalCount = totals.low + totals.out + totals.expiring;
 
   const visibleItems = useMemo(() => {
     const normalized = query.trim().toLowerCase();
 
-    return ALERTS.filter((item) => {
+    return alerts.filter((item) => {
       const matchesTab = tab === 'all' || item.severity === tab;
       const matchesQuery =
         normalized.length === 0 ||
         item.name.toLowerCase().includes(normalized) ||
-        item.warehouse.toLowerCase().includes(normalized);
+        item.fullName.toLowerCase().includes(normalized);
 
       return matchesTab && matchesQuery;
     });
-  }, [query, tab]);
+  }, [alerts, query, tab]);
 
   const tabOptions = ALERT_TABS.map((id) => ({
-    count: id === 'all' ? totalCount : ALERT_TOTALS[id],
+    count: id === 'all' ? totalCount : totals[id],
     countColor: {
       all: colors.red500,
       expiring: colors.blue500,
       low: colors.amber500,
       out: colors.red500,
-      overdue: colors.purple500,
     }[id],
     id,
     label: t(`screen_alerts.tabs.${id}`),
@@ -88,8 +101,16 @@ function Alerts() {
     items: visibleItems.filter((item) => item.group === group),
   })).filter((entry) => entry.items.length > 0);
 
+  const handleResetError = () => {
+    void alertBoardQuery.refetch();
+  };
+
   return (
-    <SafeScreen edges={['top', 'left', 'right']}>
+    <SafeScreen
+      edges={['top', 'left', 'right']}
+      isError={alertBoardQuery.isError}
+      onResetError={handleResetError}
+    >
       <View
         style={[layout.flex_1, backgrounds.surfaceSunken]}
         testID="alerts-screen"
@@ -105,15 +126,14 @@ function Alerts() {
           showsVerticalScrollIndicator={false}
         >
           <View style={[gutters.paddingHorizontal_16]}>
-            <AlertsHeader alertCount={ALERT_TOTALS.overdue} />
+            <AlertsHeader alertCount={totalCount} />
           </View>
 
           <View style={[gutters.paddingHorizontal_16]}>
             <AlertsSummary
-              expiringCount={ALERT_TOTALS.expiring}
-              lowCount={ALERT_TOTALS.low}
-              outCount={ALERT_TOTALS.out}
-              overdueCount={ALERT_TOTALS.overdue}
+              expiringCount={totals.expiring}
+              lowCount={totals.low}
+              outCount={totals.out}
             />
           </View>
 

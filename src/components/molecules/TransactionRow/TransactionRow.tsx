@@ -3,10 +3,10 @@ import type { TouchableOpacityProps } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { Text, TouchableOpacity, View } from 'react-native';
 
+import type { TransactionItem } from '@/hooks/domain/inventory/schema';
 import { useTheme } from '@/theme';
 
 import { IconByVariant, StatusPill, TagChip } from '@/components/atoms';
-import type { TransactionItem } from '@/screens/Transactions/mockData';
 
 type Properties = {
   readonly item: TransactionItem;
@@ -34,18 +34,11 @@ function TransactionRow({ item, style, ...props }: Properties) {
       tint: colors.blue500,
       valueColor: colors.blue500,
     },
-    transfer: {
-      background: colors.purple100,
-      iconPath: 'arrows',
-      tint: colors.purple500,
-      valueColor: colors.purple500,
-    },
   } as const;
 
   const statusTones = {
+    cancelled: 'danger',
     done: 'success',
-    draft: 'warning',
-    pending: 'warning',
   } as const;
 
   const { background, iconPath, tint, valueColor } = kinds[item.kind];

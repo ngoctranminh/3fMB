@@ -10,18 +10,12 @@ type Properties = {
   readonly expiringCount: number;
   readonly lowCount: number;
   readonly outCount: number;
-  readonly overdueCount: number;
 };
 
 const ICON_SIZE = 22;
 const TILE_SIZE = 44;
 
-function AlertsSummary({
-  expiringCount,
-  lowCount,
-  outCount,
-  overdueCount,
-}: Properties) {
+function AlertsSummary({ expiringCount, lowCount, outCount }: Properties) {
   const { t } = useTranslation();
   const { backgrounds, colors, components, fonts, gutters, layout } =
     useTheme();
@@ -50,14 +44,6 @@ function AlertsSummary({
       label: t('screen_alerts.summary.expiring_label'),
       tint: colors.blue500,
       value: expiringCount,
-    },
-    {
-      background: colors.purple100,
-      iconPath: 'arrow-path',
-      id: 'overdue',
-      label: t('screen_alerts.summary.overdue_label'),
-      tint: colors.purple500,
-      value: overdueCount,
     },
   ];
 

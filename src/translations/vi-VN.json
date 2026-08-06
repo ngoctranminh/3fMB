@@ -126,10 +126,6 @@
         "other": {
           "label": "Nhập khác",
           "caption": "Nhập nội bộ"
-        },
-        "transfer": {
-          "label": "Điều chuyển",
-          "caption": "Chuyển kho"
         }
       },
       "today": {
@@ -140,19 +136,20 @@
       },
       "filters": {
         "all": "Tất cả",
-        "import": "Nhập kho",
-        "export": "Xuất kho",
-        "transfer": "Điều chuyển"
+        "purchase": "Nhập hàng",
+        "return": "Trả hàng",
+        "other_in": "Nhập khác",
+        "usage": "Xuất dùng",
+        "waste": "Xuất huỷ",
+        "other_out": "Xuất khác"
       },
       "kinds": {
         "import": "Nhập kho",
-        "export": "Xuất kho",
-        "transfer": "Điều chuyển"
+        "export": "Xuất kho"
       },
       "statuses": {
         "done": "Hoàn thành",
-        "pending": "Chờ xử lý",
-        "draft": "Nháp"
+        "cancelled": "Đã huỷ"
       }
     },
     "screen_alerts": {
