@@ -5,10 +5,104 @@
       "initials": "3F"
     },
     "common_error": "Rất tiếc! Đã có lỗi xảy ra.",
+    "error_boundary": {
+      "title": "Rất tiếc! Đã có lỗi xảy ra.",
+      "description": "Chúng tôi xin lỗi vì sự bất tiện này. Vui lòng thử lại sau.",
+      "cta": "Tải lại màn hình"
+    },
+    "screen_alerts": {
+      "title": "Cảnh báo",
+      "subtitle": "Kho Quán Ăn",
+      "search_placeholder": "Tìm nguyên liệu, mã, quy cách...",
+      "filter": "Bộ lọc",
+      "empty": "Không có cảnh báo nào",
+      "summary": {
+        "low_label": "Sắp hết hàng",
+        "out_label": "Hết hàng",
+        "expiring_label": "Hết hạn",
+        "overdue_label": "Quá hạn nhập",
+        "unit": "Loại"
+      },
+      "tabs": {
+        "all": "Tất cả",
+        "low": "Sắp hết hàng",
+        "out": "Hết hàng",
+        "expiring": "Hết hạn",
+        "overdue": "Quá hạn nhập"
+      },
+      "groups": {
+        "today": "Hôm nay",
+        "yesterday": "Hôm qua",
+        "earlier": "Trước đó"
+      },
+      "statuses": {
+        "low": "Sắp hết ({{quantity}})",
+        "out": "Hết hàng",
+        "expiring_from": "Hết hạn từ {{date}}",
+        "expiring_on": "Hết hạn vào {{date}}",
+        "overdue": "Quá hạn nhập {{days}} ngày"
+      },
+      "meta": {
+        "remaining_label": "Còn:",
+        "reorder_label": "Định mức:",
+        "expired_days": "Hết hạn {{days}} ngày",
+        "remaining_days": "Còn {{days}} ngày",
+        "last_import_label": "Nhập lần cuối:"
+      }
+    },
     "screen_example": {
       "hello_user": "Xin chào, tôi tên là {{name}}",
       "title": "Chào mừng đến với $t(common_appName.full)",
       "description": "Bạn muốn khám phá một số tính năng? Hãy bấm vào một trong ba nút ở cuối màn hình. Nút đầu tiên gọi một REST API. Nút thứ hai đổi màu chủ đề. Và nút thứ ba đổi ngôn ngữ."
+    },
+    "screen_ingredients": {
+      "title": "Nguyên liệu",
+      "subtitle": "Kho Quán Ăn",
+      "add": "Thêm nguyên liệu",
+      "stock_label": "Tồn kho",
+      "value_label": "Giá trị",
+      "empty": "Không tìm thấy nguyên liệu nào",
+      "status_low": "Sắp hết",
+      "status_expired": "Hết hạn",
+      "status_ok": "Đủ hàng",
+      "categories": {
+        "all": "Tất cả",
+        "dairy": "Sữa, trứng",
+        "meat": "Thịt, cá",
+        "spice": "Gia vị",
+        "starch": "Tinh bột",
+        "vegetable": "Rau củ"
+      },
+      "summary": {
+        "total_label": "Tổng nguyên liệu",
+        "total_unit": "Loại",
+        "value_label": "Tổng tồn kho",
+        "value_unit": "Giá trị",
+        "low_label": "Sắp hết hàng",
+        "low_unit": "Loại",
+        "expired_label": "Hết hạn",
+        "expired_unit": "Loại"
+      }
+    },
+    "screen_item_detail": {
+      "title": "Chi tiết nguyên liệu",
+      "path": "Vị trí",
+      "stock": "Tồn kho",
+      "unit_price": "Đơn giá",
+      "total_value": "Giá trị tồn",
+      "min_quantity": "Định mức",
+      "expires_at": "Hạn dùng",
+      "note": "Ghi chú",
+      "no_expiry": "Không có hạn",
+      "no_note": "Không có ghi chú",
+      "adjust_title": "Điều chỉnh nhanh",
+      "history_title": "Lịch sử giao dịch",
+      "history_empty": "Chưa có giao dịch nào",
+      "adjusting": "Đang cập nhật...",
+      "adjust_failed": "Không cập nhật được, thử lại.",
+      "status_low": "Sắp hết",
+      "status_expired": "Hết hạn",
+      "status_ok": "Đủ hàng"
     },
     "screen_login": {
       "title": "Đăng nhập",
@@ -29,11 +123,6 @@
         "invalid_credentials": "Tên đăng nhập hoặc mật khẩu không đúng",
         "network": "Không kết nối được tới server. Vui lòng kiểm tra mạng và thử lại."
       }
-    },
-    "error_boundary": {
-      "title": "Rất tiếc! Đã có lỗi xảy ra.",
-      "description": "Chúng tôi xin lỗi vì sự bất tiện này. Vui lòng thử lại sau.",
-      "cta": "Tải lại màn hình"
     },
     "screen_overview": {
       "title": "Tổng quan",
@@ -74,34 +163,21 @@
         "more": "Thêm"
       }
     },
-    "screen_ingredients": {
-      "title": "Nguyên liệu",
-      "subtitle": "Kho Quán Ăn",
-      "add": "Thêm nguyên liệu",
-      "stock_label": "Tồn kho",
-      "value_label": "Giá trị",
-      "empty": "Không tìm thấy nguyên liệu nào",
-      "status_low": "Sắp hết",
-      "status_expired": "Hết hạn",
-      "status_ok": "Đủ hàng",
-      "categories": {
-        "all": "Tất cả",
-        "dairy": "Sữa, trứng",
-        "meat": "Thịt, cá",
-        "spice": "Gia vị",
-        "starch": "Tinh bột",
-        "vegetable": "Rau củ"
-      },
-      "summary": {
-        "total_label": "Tổng nguyên liệu",
-        "total_unit": "Loại",
-        "value_label": "Tổng tồn kho",
-        "value_unit": "Giá trị",
-        "low_label": "Sắp hết hàng",
-        "low_unit": "Loại",
-        "expired_label": "Hết hạn",
-        "expired_unit": "Loại"
-      }
+    "screen_receipt_detail": {
+      "title": "Chi tiết phiếu",
+      "partner": "Đối tác",
+      "user": "Người tạo",
+      "date": "Thời gian",
+      "total": "Tổng giá trị",
+      "note": "Ghi chú",
+      "no_note": "Không có ghi chú",
+      "lines_title": "Danh sách hàng",
+      "lines_empty": "Phiếu không có dòng hàng",
+      "unit_price": "Đơn giá",
+      "cancel": "Huỷ phiếu",
+      "cancelling": "Đang huỷ...",
+      "cancel_failed": "Không huỷ được phiếu, thử lại.",
+      "cancelled_notice": "Phiếu này đã huỷ."
     },
     "screen_transactions": {
       "title": "Nhập / Xuất kho",
@@ -150,46 +226,6 @@
       "statuses": {
         "done": "Hoàn thành",
         "cancelled": "Đã huỷ"
-      }
-    },
-    "screen_alerts": {
-      "title": "Cảnh báo",
-      "subtitle": "Kho Quán Ăn",
-      "search_placeholder": "Tìm nguyên liệu, mã, quy cách...",
-      "filter": "Bộ lọc",
-      "empty": "Không có cảnh báo nào",
-      "summary": {
-        "low_label": "Sắp hết hàng",
-        "out_label": "Hết hàng",
-        "expiring_label": "Hết hạn",
-        "overdue_label": "Quá hạn nhập",
-        "unit": "Loại"
-      },
-      "tabs": {
-        "all": "Tất cả",
-        "low": "Sắp hết hàng",
-        "out": "Hết hàng",
-        "expiring": "Hết hạn",
-        "overdue": "Quá hạn nhập"
-      },
-      "groups": {
-        "today": "Hôm nay",
-        "yesterday": "Hôm qua",
-        "earlier": "Trước đó"
-      },
-      "statuses": {
-        "low": "Sắp hết ({{quantity}})",
-        "out": "Hết hàng",
-        "expiring_from": "Hết hạn từ {{date}}",
-        "expiring_on": "Hết hạn vào {{date}}",
-        "overdue": "Quá hạn nhập {{days}} ngày"
-      },
-      "meta": {
-        "remaining_label": "Còn:",
-        "reorder_label": "Định mức:",
-        "expired_days": "Hết hạn {{days}} ngày",
-        "remaining_days": "Còn {{days}} ngày",
-        "last_import_label": "Nhập lần cuối:"
       }
     }
   }

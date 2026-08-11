@@ -10,8 +10,11 @@ import { createMMKV, MMKV } from 'react-native-mmkv';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { InventoryServices } from '@/hooks/domain/inventory/inventoryService';
+import { Paths } from '@/navigation/paths';
 import { ThemeProvider } from '@/theme';
 import i18n from '@/translations';
+
+import { createTabScreenProps } from '@/tests/navigationProps';
 
 import Transactions from './Transactions';
 
@@ -101,7 +104,7 @@ describe('Transactions screen', () => {
         <QueryClientProvider client={queryClient}>
           <ThemeProvider storage={storage}>
             <I18nextProvider i18n={i18n}>
-              <Transactions />
+              <Transactions {...createTabScreenProps(Paths.Transactions).props} />
             </I18nextProvider>
           </ThemeProvider>
         </QueryClientProvider>

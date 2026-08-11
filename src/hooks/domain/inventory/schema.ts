@@ -84,6 +84,45 @@ export const serverItemsSchema = z.array(serverItemSchema);
 
 export const valueHistorySchema = z.array(valuePointSchema);
 
+export const serverItemDetailSchema = serverItemSchema.extend({
+  note: z.string(),
+});
+
+export const serverLedgerEntrySchema = z.object({
+  delta: z.number(),
+  id: z.number(),
+  item_unit: z.string(),
+  kind: z.enum(['in', 'out']),
+  note: z.string(),
+  occurred_at: z.string(),
+  total_price: z.number(),
+});
+
+export const serverLedgerSchema = z.object({
+  items: z.array(serverLedgerEntrySchema),
+  total: z.number(),
+});
+
+export const serverDocumentLineSchema = z.object({
+  id: z.number(),
+  item_full_name: z.string(),
+  item_id: z.number(),
+  item_name: z.string(),
+  item_unit: z.string(),
+  note: z.string(),
+  quantity: z.number(),
+  total_price: z.number(),
+  unit_price: z.number(),
+});
+
+export const serverDocumentDetailSchema = serverDocumentSchema.extend({
+  lines: z.array(serverDocumentLineSchema),
+  note: z.string(),
+  occurred_at: z.string(),
+  type_label: z.string(),
+  status_label: z.string(),
+});
+
 export type AlertDetail = {
   readonly date: string;
   readonly fullName: string;
@@ -121,6 +160,56 @@ export type ChartPoint = {
   readonly value: number;
 };
 
+export type DocumentLine = {
+  readonly fullName: string;
+  readonly id: string;
+  readonly name: string;
+  readonly note: string;
+  readonly quantity: string;
+  readonly totalPrice: string;
+  readonly unitPrice: string;
+};
+
+export type DocumentDetail = {
+  readonly canCancel: boolean;
+  readonly code: string;
+  readonly date: string;
+  readonly id: string;
+  readonly kind: TransactionKind;
+  readonly lines: readonly DocumentLine[];
+  readonly note: string;
+  readonly partner: string;
+  readonly status: 'cancelled' | 'done';
+  readonly statusLabel: string;
+  readonly subtypeLabel: string;
+  readonly totalValue: string;
+  readonly user: string;
+};
+
+export type ItemDetail = {
+  readonly expiresAt: null | string;
+  readonly fullName: string;
+  readonly id: number;
+  readonly minQuantity: string;
+  readonly name: string;
+  readonly note: string;
+  readonly quantity: number;
+  readonly quantityLabel: string;
+  readonly status: 'expired' | 'low' | 'ok';
+  readonly totalValue: string;
+  readonly unit: string;
+  readonly unitPrice: string;
+};
+
+export type LedgerEntry = {
+  readonly deltaLabel: string;
+  readonly id: string;
+  readonly isIncoming: boolean;
+  readonly note: string;
+  readonly occurredAt: string;
+  readonly totalPrice: string;
+};
+
 export type DocumentsSummary = z.infer<typeof documentsSummarySchema>;
 
 export type DocumentSubtype = z.infer<typeof documentSubtypeSchema>;
@@ -152,6 +241,12 @@ export type InventorySummary = z.infer<typeof inventorySummarySchema>;
 export type ServerAlert = z.infer<typeof serverAlertSchema>;
 
 export type ServerDocument = z.infer<typeof serverDocumentSchema>;
+
+export type ServerDocumentDetail = z.infer<typeof serverDocumentDetailSchema>;
+
+export type ServerItemDetail = z.infer<typeof serverItemDetailSchema>;
+
+export type ServerLedgerEntry = z.infer<typeof serverLedgerEntrySchema>;
 
 export type ServerItem = z.infer<typeof serverItemSchema>;
 

@@ -15,9 +15,14 @@ import {
 type Properties = {
   readonly items: readonly InventoryItem[];
   readonly onSeeAll?: () => void;
+  readonly onSelectItem?: (itemId: string) => void;
 };
 
-function InventoryCard({ items, onSeeAll = undefined }: Properties) {
+function InventoryCard({
+  items,
+  onSeeAll = undefined,
+  onSelectItem = undefined,
+}: Properties) {
   const { t } = useTranslation();
   const { backgrounds, colors, fonts, gutters, layout } = useTheme();
 
@@ -49,7 +54,13 @@ function InventoryCard({ items, onSeeAll = undefined }: Properties) {
             {index > 0 ? (
               <View style={[backgrounds.gray100, { height: 1 }]} />
             ) : undefined}
-            <IngredientRow item={item} />
+            <IngredientRow
+              item={item}
+              onPress={() => {
+                onSelectItem?.(item.id);
+              }}
+              testID={`inventory-row-${item.id}`}
+            />
           </Fragment>
         ))}
       </View>

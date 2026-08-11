@@ -1,3 +1,5 @@
+import type { MainTabScreenProps } from '@/navigation/types';
+
 import { Fragment, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
@@ -5,6 +7,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useInventory } from '@/hooks';
 import { formatCurrency } from '@/hooks/domain/inventory/adapters';
+import { Paths } from '@/navigation/paths';
 import { useTheme } from '@/theme';
 
 import { Card, CategoryChip, IconByVariant } from '@/components/atoms';
@@ -22,7 +25,7 @@ const PILL_GAP = 16;
 const PILL_HEIGHT = 52;
 const PLUS_SIZE = 20;
 
-function Ingredients() {
+function Ingredients({ navigation }: MainTabScreenProps<Paths.Ingredients>) {
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
   const { backgrounds, components, gutters, layout } = useTheme();
@@ -137,7 +140,15 @@ function Ingredients() {
                       {index > 0 ? (
                         <View style={[backgrounds.gray100, { height: 1 }]} />
                       ) : undefined}
-                      <IngredientDetailRow item={item} />
+                      <IngredientDetailRow
+                        item={item}
+                        onPress={() => {
+                          navigation.navigate(Paths.ItemDetail, {
+                            itemId: item.id,
+                          });
+                        }}
+                        testID={`ingredient-row-${item.id}`}
+                      />
                     </Fragment>
                   ))
                 )}

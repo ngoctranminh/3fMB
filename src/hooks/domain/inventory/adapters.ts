@@ -5,12 +5,18 @@ import type {
   AlertSeverity,
   AlertTotals,
   ChartPoint,
+  DocumentDetail,
   DocumentsSummary,
   IngredientItem,
   InventoryItem,
+  ItemDetail,
+  LedgerEntry,
   ServerAlert,
   ServerDocument,
+  ServerDocumentDetail,
   ServerItem,
+  ServerItemDetail,
+  ServerLedgerEntry,
   TodayTotals,
   TransactionItem,
   ValuePoint,
@@ -22,10 +28,19 @@ const MONTH_END = 10;
 const DATE_LENGTH = 10;
 const MONTH_OFFSET = 1;
 const PAD_LENGTH = 2;
+const TIME_LENGTH = 5;
 
 export const formatCurrency = (value: number) => {
   const rounded = Math.round(value);
   return `${String(rounded).replaceAll(THOUSANDS_GROUP, '.')}đ`;
+};
+
+// Server trả "2026-08-06 09:04:37" (không phải ISO) nên cắt chuỗi, không parse Date
+export const toDateTimeLabel = (timestamp: string) => {
+  const [date, time = ''] = timestamp.split(' ');
+  const [year, month, day] = date.split('-');
+  const clock = time.slice(0, TIME_LENGTH);
+  return clock ? `${day}/${month}/${year} ${clock}` : `${day}/${month}/${year}`;
 };
 
 // Server trả "2026-07-31", không phải ISO có timezone, nên cắt chuỗi thay vì new Date()
@@ -83,7 +98,7 @@ const toStatus = (item: ServerItem, today: string): InventoryItem['status'] => {
 };
 
 // Tên lá trùng nhau nhiều ("Đã làm" có ở cả Mực và Bò) nên cần đường dẫn cha
-const buildTrail = (item: ServerItem, byId: Map<number, ServerItem>) => {
+export const buildTrail = (item: ServerItem, byId: Map<number, ServerItem>) => {
   const names = [item.name];
   let parentId = item.parent_id;
 
@@ -243,3 +258,72 @@ export const toIngredientItems = (
 // Chip lọc dựng từ gốc cây thật thay vì danh sách category cố định
 export const toGroupNames = (items: readonly ServerItem[]) =>
   items.filter((item) => item.parent_id === null).map((item) => item.name);
+
+// /api/items/:id không trả đường dẫn cha nên phải dựng từ cây phẳng
+export const buildItemTrail = (
+  item: ServerItem,
+  items: readonly ServerItem[],
+) => buildTrail(item, new Map(items.map((entry) => [entry.id, entry])));
+
+export const toItemDetail = (
+  item: ServerItemDetail,
+  trail: string,
+): ItemDetail => {
+  const status = toStatus(item, todayIsoDate());
+
+  return {
+    expiresAt: item.expires_at,
+    fullName: trail,
+    id: item.id,
+    minQuantity: `${String(item.min_quantity)} ${item.unit}`.trim(),
+    name: item.name,
+    note: item.note,
+    quantity: item.quantity,
+    quantityLabel: `${String(item.quantity)} ${item.unit}`.trim(),
+    status,
+    totalValue: formatCurrency(item.quantity * item.unit_price),
+    unit: item.unit,
+    unitPrice: formatCurrency(item.unit_price),
+  };
+};
+
+export const toLedgerEntry = (entry: ServerLedgerEntry): LedgerEntry => {
+  const isIncoming = entry.kind === 'in';
+  const sign = isIncoming ? '+' : '−';
+
+  return {
+    deltaLabel: `${sign}${String(Math.abs(entry.delta))} ${entry.item_unit}`.trim(),
+    id: String(entry.id),
+    isIncoming,
+    note: entry.note,
+    // occurred_at là "2026-08-06 09:04:37", cắt chuỗi thay vì parse Date
+    occurredAt: toDateTimeLabel(entry.occurred_at),
+    totalPrice: formatDocumentValue(entry.total_price),
+  };
+};
+
+export const toDocumentDetail = (
+  document: ServerDocumentDetail,
+): DocumentDetail => ({
+  canCancel: document.status === 'completed',
+  code: document.code,
+  date: document.occurred_at_label,
+  id: String(document.id),
+  kind: document.type === 'in' ? 'import' : 'export',
+  lines: document.lines.map((line) => ({
+    fullName: line.item_full_name,
+    id: String(line.id),
+    name: line.item_name,
+    note: line.note,
+    quantity: `${String(line.quantity)} ${line.item_unit}`.trim(),
+    totalPrice: formatDocumentValue(line.total_price),
+    unitPrice: formatDocumentValue(line.unit_price),
+  })),
+  note: document.note,
+  partner: document.party,
+  status: document.status === 'completed' ? 'done' : 'cancelled',
+  statusLabel: document.status_label,
+  subtypeLabel: document.subtype_label,
+  totalValue: formatDocumentValue(document.total_value),
+  user: document.created_by,
+});

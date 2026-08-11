@@ -14,6 +14,8 @@ import type {
   DocumentSubtype,
   TransactionKind,
 } from '@/hooks/domain/inventory/schema';
+import type { MainTabScreenProps } from '@/navigation/types';
+import { Paths } from '@/navigation/paths';
 import { useTheme } from '@/theme';
 
 import { Card, CategoryChip, IconByVariant } from '@/components/atoms';
@@ -48,7 +50,7 @@ const QUICK_ACTIONS = [
   { iconPath: 'document', id: 'other', tone: 'green' },
 ] as const;
 
-function Transactions() {
+function Transactions({ navigation }: MainTabScreenProps<Paths.Transactions>) {
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
   const { backgrounds, colors, components, gutters, layout } = useTheme();
@@ -240,7 +242,15 @@ function Transactions() {
                       {index > 0 ? (
                         <View style={[backgrounds.gray100, { height: 1 }]} />
                       ) : undefined}
-                      <TransactionRow item={item} />
+                      <TransactionRow
+                        item={item}
+                        onPress={() => {
+                          navigation.navigate(Paths.ReceiptDetail, {
+                            documentId: item.id,
+                          });
+                        }}
+                        testID={`transaction-row-${item.id}`}
+                      />
                     </Fragment>
                   ))
                 )}

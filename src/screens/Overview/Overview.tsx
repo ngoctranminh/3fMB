@@ -1,9 +1,12 @@
+import type { MainTabScreenProps } from '@/navigation/types';
+
 import { useTranslation } from 'react-i18next';
 import { ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useInventory } from '@/hooks';
 import { formatCurrency } from '@/hooks/domain/inventory/adapters';
+import { Paths } from '@/navigation/paths';
 import { useTheme } from '@/theme';
 
 import { StatTile } from '@/components/molecules';
@@ -20,7 +23,7 @@ const ALERTS_LIMIT = 4;
 const CHART_DAYS = 7;
 const CONTENT_GAP = 16;
 
-function Overview() {
+function Overview({ navigation }: MainTabScreenProps<Paths.Overview>) {
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
   const { backgrounds, gutters, layout } = useTheme();
@@ -82,6 +85,18 @@ function Overview() {
     void itemsQuery.refetch();
   };
 
+  const handleSelectItem = (itemId: string) => {
+    navigation.navigate(Paths.ItemDetail, { itemId });
+  };
+
+  const handleSeeAllAlerts = () => {
+    navigation.navigate(Paths.Alerts);
+  };
+
+  const handleSeeAllItems = () => {
+    navigation.navigate(Paths.Ingredients);
+  };
+
   return (
     <SafeScreen
       edges={['top', 'left', 'right']}
@@ -103,7 +118,10 @@ function Overview() {
           showsVerticalScrollIndicator={false}
         >
           <View style={[gutters.paddingHorizontal_16]}>
-            <OverviewHeader alertCount={summary?.alert_count ?? 0} />
+            <OverviewHeader
+              alertCount={summary?.alert_count ?? 0}
+              onBell={handleSeeAllAlerts}
+            />
           </View>
 
           <ScrollView
@@ -128,8 +146,15 @@ function Overview() {
 
           <View style={[gutters.gap_16, gutters.paddingHorizontal_16]}>
             <StockValueChart points={historyQuery.data ?? []} />
-            <AlertsCard alerts={alertsQuery.data ?? []} />
-            <InventoryCard items={itemsQuery.data ?? []} />
+            <AlertsCard
+              alerts={alertsQuery.data ?? []}
+              onSeeAll={handleSeeAllAlerts}
+            />
+            <InventoryCard
+              items={itemsQuery.data ?? []}
+              onSeeAll={handleSeeAllItems}
+              onSelectItem={handleSelectItem}
+            />
           </View>
         </ScrollView>
       </View>

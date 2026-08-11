@@ -5,10 +5,104 @@
       "initials": "3F"
     },
     "common_error": "Oops! Something went wrong.",
+    "error_boundary": {
+      "title": "Oops! Something went wrong.",
+      "description": "We are sorry for the inconvenience. Please try again later.",
+      "cta": "Reload the screen"
+    },
+    "screen_alerts": {
+      "title": "Alerts",
+      "subtitle": "Restaurant Storage",
+      "search_placeholder": "Search ingredients, codes, packaging...",
+      "filter": "Filters",
+      "empty": "No alerts found",
+      "summary": {
+        "low_label": "Running low",
+        "out_label": "Out of stock",
+        "expiring_label": "Expiring",
+        "overdue_label": "Overdue restock",
+        "unit": "Types"
+      },
+      "tabs": {
+        "all": "All",
+        "low": "Running low",
+        "out": "Out of stock",
+        "expiring": "Expiring",
+        "overdue": "Overdue restock"
+      },
+      "groups": {
+        "today": "Today",
+        "yesterday": "Yesterday",
+        "earlier": "Earlier"
+      },
+      "statuses": {
+        "low": "Running low ({{quantity}})",
+        "out": "Out of stock",
+        "expiring_from": "Expired since {{date}}",
+        "expiring_on": "Expires on {{date}}",
+        "overdue": "Restock overdue by {{days}} days"
+      },
+      "meta": {
+        "remaining_label": "Left:",
+        "reorder_label": "Reorder at:",
+        "expired_days": "Expired {{days}} days ago",
+        "remaining_days": "{{days}} days left",
+        "last_import_label": "Last restock:"
+      }
+    },
     "screen_example": {
       "hello_user": "Hi, my name is {{name}}",
       "title": "Welcome on The $t(common_appName.full)",
       "description": "Do you want to discover some features? Just click on one of the three buttons at the bottom of the screen. The first allows you to call a REST API. The second lets you change the theme color. And the third allows you to change the language."
+    },
+    "screen_ingredients": {
+      "title": "Ingredients",
+      "subtitle": "Restaurant Storage",
+      "add": "Add ingredient",
+      "stock_label": "In stock",
+      "value_label": "Value",
+      "empty": "No ingredients found",
+      "status_low": "Running low",
+      "status_expired": "Expired",
+      "status_ok": "In stock",
+      "categories": {
+        "all": "All",
+        "dairy": "Dairy, eggs",
+        "meat": "Meat, fish",
+        "spice": "Seasoning",
+        "starch": "Starch",
+        "vegetable": "Vegetables"
+      },
+      "summary": {
+        "total_label": "Total ingredients",
+        "total_unit": "Types",
+        "value_label": "Total stock",
+        "value_unit": "Value",
+        "low_label": "Running low",
+        "low_unit": "Types",
+        "expired_label": "Expired",
+        "expired_unit": "Types"
+      }
+    },
+    "screen_item_detail": {
+      "title": "Item detail",
+      "path": "Location",
+      "stock": "In stock",
+      "unit_price": "Unit price",
+      "total_value": "Stock value",
+      "min_quantity": "Reorder level",
+      "expires_at": "Expiry",
+      "note": "Note",
+      "no_expiry": "No expiry",
+      "no_note": "No note",
+      "adjust_title": "Quick adjust",
+      "history_title": "Transaction history",
+      "history_empty": "No transactions yet",
+      "adjusting": "Updating...",
+      "adjust_failed": "Update failed, please retry.",
+      "status_low": "Low",
+      "status_expired": "Expired",
+      "status_ok": "In stock"
     },
     "screen_login": {
       "title": "Sign in",
@@ -29,11 +123,6 @@
         "invalid_credentials": "Incorrect username or password",
         "network": "Cannot reach the server. Please check your connection and try again."
       }
-    },
-    "error_boundary": {
-      "title": "Oops! Something went wrong.",
-      "description": "We are sorry for the inconvenience. Please try again later.",
-      "cta": "Reload the screen"
     },
     "screen_overview": {
       "title": "Overview",
@@ -74,34 +163,21 @@
         "more": "More"
       }
     },
-    "screen_ingredients": {
-      "title": "Ingredients",
-      "subtitle": "Restaurant Storage",
-      "add": "Add ingredient",
-      "stock_label": "In stock",
-      "value_label": "Value",
-      "empty": "No ingredients found",
-      "status_low": "Running low",
-      "status_expired": "Expired",
-      "status_ok": "In stock",
-      "categories": {
-        "all": "All",
-        "dairy": "Dairy, eggs",
-        "meat": "Meat, fish",
-        "spice": "Seasoning",
-        "starch": "Starch",
-        "vegetable": "Vegetables"
-      },
-      "summary": {
-        "total_label": "Total ingredients",
-        "total_unit": "Types",
-        "value_label": "Total stock",
-        "value_unit": "Value",
-        "low_label": "Running low",
-        "low_unit": "Types",
-        "expired_label": "Expired",
-        "expired_unit": "Types"
-      }
+    "screen_receipt_detail": {
+      "title": "Receipt detail",
+      "partner": "Party",
+      "user": "Created by",
+      "date": "Time",
+      "total": "Total value",
+      "note": "Note",
+      "no_note": "No note",
+      "lines_title": "Line items",
+      "lines_empty": "This receipt has no lines",
+      "unit_price": "Unit price",
+      "cancel": "Cancel receipt",
+      "cancelling": "Cancelling...",
+      "cancel_failed": "Could not cancel, please retry.",
+      "cancelled_notice": "This receipt is cancelled."
     },
     "screen_transactions": {
       "title": "Stock In / Out",
@@ -150,46 +226,6 @@
       "statuses": {
         "done": "Completed",
         "cancelled": "Cancelled"
-      }
-    },
-    "screen_alerts": {
-      "title": "Alerts",
-      "subtitle": "Restaurant Storage",
-      "search_placeholder": "Search ingredients, codes, packaging...",
-      "filter": "Filters",
-      "empty": "No alerts found",
-      "summary": {
-        "low_label": "Running low",
-        "out_label": "Out of stock",
-        "expiring_label": "Expiring",
-        "overdue_label": "Overdue restock",
-        "unit": "Types"
-      },
-      "tabs": {
-        "all": "All",
-        "low": "Running low",
-        "out": "Out of stock",
-        "expiring": "Expiring",
-        "overdue": "Overdue restock"
-      },
-      "groups": {
-        "today": "Today",
-        "yesterday": "Yesterday",
-        "earlier": "Earlier"
-      },
-      "statuses": {
-        "low": "Running low ({{quantity}})",
-        "out": "Out of stock",
-        "expiring_from": "Expired since {{date}}",
-        "expiring_on": "Expires on {{date}}",
-        "overdue": "Restock overdue by {{days}} days"
-      },
-      "meta": {
-        "remaining_label": "Left:",
-        "reorder_label": "Reorder at:",
-        "expired_days": "Expired {{days}} days ago",
-        "remaining_days": "{{days}} days left",
-        "last_import_label": "Last restock:"
       }
     }
   }

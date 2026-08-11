@@ -103,7 +103,11 @@
       "Bash(curl -s -m 5 http://localhost:3000/health)",
       "Bash(echo \"LINT_AFTER_FIX_EXIT=$?\")",
       "Bash(git add *)",
-      "Bash(git commit -q -m ' *)"
+      "Bash(git commit -q -m ' *)",
+      "Bash(curl -s -m 5 http://localhost:3000/api/items/3)",
+      "Bash(curl -s -m 5 \"http://localhost:3000/api/transactions?item_id=3&limit=3\")",
+      "Bash(curl -s -m 5 http://localhost:3000/api/documents/22)",
+      "Bash(curl -s -m 5 \"http://localhost:3000/api/transactions?limit=3\")"
     ],
     "additionalDirectories": [
       "/Users/tmn/.claude/projects/-Users-tmn-Documents-code-threefffapp/memory",

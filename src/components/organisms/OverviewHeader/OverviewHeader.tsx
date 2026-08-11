@@ -7,11 +7,12 @@ import { Badge, IconByVariant } from '@/components/atoms';
 
 type Properties = {
   readonly alertCount: number;
+  readonly onBell?: () => void;
 };
 
 const ICON_SIZE = 24;
 
-function OverviewHeader({ alertCount }: Properties) {
+function OverviewHeader({ alertCount, onBell = undefined }: Properties) {
   const { t } = useTranslation();
   const { colors, fonts, gutters, layout } = useTheme();
 
@@ -47,6 +48,7 @@ function OverviewHeader({ alertCount }: Properties) {
 
       <TouchableOpacity
         accessibilityRole="button"
+        onPress={onBell}
         style={[layout.relative]}
         testID="overview-bell-button"
       >

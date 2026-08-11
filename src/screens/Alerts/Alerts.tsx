@@ -14,6 +14,8 @@ import type {
   AlertGroup,
   AlertSeverity,
 } from '@/hooks/domain/inventory/schema';
+import type { MainTabScreenProps } from '@/navigation/types';
+import { Paths } from '@/navigation/paths';
 import { useTheme } from '@/theme';
 
 import { Card, IconButton, IconByVariant } from '@/components/atoms';
@@ -36,7 +38,7 @@ const ALERT_TABS = ['all', 'low', 'out', 'expiring'] as const;
 const CONTENT_GAP = 16;
 const ICON_SIZE = 18;
 
-function Alerts() {
+function Alerts({ navigation }: MainTabScreenProps<Paths.Alerts>) {
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
   const { backgrounds, colors, components, gutters, layout } = useTheme();
@@ -225,7 +227,15 @@ function Alerts() {
                             <View
                               style={[backgrounds.gray100, { height: 1 }]}
                             />
-                            <AlertDetailRow item={item} />
+                            <AlertDetailRow
+                              item={item}
+                              onPress={() => {
+                                navigation.navigate(Paths.ItemDetail, {
+                                  itemId: item.id,
+                                });
+                              }}
+                              testID={`alert-row-${item.id}`}
+                            />
                           </Fragment>
                         ))}
                       </View>
