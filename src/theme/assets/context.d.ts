@@ -53,7 +53,12 @@ declare namespace NodeJS {
 }
 declare let process: NodeJS.Process;
 
-declare module '*.png';
+declare module '*.png' {
+  import type { ImageSourcePropType } from 'react-native';
+
+  const content: ImageSourcePropType;
+  export default content;
+}
 
 declare module '*.svg' {
   import type React from 'react';

@@ -1,19 +1,19 @@
 import type { ViewProps } from 'react-native';
 
-import { Text, View } from 'react-native';
+import { Image, View } from 'react-native';
 
 import { useTheme } from '@/theme';
+import logo from '@/theme/assets/images/logo.png';
 
 type Properties = {
   readonly size?: number;
 } & ViewProps;
 
 const SIZE = 96;
-const RADIUS_RATIO = 0.28;
-const FONT_RATIO = 0.42;
+const RADIUS_RATIO = 0.22;
 
 function Logo({ size = SIZE, style, ...props }: Properties) {
-  const { backgrounds, colors, fonts, layout } = useTheme();
+  const { layout } = useTheme();
 
   return (
     <View
@@ -21,27 +21,23 @@ function Logo({ size = SIZE, style, ...props }: Properties) {
       style={[
         layout.justifyCenter,
         layout.itemsCenter,
-        backgrounds.purple100,
         {
+          backgroundColor: '#000000',
           borderRadius: size * RADIUS_RATIO,
           height: size,
+          overflow: 'hidden',
           width: size,
         },
         style,
       ]}
       testID="app-logo"
     >
-      <Text
-        style={[
-          fonts.bold,
-          {
-            color: colors.purple500,
-            fontSize: size * FONT_RATIO,
-          },
-        ]}
-      >
-        3F
-      </Text>
+      <Image
+        accessibilityIgnoresInvertColors
+        resizeMode="cover"
+        source={logo}
+        style={{ height: size, width: size }}
+      />
     </View>
   );
 }
