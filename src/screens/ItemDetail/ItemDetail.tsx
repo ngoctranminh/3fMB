@@ -39,12 +39,14 @@ function ItemDetail({ navigation, route }: RootScreenProps<Paths.ItemDetail>) {
     expired: t('screen_item_detail.status_expired'),
     low: t('screen_item_detail.status_low'),
     ok: t('screen_item_detail.status_ok'),
+    out: t('screen_item_detail.status_out'),
   };
 
   const statusTones = {
     expired: 'danger',
     low: 'warning',
     ok: 'success',
+    out: 'danger',
   } as const;
 
   const handleAdjust = (delta: number) => {

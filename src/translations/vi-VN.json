@@ -99,6 +99,7 @@
       "value_label": "Giá trị",
       "empty": "Không tìm thấy nguyên liệu nào",
       "status_low": "Sắp hết",
+      "status_out": "Hết hàng",
       "status_expired": "Hết hạn",
       "status_ok": "Đủ hàng",
       "filter_title": "Lọc theo trạng thái",
@@ -106,6 +107,7 @@
         "all": "Tất cả",
         "ok": "Đủ hàng",
         "low": "Sắp hết",
+        "out": "Hết hàng",
         "expired": "Hết hạn"
       },
       "categories": {
@@ -144,6 +146,7 @@
       "adjusting": "Đang cập nhật...",
       "adjust_failed": "Không cập nhật được, thử lại.",
       "status_low": "Sắp hết",
+      "status_out": "Hết hàng",
       "status_expired": "Hết hạn",
       "status_ok": "Đủ hàng"
     },
@@ -196,6 +199,7 @@
         "title": "Cảnh báo",
         "see_all": "Xem tất cả",
         "low_stock": "Sắp hết ({{quantity}})",
+        "out_stock": "Hết hàng",
         "expired_on": "Hết hạn {{date}}"
       },
       "inventory": {
@@ -203,6 +207,7 @@
         "search_placeholder": "Tìm nguyên liệu...",
         "see_all": "Xem tất cả nguyên liệu →",
         "status_low": "Sắp hết",
+        "status_out": "Hết hàng",
         "status_expired": "Hết hạn",
         "status_ok": "Đủ"
       },

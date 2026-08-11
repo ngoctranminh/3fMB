@@ -18,7 +18,7 @@ type Properties = {
   readonly onSelectItem?: (itemId: string) => void;
 };
 
-type StatusFilter = 'all' | 'expired' | 'low' | 'ok';
+type StatusFilter = 'all' | 'expired' | 'low' | 'ok' | 'out';
 
 function InventoryCard({
   items,
@@ -53,7 +53,13 @@ function InventoryCard({
   }, [items, query, sortAscending, statusFilter]);
 
   const handleFilter = () => {
-    const options: readonly StatusFilter[] = ['all', 'ok', 'low', 'expired'];
+    const options: readonly StatusFilter[] = [
+      'all',
+      'ok',
+      'low',
+      'out',
+      'expired',
+    ];
 
     Alert.alert(
       t('screen_ingredients.filter_title'),

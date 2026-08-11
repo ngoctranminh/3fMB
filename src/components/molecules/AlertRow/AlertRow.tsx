@@ -10,7 +10,7 @@ import { IconByVariant } from '@/components/atoms';
 type Properties = {
   readonly date: string;
   readonly quantity: string;
-  readonly severity: 'expired' | 'low';
+  readonly severity: 'expired' | 'low' | 'out';
   readonly title: string;
 } & ViewProps;
 
@@ -28,6 +28,7 @@ function AlertRow({
   const { colors, fonts, gutters, layout } = useTheme();
 
   const isLow = severity === 'low';
+  const isOut = severity === 'out';
 
   return (
     <View
@@ -36,7 +37,9 @@ function AlertRow({
     >
       <IconByVariant
         height={ICON_SIZE}
-        path={isLow ? 'warning-triangle' : 'warning-circle'}
+        path={
+          isLow ? 'warning-triangle' : isOut ? 'x-circle' : 'warning-circle'
+        }
         stroke={isLow ? colors.amber500 : colors.red500}
         width={ICON_SIZE}
       />
@@ -44,9 +47,11 @@ function AlertRow({
       <View style={[layout.flex_1, gutters.gap_4]}>
         <Text style={[fonts.size_14, fonts.gray800]}>{title}</Text>
         <Text style={[fonts.size_12, fonts.red500]}>
-          {isLow
-            ? t('screen_overview.alerts.low_stock', { quantity })
-            : t('screen_overview.alerts.expired_on', { date: quantity })}
+          {isOut
+            ? t('screen_overview.alerts.out_stock')
+            : isLow
+              ? t('screen_overview.alerts.low_stock', { quantity })
+              : t('screen_overview.alerts.expired_on', { date: quantity })}
         </Text>
       </View>
 

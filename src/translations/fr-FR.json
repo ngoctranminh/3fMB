@@ -99,6 +99,7 @@
       "value_label": "Valeur",
       "empty": "Aucun ingrédient trouvé",
       "status_low": "Bientôt épuisé",
+      "status_out": "En rupture",
       "status_expired": "Périmé",
       "status_ok": "En stock",
       "filter_title": "Filtrer par statut",
@@ -106,6 +107,7 @@
         "all": "Tous",
         "ok": "En stock",
         "low": "Bientôt épuisé",
+        "out": "En rupture",
         "expired": "Périmé"
       },
       "categories": {
@@ -144,6 +146,7 @@
       "adjusting": "Mise à jour...",
       "adjust_failed": "Échec, réessayez.",
       "status_low": "Bas",
+      "status_out": "En rupture",
       "status_expired": "Périmé",
       "status_ok": "En stock"
     },
@@ -196,6 +199,7 @@
         "title": "Alertes",
         "see_all": "Tout voir",
         "low_stock": "Bientôt épuisé ({{quantity}})",
+        "out_stock": "En rupture",
         "expired_on": "Périmé le {{date}}"
       },
       "inventory": {
@@ -203,6 +207,7 @@
         "search_placeholder": "Rechercher un ingrédient...",
         "see_all": "Voir tous les ingrédients →",
         "status_low": "Bientôt épuisé",
+        "status_out": "En rupture",
         "status_expired": "Périmé",
         "status_ok": "En stock"
       },

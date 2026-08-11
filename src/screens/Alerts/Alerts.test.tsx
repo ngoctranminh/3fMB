@@ -118,12 +118,14 @@ describe('Alerts screen', () => {
     expect(screen.getByText('Trứng cá đen')).toBeOnTheScreen();
   });
 
-  it('shows the status label supplied by the server', async () => {
+  it('overrides the server low-stock label when quantity is zero', async () => {
     renderScreen();
 
     await waitFor(() => {
       expect(screen.getByText('Sắp hết (2.5 kg)')).toBeOnTheScreen();
     });
+    expect(screen.getAllByText('Hết hàng').length).toBeGreaterThan(0);
+    expect(screen.queryByText('Sắp hết (0 kg)')).not.toBeOnTheScreen();
     expect(screen.getByText('Còn 3 ngày')).toBeOnTheScreen();
   });
 

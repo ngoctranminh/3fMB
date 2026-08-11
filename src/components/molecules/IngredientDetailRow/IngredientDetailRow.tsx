@@ -23,12 +23,14 @@ function IngredientDetailRow({ item, style, ...props }: Properties) {
     expired: t('screen_ingredients.status_expired'),
     low: t('screen_ingredients.status_low'),
     ok: t('screen_ingredients.status_ok'),
+    out: t('screen_ingredients.status_out'),
   };
 
   const statusTones = {
     expired: 'danger',
     low: 'warning',
     ok: 'success',
+    out: 'danger',
   } as const;
 
   return (

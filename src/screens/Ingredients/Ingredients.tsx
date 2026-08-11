@@ -31,7 +31,7 @@ const PILL_GAP = 16;
 const PILL_HEIGHT = 52;
 const PLUS_SIZE = 20;
 
-type StatusFilter = 'all' | 'expired' | 'low' | 'ok';
+type StatusFilter = 'all' | 'expired' | 'low' | 'ok' | 'out';
 
 function Ingredients({ navigation }: MainTabScreenProps<Paths.Ingredients>) {
   const { t } = useTranslation();
@@ -88,7 +88,13 @@ function Ingredients({ navigation }: MainTabScreenProps<Paths.Ingredients>) {
   };
 
   const handleFilter = () => {
-    const options: readonly StatusFilter[] = ['all', 'ok', 'low', 'expired'];
+    const options: readonly StatusFilter[] = [
+      'all',
+      'ok',
+      'low',
+      'out',
+      'expired',
+    ];
 
     Alert.alert(
       t('screen_ingredients.filter_title'),
@@ -163,7 +169,7 @@ function Ingredients({ navigation }: MainTabScreenProps<Paths.Ingredients>) {
           <View style={[gutters.gap_16, gutters.paddingHorizontal_16]}>
             <IngredientsSummary
               expiredCount={summary?.overdue_count ?? 0}
-              lowCount={summary?.low_stock_count ?? 0}
+              lowCount={items.filter((item) => item.status === 'low').length}
               totalCount={summary?.total_items ?? 0}
               totalValue={summary ? formatCurrency(summary.total_value) : '—'}
             />

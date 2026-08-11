@@ -99,6 +99,7 @@
       "value_label": "Value",
       "empty": "No ingredients found",
       "status_low": "Running low",
+      "status_out": "Out of stock",
       "status_expired": "Expired",
       "status_ok": "In stock",
       "filter_title": "Filter by status",
@@ -106,6 +107,7 @@
         "all": "All",
         "ok": "In stock",
         "low": "Running low",
+        "out": "Out of stock",
         "expired": "Expired"
       },
       "categories": {
@@ -144,6 +146,7 @@
       "adjusting": "Updating...",
       "adjust_failed": "Update failed, please retry.",
       "status_low": "Low",
+      "status_out": "Out of stock",
       "status_expired": "Expired",
       "status_ok": "In stock"
     },
@@ -196,6 +199,7 @@
         "title": "Alerts",
         "see_all": "See all",
         "low_stock": "Running low ({{quantity}})",
+        "out_stock": "Out of stock",
         "expired_on": "Expired {{date}}"
       },
       "inventory": {
@@ -203,6 +207,7 @@
         "search_placeholder": "Search ingredients...",
         "see_all": "See all ingredients →",
         "status_low": "Running low",
+        "status_out": "Out of stock",
         "status_expired": "Expired",
         "status_ok": "In stock"
       },

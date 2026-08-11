@@ -141,7 +141,7 @@ export type AlertItem = {
   readonly date: string;
   readonly id: string;
   readonly quantity: string;
-  readonly severity: 'expired' | 'low';
+  readonly severity: 'expired' | 'low' | 'out';
   readonly title: string;
 };
 
@@ -221,7 +221,7 @@ export type IngredientItem = {
   readonly isLow: boolean;
   readonly name: string;
   readonly quantity: string;
-  readonly status: 'expired' | 'low' | 'ok';
+  readonly status: InventoryStatus;
   readonly unit: string;
   readonly value: string;
 };
@@ -246,9 +246,11 @@ export type InventoryItem = {
   readonly isLow: boolean;
   readonly name: string;
   readonly quantity: string;
-  readonly status: 'expired' | 'low' | 'ok';
+  readonly status: InventoryStatus;
   readonly unit: string;
 };
+
+export type InventoryStatus = 'expired' | 'low' | 'ok' | 'out';
 
 export type InventorySummary = z.infer<typeof inventorySummarySchema>;
 
@@ -261,7 +263,7 @@ export type ItemDetail = {
   readonly note: string;
   readonly quantity: number;
   readonly quantityLabel: string;
-  readonly status: 'expired' | 'low' | 'ok';
+  readonly status: InventoryStatus;
   readonly totalValue: string;
   readonly unit: string;
   readonly unitPrice: string;

@@ -58,14 +58,16 @@ export const toChartPoint = (point: ValuePoint): ChartPoint => ({
 // AlertRow hiển thị ngày hết hạn qua prop `quantity`, không phải `date`
 export const toAlertItem = (alert: ServerAlert): AlertItem => {
   const isLow = alert.kind === 'low_stock';
+  const severity = alert.quantity <= 0 ? 'out' : isLow ? 'low' : 'expired';
 
   return {
     date: alert.date,
     id: String(alert.id),
-    quantity: isLow
-      ? `${String(alert.quantity)} ${alert.unit}`.trim()
-      : alert.date,
-    severity: isLow ? 'low' : 'expired',
+    quantity:
+      isLow || severity === 'out'
+        ? `${String(alert.quantity)} ${alert.unit}`.trim()
+        : alert.date,
+    severity,
     title: alert.full_name,
   };
 };
@@ -86,6 +88,9 @@ const shiftIsoDate = (isoDate: string, days: number) => {
 };
 
 const toStatus = (item: ServerItem, today: string): InventoryItem['status'] => {
+  if (item.quantity <= 0) {
+    return 'out';
+  }
   if (
     item.expires_at !== null &&
     item.expires_at.slice(0, DATE_LENGTH) < today
@@ -127,8 +132,11 @@ const toAlertGroup = (updatedAt: string, today: string): AlertGroup => {
 
 // quantity 0 là hết hàng hẳn, khác với sắp hết — UI tách thành 2 tab riêng
 const toAlertSeverity = (alert: ServerAlert): AlertSeverity => {
+  if (alert.quantity <= 0) {
+    return 'out';
+  }
   if (alert.kind === 'low_stock') {
-    return alert.quantity <= 0 ? 'out' : 'low';
+    return 'low';
   }
   return 'expiring';
 };
@@ -222,7 +230,7 @@ export const toLeafInventoryItems = (
     return {
       fullName: buildTrail(item, byId),
       id: String(item.id),
-      isLow: status === 'low',
+      isLow: status === 'low' || status === 'out',
       name: item.name,
       quantity: String(item.quantity),
       status,
@@ -244,7 +252,7 @@ export const toIngredientItems = (
       fullName: buildTrail(item, byId),
       group: buildRootName(item, byId),
       id: String(item.id),
-      isLow: status === 'low',
+      isLow: status === 'low' || status === 'out',
       name: item.name,
       quantity: String(item.quantity),
       status,

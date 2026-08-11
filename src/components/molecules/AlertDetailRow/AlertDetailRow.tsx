@@ -92,7 +92,13 @@ function AlertDetailRow({ item, style, ...props }: Properties) {
     }
   };
 
-  const status = { color: tint, text: item.statusLabel };
+  const status = {
+    color: tint,
+    text:
+      item.severity === 'out'
+        ? t('screen_alerts.statuses.out')
+        : item.statusLabel,
+  };
 
   return (
     <TouchableOpacity

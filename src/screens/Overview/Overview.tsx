@@ -38,6 +38,9 @@ function Overview({ navigation }: MainTabScreenProps<Paths.Overview>) {
   const itemsQuery = useFetchItemsQuery();
 
   const summary = summaryQuery.data;
+  const lowStockCount = itemsQuery.data?.filter(
+    (item) => item.status === 'low',
+  ).length;
 
   const stats = [
     {
@@ -59,7 +62,7 @@ function Overview({ navigation }: MainTabScreenProps<Paths.Overview>) {
       iconPath: 'warning-triangle',
       label: t('screen_overview.stats.low_label'),
       tone: 'amber',
-      value: summary ? String(summary.low_stock_count) : '—',
+      value: lowStockCount === undefined ? '—' : String(lowStockCount),
     },
     {
       caption: t('screen_overview.stats.expired_unit'),
