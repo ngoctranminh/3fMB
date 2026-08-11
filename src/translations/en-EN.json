@@ -155,12 +155,12 @@
       "password_label": "Password",
       "password_placeholder": "Enter your password",
       "submit": "Sign in",
-      "hint": "Demo account: emilys / emilyspass",
+      "hint": "Use the account provided by your administrator",
       "validation": {
         "username_required": "Please enter your username",
         "username_too_short": "Username must be at least 3 characters",
         "password_required": "Please enter your password",
-        "password_too_short": "Password must be at least 3 characters"
+        "password_too_short": "Password must be at least 8 characters"
       },
       "error": {
         "invalid_credentials": "Incorrect username or password",
@@ -171,7 +171,9 @@
       "title": "More",
       "theme": "Switch light / dark theme",
       "language": "Change language",
-      "logout": "Sign out"
+      "logout": "Sign out",
+      "logging_out": "Signing out...",
+      "logout_error": "Could not sign out from the server. Please retry."
     },
     "screen_overview": {
       "title": "Overview",

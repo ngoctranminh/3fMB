@@ -155,12 +155,12 @@
       "password_label": "Mot de passe",
       "password_placeholder": "Saisissez votre mot de passe",
       "submit": "Se connecter",
-      "hint": "Compte de démonstration : emilys / emilyspass",
+      "hint": "Utilisez le compte fourni par votre administrateur",
       "validation": {
         "username_required": "Veuillez saisir votre nom d'utilisateur",
         "username_too_short": "Le nom d'utilisateur doit contenir au moins 3 caractères",
         "password_required": "Veuillez saisir votre mot de passe",
-        "password_too_short": "Le mot de passe doit contenir au moins 3 caractères"
+        "password_too_short": "Le mot de passe doit contenir au moins 8 caractères"
       },
       "error": {
         "invalid_credentials": "Nom d'utilisateur ou mot de passe incorrect",
@@ -171,7 +171,9 @@
       "title": "Plus",
       "theme": "Changer le thème clair / sombre",
       "language": "Changer la langue",
-      "logout": "Déconnexion"
+      "logout": "Déconnexion",
+      "logging_out": "Déconnexion...",
+      "logout_error": "Impossible de se déconnecter du serveur. Réessayez."
     },
     "screen_overview": {
       "title": "Vue d'ensemble",

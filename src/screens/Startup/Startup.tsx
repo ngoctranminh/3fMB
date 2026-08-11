@@ -1,8 +1,7 @@
-import { useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, Text, View } from 'react-native';
+import { ActivityIndicator, View } from 'react-native';
 
+import { useAuth } from '@/hooks';
 import { Paths } from '@/navigation/paths';
 import type { RootScreenProps } from '@/navigation/types';
 import { useTheme } from '@/theme';
@@ -11,27 +10,27 @@ import { AssetByVariant } from '@/components/atoms';
 import { SafeScreen } from '@/components/templates';
 
 function Startup({ navigation }: RootScreenProps<Paths.Startup>) {
-  const { fonts, gutters, layout } = useTheme();
-  const { t } = useTranslation();
+  const { gutters, layout } = useTheme();
+  const { useCurrentUserQuery } = useAuth();
 
-  const { isError, isFetching, isSuccess } = useQuery({
-    queryFn: () => {
-      return Promise.resolve(true);
-    },
-    queryKey: ['startup'],
-  });
+  const sessionQuery = useCurrentUserQuery();
 
   useEffect(() => {
-    if (isSuccess) {
+    if (sessionQuery.isSuccess) {
       navigation.reset({
         index: 0,
-        routes: [{ name: Paths.Login }],
+        routes: [{ name: sessionQuery.data ? Paths.MainTabs : Paths.Login }],
       });
     }
-  }, [isSuccess, navigation]);
+  }, [navigation, sessionQuery.data, sessionQuery.isSuccess]);
 
   return (
-    <SafeScreen>
+    <SafeScreen
+      isError={sessionQuery.isError}
+      onResetError={() => {
+        void sessionQuery.refetch();
+      }}
+    >
       <View
         style={[
           layout.flex_1,
@@ -45,11 +44,8 @@ function Startup({ navigation }: RootScreenProps<Paths.Startup>) {
           resizeMode="contain"
           style={{ height: 300, width: 300 }}
         />
-        {isFetching ? (
+        {sessionQuery.isFetching ? (
           <ActivityIndicator size="large" style={[gutters.marginVertical_24]} />
-        ) : undefined}
-        {isError ? (
-          <Text style={[fonts.size_16, fonts.red500]}>{t('common_error')}</Text>
         ) : undefined}
       </View>
     </SafeScreen>

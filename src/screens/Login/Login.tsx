@@ -36,8 +36,8 @@ function Login({ navigation }: RootScreenProps<Paths.Login>) {
   const { colors, components, fonts, gutters, layout } = useTheme();
   const { useLoginMutation } = useAuth();
 
-  const [username, setUsername] = useState('emilys');
-  const [password, setPassword] = useState('emilyspass');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [focusedField, setFocusedField] = useState<string | undefined>(
     undefined,

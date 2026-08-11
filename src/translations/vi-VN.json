@@ -155,12 +155,12 @@
       "password_label": "Mật khẩu",
       "password_placeholder": "Nhập mật khẩu",
       "submit": "Đăng nhập",
-      "hint": "Tài khoản dùng thử: emilys / emilyspass",
+      "hint": "Sử dụng tài khoản do quản trị viên cung cấp",
       "validation": {
         "username_required": "Vui lòng nhập tên đăng nhập",
         "username_too_short": "Tên đăng nhập phải có ít nhất 3 ký tự",
         "password_required": "Vui lòng nhập mật khẩu",
-        "password_too_short": "Mật khẩu phải có ít nhất 3 ký tự"
+        "password_too_short": "Mật khẩu phải có ít nhất 8 ký tự"
       },
       "error": {
         "invalid_credentials": "Tên đăng nhập hoặc mật khẩu không đúng",
@@ -171,7 +171,9 @@
       "title": "Thêm",
       "theme": "Đổi giao diện sáng / tối",
       "language": "Đổi ngôn ngữ",
-      "logout": "Đăng xuất"
+      "logout": "Đăng xuất",
+      "logging_out": "Đang đăng xuất...",
+      "logout_error": "Không thể đăng xuất khỏi server. Vui lòng thử lại."
     },
     "screen_overview": {
       "title": "Tổng quan",

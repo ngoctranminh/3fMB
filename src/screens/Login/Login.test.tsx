@@ -27,13 +27,7 @@ jest.mock('@/hooks/domain/auth/authService', () => {
 const loginMock = jest.mocked(AuthServices.login);
 
 const authenticatedUser = {
-  accessToken: 'access-token',
-  email: 'emily.johnson@x.dummyjson.com',
-  firstName: 'Emily',
   id: 1,
-  image: 'https://dummyjson.com/icon/emilys/128',
-  lastName: 'Johnson',
-  refreshToken: 'refresh-token',
   username: 'emilys',
 };
 
@@ -142,7 +136,10 @@ describe('Login screen', () => {
     renderScreen();
 
     fireEvent.changeText(screen.getByTestId('login-username-input'), 'emilys');
-    fireEvent.changeText(screen.getByTestId('login-password-input'), 'wrong');
+    fireEvent.changeText(
+      screen.getByTestId('login-password-input'),
+      'wrongpass',
+    );
     fireEvent.press(screen.getByTestId('login-submit-button'));
 
     await waitFor(() => {

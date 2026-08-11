@@ -1,6 +1,6 @@
 import type { Credentials } from './schema';
 
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { AuthServices } from './authService';
 
@@ -9,6 +9,22 @@ const useLoginMutation = () =>
     mutationFn: (credentials: Credentials) => AuthServices.login(credentials),
   });
 
+const useCurrentUserQuery = () =>
+  useQuery({
+    queryFn: AuthServices.getCurrentUser,
+    queryKey: ['auth', 'currentUser'],
+  });
+
 export const useAuth = () => {
-  return { useLoginMutation };
+  const client = useQueryClient();
+
+  const useLogoutMutation = () =>
+    useMutation({
+      mutationFn: AuthServices.logout,
+      onSuccess: () => {
+        client.removeQueries();
+      },
+    });
+
+  return { useCurrentUserQuery, useLoginMutation, useLogoutMutation };
 };
