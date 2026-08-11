@@ -25,7 +25,7 @@ export const createDetailScreenProps = <
   S extends Paths.ItemDetail | Paths.ReceiptDetail,
 >(
   name: S,
-  params: RootScreenProps<S>['route']['params'],
+  parameters: RootScreenProps<S>['route']['params'],
 ) => {
   const goBack = jest.fn();
 
@@ -33,7 +33,7 @@ export const createDetailScreenProps = <
     goBack,
     props: {
       navigation: { goBack },
-      route: { key: `${name}-test`, name, params },
+      route: { key: `${name}-test`, name, params: parameters },
     } as unknown as RootScreenProps<S>,
   };
 };

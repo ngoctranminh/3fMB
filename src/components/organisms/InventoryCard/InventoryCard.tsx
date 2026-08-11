@@ -1,6 +1,6 @@
 import { Fragment, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Alert, Text, TouchableOpacity, View } from 'react-native';
 
 import type { InventoryItem } from '@/hooks/domain/inventory/schema';
 import { useTheme } from '@/theme';
@@ -18,6 +18,8 @@ type Properties = {
   readonly onSelectItem?: (itemId: string) => void;
 };
 
+type StatusFilter = 'all' | 'expired' | 'low' | 'ok';
+
 function InventoryCard({
   items,
   onSeeAll = undefined,
@@ -27,16 +29,43 @@ function InventoryCard({
   const { backgrounds, colors, fonts, gutters, layout } = useTheme();
 
   const [query, setQuery] = useState('');
+  const [sortAscending, setSortAscending] = useState(true);
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
 
   const visibleItems = useMemo(() => {
     const normalized = query.trim().toLowerCase();
 
-    if (normalized.length === 0) {
-      return items;
-    }
+    const filteredItems = items.filter((item) => {
+      const matchesQuery =
+        normalized.length === 0 ||
+        item.fullName.toLowerCase().includes(normalized);
+      const matchesStatus =
+        statusFilter === 'all' || item.status === statusFilter;
+      return matchesQuery && matchesStatus;
+    });
 
-    return items.filter((item) => item.name.toLowerCase().includes(normalized));
-  }, [items, query]);
+    // React Native's current JS target does not expose Array#toSorted yet.
+    // eslint-disable-next-line unicorn/no-array-sort
+    return filteredItems.sort((left, right) => {
+      const result = left.fullName.localeCompare(right.fullName, 'vi');
+      return sortAscending ? result : -result;
+    });
+  }, [items, query, sortAscending, statusFilter]);
+
+  const handleFilter = () => {
+    const options: readonly StatusFilter[] = ['all', 'ok', 'low', 'expired'];
+
+    Alert.alert(
+      t('screen_ingredients.filter_title'),
+      undefined,
+      options.map((option) => ({
+        onPress: () => {
+          setStatusFilter(option);
+        },
+        text: t(`screen_ingredients.filters.${option}`),
+      })),
+    );
+  };
 
   return (
     <Card>
@@ -44,6 +73,10 @@ function InventoryCard({
 
       <SearchBar
         onChangeText={setQuery}
+        onFilter={handleFilter}
+        onSort={() => {
+          setSortAscending((previous) => !previous);
+        }}
         style={[gutters.marginTop_16]}
         value={query}
       />

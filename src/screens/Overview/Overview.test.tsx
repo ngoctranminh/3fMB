@@ -6,6 +6,7 @@ import {
   waitFor,
 } from '@testing-library/react-native';
 import { I18nextProvider } from 'react-i18next';
+import { Alert } from 'react-native';
 import { createMMKV, MMKV } from 'react-native-mmkv';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
@@ -131,28 +132,33 @@ describe('Overview screen', () => {
     });
     expect(screen.getByText('34.449.500đ')).toBeOnTheScreen();
 
-    expect(screen.getAllByText('Giá trị tồn kho')).toHaveLength(2);
-    expect(screen.getByText('7 ngày qua')).toBeOnTheScreen();
+    expect(screen.getAllByText('Giá trị tồn kho')).toHaveLength(1);
 
     expect(screen.getByText('Đông lạnh / Mực / Đã làm')).toBeOnTheScreen();
     expect(screen.getAllByText('Sắp hết').length).toBeGreaterThan(0);
     expect(screen.getByText('Chưa làm')).toBeOnTheScreen();
   });
 
-  it('renders the chart after the card reports its width', async () => {
-    renderScreen();
-
-    await waitFor(() => {
-      expect(screen.getByText('66')).toBeOnTheScreen();
+  it('opens the More tab from the menu button', () => {
+    const navigation = createTabScreenProps(Paths.Overview);
+    const queryClient = new QueryClient({
+      defaultOptions: { queries: { retry: false } },
     });
 
-    fireEvent(screen.getByTestId('chart-body'), 'layout', {
-      nativeEvent: { layout: { height: 180, width: 320, x: 0, y: 0 } },
-    });
+    render(
+      <SafeAreaProvider>
+        <QueryClientProvider client={queryClient}>
+          <ThemeProvider storage={storage}>
+            <I18nextProvider i18n={i18n}>
+              <Overview {...navigation.props} />
+            </I18nextProvider>
+          </ThemeProvider>
+        </QueryClientProvider>
+      </SafeAreaProvider>,
+    );
 
-    expect(screen.getByText('50M')).toBeOnTheScreen();
-    expect(screen.getByText('31/07')).toBeOnTheScreen();
-    expect(screen.getByText('06/08')).toBeOnTheScreen();
+    fireEvent.press(screen.getByTestId('overview-menu-button'));
+    expect(navigation.navigate).toHaveBeenCalledWith(Paths.More);
   });
 
   it('filters the inventory list by the search query', async () => {
@@ -166,5 +172,21 @@ describe('Overview screen', () => {
 
     expect(screen.getByText('Đen')).toBeOnTheScreen();
     expect(screen.queryByText('Chưa làm')).not.toBeOnTheScreen();
+  });
+
+  it('opens the inventory status filter', async () => {
+    const alert = jest.spyOn(Alert, 'alert').mockImplementation();
+    renderScreen();
+
+    await waitFor(() => {
+      expect(screen.getByText('Chưa làm')).toBeOnTheScreen();
+    });
+
+    fireEvent.press(screen.getByTestId('inventory-filter-button'));
+    expect(alert).toHaveBeenCalledWith(
+      'Lọc theo trạng thái',
+      undefined,
+      expect.any(Array),
+    );
   });
 });

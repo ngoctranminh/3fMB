@@ -1,4 +1,6 @@
+import type { Ref } from 'react';
 import type { ViewProps } from 'react-native';
+import type { TextInput as TextInputType } from 'react-native';
 
 import { useTranslation } from 'react-i18next';
 import { TextInput, View } from 'react-native';
@@ -8,6 +10,7 @@ import { useTheme } from '@/theme';
 import { IconButton, IconByVariant } from '@/components/atoms';
 
 type Properties = {
+  readonly inputRef?: Ref<TextInputType>;
   readonly onChangeText: (value: string) => void;
   readonly onFilter?: () => void;
   readonly onSort?: () => void;
@@ -17,6 +20,7 @@ type Properties = {
 const ICON_SIZE = 18;
 
 function SearchBar({
+  inputRef: inputReference = undefined,
   onChangeText,
   onFilter = undefined,
   onSort = undefined,
@@ -43,6 +47,7 @@ function SearchBar({
           onChangeText={onChangeText}
           placeholder={t('screen_overview.inventory.search_placeholder')}
           placeholderTextColor={colors.gray200}
+          ref={inputReference}
           style={[components.searchInput]}
           testID="inventory-search-input"
           value={value}

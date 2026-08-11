@@ -1,5 +1,7 @@
 export const enum Paths {
+  AddIngredient = 'addIngredient',
   Alerts = 'alerts',
+  CreateDocument = 'createDocument',
   Example = 'example',
   Ingredients = 'ingredients',
   ItemDetail = 'itemDetail',

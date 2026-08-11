@@ -1,3 +1,5 @@
+import type { TransactionPeriod } from './schema';
+
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { InventoryServices } from './inventoryService';
@@ -7,6 +9,7 @@ const enum InventoryQueryKey {
   fetchAlerts = 'fetchInventoryAlerts',
   fetchDocumentDetail = 'fetchInventoryDocumentDetail',
   fetchIngredients = 'fetchInventoryIngredients',
+  fetchInventoryCatalog = 'fetchInventoryCatalog',
   fetchItemDetail = 'fetchInventoryItemDetail',
   fetchItemLedger = 'fetchInventoryItemLedger',
   fetchItems = 'fetchInventoryItems',
@@ -70,10 +73,16 @@ const useFetchTodayTotalsQuery = () =>
     queryKey: [InventoryQueryKey.fetchTodayTotals],
   });
 
-const useFetchTransactionsQuery = () =>
+const useFetchTransactionsQuery = (period: TransactionPeriod = 'all') =>
   useQuery({
-    queryFn: () => InventoryServices.fetchTransactions(),
-    queryKey: [InventoryQueryKey.fetchTransactions],
+    queryFn: () => InventoryServices.fetchTransactions(period),
+    queryKey: [InventoryQueryKey.fetchTransactions, period],
+  });
+
+const useFetchInventoryCatalogQuery = () =>
+  useQuery({
+    queryFn: () => InventoryServices.fetchInventoryCatalog(),
+    queryKey: [InventoryQueryKey.fetchInventoryCatalog],
   });
 
 const useFetchValueHistoryQuery = (days: number) =>
@@ -88,6 +97,7 @@ const ALL_QUERY_KEYS = [
   InventoryQueryKey.fetchAlerts,
   InventoryQueryKey.fetchDocumentDetail,
   InventoryQueryKey.fetchIngredients,
+  InventoryQueryKey.fetchInventoryCatalog,
   InventoryQueryKey.fetchItemDetail,
   InventoryQueryKey.fetchItemLedger,
   InventoryQueryKey.fetchItems,
@@ -129,14 +139,29 @@ export const useInventory = () => {
       onSuccess: invalidateAll,
     });
 
+  const useCreateDocumentMutation = () =>
+    useMutation({
+      mutationFn: InventoryServices.createDocument,
+      onSuccess: invalidateAll,
+    });
+
+  const useCreateItemMutation = () =>
+    useMutation({
+      mutationFn: InventoryServices.createItem,
+      onSuccess: invalidateAll,
+    });
+
   return {
     invalidateQuery,
     useAdjustQuantityMutation,
     useCancelDocumentMutation,
+    useCreateDocumentMutation,
+    useCreateItemMutation,
     useFetchAlertBoardQuery,
     useFetchAlertsQuery,
     useFetchDocumentDetailQuery,
     useFetchIngredientsQuery,
+    useFetchInventoryCatalogQuery,
     useFetchItemDetailQuery,
     useFetchItemLedgerQuery,
     useFetchItemsQuery,

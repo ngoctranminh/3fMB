@@ -119,8 +119,8 @@ export const serverDocumentDetailSchema = serverDocumentSchema.extend({
   lines: z.array(serverDocumentLineSchema),
   note: z.string(),
   occurred_at: z.string(),
-  type_label: z.string(),
   status_label: z.string(),
+  type_label: z.string(),
 });
 
 export type AlertDetail = {
@@ -160,14 +160,28 @@ export type ChartPoint = {
   readonly value: number;
 };
 
-export type DocumentLine = {
-  readonly fullName: string;
-  readonly id: string;
+export type CreateDocumentInput = {
+  readonly created_by: string;
+  readonly lines: readonly {
+    readonly item_id: number;
+    readonly note: string;
+    readonly quantity: number;
+    readonly unit_price?: number;
+  }[];
+  readonly note: string;
+  readonly party: string;
+  readonly subtype: DocumentSubtype;
+};
+
+export type CreateItemInput = {
+  readonly expires_at: string | undefined;
+  readonly min_quantity: number;
   readonly name: string;
   readonly note: string;
-  readonly quantity: string;
-  readonly totalPrice: string;
-  readonly unitPrice: string;
+  readonly parent_id: number;
+  readonly quantity: number;
+  readonly unit: string;
+  readonly unit_price: number;
 };
 
 export type DocumentDetail = {
@@ -185,6 +199,58 @@ export type DocumentDetail = {
   readonly totalValue: string;
   readonly user: string;
 };
+
+export type DocumentLine = {
+  readonly fullName: string;
+  readonly id: string;
+  readonly name: string;
+  readonly note: string;
+  readonly quantity: string;
+  readonly totalPrice: string;
+  readonly unitPrice: string;
+};
+
+export type DocumentsSummary = z.infer<typeof documentsSummarySchema>;
+
+export type DocumentSubtype = z.infer<typeof documentSubtypeSchema>;
+
+export type IngredientItem = {
+  readonly fullName: string;
+  readonly group: string;
+  readonly id: string;
+  readonly isLow: boolean;
+  readonly name: string;
+  readonly quantity: string;
+  readonly status: 'expired' | 'low' | 'ok';
+  readonly unit: string;
+  readonly value: string;
+};
+
+export type InventoryCatalog = {
+  readonly groups: readonly {
+    readonly id: string;
+    readonly name: string;
+  }[];
+  readonly items: readonly {
+    readonly fullName: string;
+    readonly id: string;
+    readonly name: string;
+    readonly unit: string;
+    readonly unitPrice: number;
+  }[];
+};
+
+export type InventoryItem = {
+  readonly fullName: string;
+  readonly id: string;
+  readonly isLow: boolean;
+  readonly name: string;
+  readonly quantity: string;
+  readonly status: 'expired' | 'low' | 'ok';
+  readonly unit: string;
+};
+
+export type InventorySummary = z.infer<typeof inventorySummarySchema>;
 
 export type ItemDetail = {
   readonly expiresAt: null | string;
@@ -210,45 +276,17 @@ export type LedgerEntry = {
   readonly totalPrice: string;
 };
 
-export type DocumentsSummary = z.infer<typeof documentsSummarySchema>;
-
-export type DocumentSubtype = z.infer<typeof documentSubtypeSchema>;
-
-export type IngredientItem = {
-  readonly fullName: string;
-  readonly group: string;
-  readonly id: string;
-  readonly isLow: boolean;
-  readonly name: string;
-  readonly quantity: string;
-  readonly status: 'expired' | 'low' | 'ok';
-  readonly unit: string;
-  readonly value: string;
-};
-
-export type InventoryItem = {
-  readonly fullName: string;
-  readonly id: string;
-  readonly isLow: boolean;
-  readonly name: string;
-  readonly quantity: string;
-  readonly status: 'expired' | 'low' | 'ok';
-  readonly unit: string;
-};
-
-export type InventorySummary = z.infer<typeof inventorySummarySchema>;
-
 export type ServerAlert = z.infer<typeof serverAlertSchema>;
 
 export type ServerDocument = z.infer<typeof serverDocumentSchema>;
 
 export type ServerDocumentDetail = z.infer<typeof serverDocumentDetailSchema>;
 
+export type ServerItem = z.infer<typeof serverItemSchema>;
+
 export type ServerItemDetail = z.infer<typeof serverItemDetailSchema>;
 
 export type ServerLedgerEntry = z.infer<typeof serverLedgerEntrySchema>;
-
-export type ServerItem = z.infer<typeof serverItemSchema>;
 
 export type TodayTotals = {
   readonly exportCount: number;
@@ -271,5 +309,7 @@ export type TransactionItem = {
 };
 
 export type TransactionKind = 'export' | 'import';
+
+export type TransactionPeriod = 'all' | 'month' | 'today' | 'week';
 
 export type ValuePoint = z.infer<typeof valuePointSchema>;

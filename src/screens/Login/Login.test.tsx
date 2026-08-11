@@ -81,6 +81,8 @@ describe('Login screen', () => {
   test('shows validation errors when both fields are empty', () => {
     renderScreen();
 
+    fireEvent.changeText(screen.getByTestId('login-username-input'), '');
+    fireEvent.changeText(screen.getByTestId('login-password-input'), '');
     fireEvent.press(screen.getByTestId('login-submit-button'));
 
     expect(screen.getByTestId('login-username-error')).toBeTruthy();

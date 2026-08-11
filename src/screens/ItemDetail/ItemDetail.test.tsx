@@ -29,6 +29,8 @@ jest.mock('@/hooks/domain/inventory/inventoryService', () => ({
 const mockedServices = jest.mocked(InventoryServices);
 
 const ITEM = {
+  // UI model and server payload both use null for a missing expiry date.
+  // eslint-disable-next-line unicorn/no-null
   expiresAt: null,
   fullName: 'Đông lạnh / Mực / Chưa làm',
   id: 3,
@@ -93,6 +95,7 @@ describe('ItemDetail screen', () => {
     mockedServices.fetchItemDetail.mockResolvedValue(ITEM);
     mockedServices.fetchItemLedger.mockResolvedValue(LEDGER);
     mockedServices.adjustItemQuantity.mockResolvedValue({
+      // eslint-disable-next-line unicorn/no-null
       expires_at: null,
       id: 3,
       min_quantity: 3,

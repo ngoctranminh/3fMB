@@ -1,13 +1,19 @@
-import type { MainTabScreenProps } from '@/navigation/types';
-
-import { Fragment, useMemo, useState } from 'react';
+import { Fragment, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import {
+  Alert,
+  ScrollView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useInventory } from '@/hooks';
 import { formatCurrency } from '@/hooks/domain/inventory/adapters';
 import { Paths } from '@/navigation/paths';
+import type { MainTabScreenProps } from '@/navigation/types';
 import { useTheme } from '@/theme';
 
 import { Card, CategoryChip, IconByVariant } from '@/components/atoms';
@@ -25,6 +31,8 @@ const PILL_GAP = 16;
 const PILL_HEIGHT = 52;
 const PLUS_SIZE = 20;
 
+type StatusFilter = 'all' | 'expired' | 'low' | 'ok';
+
 function Ingredients({ navigation }: MainTabScreenProps<Paths.Ingredients>) {
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
@@ -39,6 +47,9 @@ function Ingredients({ navigation }: MainTabScreenProps<Paths.Ingredients>) {
 
   const [group, setGroup] = useState<string>(ALL_GROUPS);
   const [query, setQuery] = useState('');
+  const [sortAscending, setSortAscending] = useState(true);
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
+  const searchInputReference = useRef<TextInput>(null);
 
   const items = useMemo(
     () => ingredientsQuery.data?.items ?? [],
@@ -49,14 +60,24 @@ function Ingredients({ navigation }: MainTabScreenProps<Paths.Ingredients>) {
   const visibleItems = useMemo(() => {
     const normalized = query.trim().toLowerCase();
 
-    return items.filter((item) => {
+    const filteredItems = items.filter((item) => {
       const matchesGroup = group === ALL_GROUPS || item.group === group;
+      const matchesStatus =
+        statusFilter === 'all' || item.status === statusFilter;
       const matchesQuery =
-        normalized.length === 0 || item.name.toLowerCase().includes(normalized);
+        normalized.length === 0 ||
+        item.fullName.toLowerCase().includes(normalized);
 
-      return matchesGroup && matchesQuery;
+      return matchesGroup && matchesStatus && matchesQuery;
     });
-  }, [group, items, query]);
+
+    // React Native's current JS target does not expose Array#toSorted yet.
+    // eslint-disable-next-line unicorn/no-array-sort
+    return filteredItems.sort((left, right) => {
+      const result = left.fullName.localeCompare(right.fullName, 'vi');
+      return sortAscending ? result : -result;
+    });
+  }, [group, items, query, sortAscending, statusFilter]);
 
   const summary = summaryQuery.data;
   const isError = ingredientsQuery.isError || summaryQuery.isError;
@@ -64,6 +85,21 @@ function Ingredients({ navigation }: MainTabScreenProps<Paths.Ingredients>) {
   const handleResetError = () => {
     void ingredientsQuery.refetch();
     void summaryQuery.refetch();
+  };
+
+  const handleFilter = () => {
+    const options: readonly StatusFilter[] = ['all', 'ok', 'low', 'expired'];
+
+    Alert.alert(
+      t('screen_ingredients.filter_title'),
+      undefined,
+      options.map((option) => ({
+        onPress: () => {
+          setStatusFilter(option);
+        },
+        text: t(`screen_ingredients.filters.${option}`),
+      })),
+    );
   };
 
   return (
@@ -85,7 +121,18 @@ function Ingredients({ navigation }: MainTabScreenProps<Paths.Ingredients>) {
           showsVerticalScrollIndicator={false}
         >
           <View style={[gutters.paddingHorizontal_16]}>
-            <IngredientsHeader />
+            <IngredientsHeader
+              onBack={() => {
+                navigation.navigate(Paths.Overview);
+              }}
+              onFilter={handleFilter}
+              onMenu={() => {
+                navigation.navigate(Paths.More);
+              }}
+              onSearch={() => {
+                searchInputReference.current?.focus();
+              }}
+            />
           </View>
 
           <ScrollView
@@ -122,7 +169,15 @@ function Ingredients({ navigation }: MainTabScreenProps<Paths.Ingredients>) {
             />
 
             <Card>
-              <SearchBar onChangeText={setQuery} value={query} />
+              <SearchBar
+                inputRef={searchInputReference}
+                onChangeText={setQuery}
+                onFilter={handleFilter}
+                onSort={() => {
+                  setSortAscending((previous) => !previous);
+                }}
+                value={query}
+              />
 
               <View style={[gutters.marginTop_8]}>
                 {visibleItems.length === 0 ? (
@@ -168,6 +223,9 @@ function Ingredients({ navigation }: MainTabScreenProps<Paths.Ingredients>) {
         >
           <TouchableOpacity
             accessibilityRole="button"
+            onPress={() => {
+              navigation.navigate(Paths.AddIngredient);
+            }}
             style={[components.buttonPill]}
             testID="ingredients-add"
           >

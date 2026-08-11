@@ -10,6 +10,26 @@
       "description": "Chúng tôi xin lỗi vì sự bất tiện này. Vui lòng thử lại sau.",
       "cta": "Tải lại màn hình"
     },
+    "screen_add_ingredient": {
+      "title": "Thêm nguyên liệu",
+      "group": "Nhóm nguyên liệu",
+      "name": "Tên nguyên liệu",
+      "quantity": "Tồn đầu",
+      "unit": "Đơn vị",
+      "unit_price": "Đơn giá",
+      "min_quantity": "Định mức tồn tối thiểu",
+      "expires_at": "Hạn dùng",
+      "note": "Ghi chú",
+      "submit": "Lưu nguyên liệu",
+      "error": "Không thể thêm nguyên liệu. Vui lòng kiểm tra và thử lại.",
+      "validation": {
+        "group": "Vui lòng chọn nhóm nguyên liệu",
+        "name": "Vui lòng nhập tên nguyên liệu",
+        "unit": "Vui lòng nhập đơn vị",
+        "numbers": "Số lượng và đơn giá phải là số không âm",
+        "date": "Ngày phải có dạng YYYY-MM-DD"
+      }
+    },
     "screen_alerts": {
       "title": "Cảnh báo",
       "subtitle": "Kho Quán Ăn",
@@ -55,6 +75,22 @@
       "title": "Chào mừng đến với $t(common_appName.full)",
       "description": "Bạn muốn khám phá một số tính năng? Hãy bấm vào một trong ba nút ở cuối màn hình. Nút đầu tiên gọi một REST API. Nút thứ hai đổi màu chủ đề. Và nút thứ ba đổi ngôn ngữ."
     },
+    "screen_create_document": {
+      "title": "Tạo phiếu nhập / xuất",
+      "subtype": "Loại phiếu",
+      "item": "Nguyên liệu",
+      "party": "Đối tác / bộ phận",
+      "quantity": "Số lượng",
+      "unit_price": "Đơn giá",
+      "note": "Ghi chú",
+      "submit": "Tạo phiếu",
+      "error": "Không thể tạo phiếu. Vui lòng kiểm tra tồn kho và thử lại.",
+      "validation": {
+        "item": "Vui lòng chọn nguyên liệu",
+        "quantity": "Số lượng phải lớn hơn 0",
+        "unit_price": "Đơn giá phải là số không âm"
+      }
+    },
     "screen_ingredients": {
       "title": "Nguyên liệu",
       "subtitle": "Kho Quán Ăn",
@@ -65,6 +101,13 @@
       "status_low": "Sắp hết",
       "status_expired": "Hết hạn",
       "status_ok": "Đủ hàng",
+      "filter_title": "Lọc theo trạng thái",
+      "filters": {
+        "all": "Tất cả",
+        "ok": "Đủ hàng",
+        "low": "Sắp hết",
+        "expired": "Hết hạn"
+      },
       "categories": {
         "all": "Tất cả",
         "dairy": "Sữa, trứng",
@@ -123,6 +166,12 @@
         "invalid_credentials": "Tên đăng nhập hoặc mật khẩu không đúng",
         "network": "Không kết nối được tới server. Vui lòng kiểm tra mạng và thử lại."
       }
+    },
+    "screen_more": {
+      "title": "Thêm",
+      "theme": "Đổi giao diện sáng / tối",
+      "language": "Đổi ngôn ngữ",
+      "logout": "Đăng xuất"
     },
     "screen_overview": {
       "title": "Tổng quan",
@@ -185,6 +234,7 @@
       "filter": "Lọc",
       "search_placeholder": "Tìm phiếu nhập / xuất, NCC, ghi chú...",
       "range_today": "Hôm nay",
+      "period_title": "Khoảng thời gian",
       "empty": "Không tìm thấy phiếu nào",
       "tabs": {
         "import": "Nhập kho",
@@ -202,7 +252,29 @@
         "other": {
           "label": "Nhập khác",
           "caption": "Nhập nội bộ"
+        },
+        "other_in": {
+          "label": "Nhập khác",
+          "caption": "Nhập nội bộ"
+        },
+        "usage": {
+          "label": "Xuất dùng",
+          "caption": "Cho bếp, pha chế"
+        },
+        "waste": {
+          "label": "Xuất huỷ",
+          "caption": "Hỏng, hết hạn"
+        },
+        "other_out": {
+          "label": "Xuất khác",
+          "caption": "Xuất nội bộ"
         }
+      },
+      "periods": {
+        "today": "Hôm nay",
+        "week": "7 ngày qua",
+        "month": "Tháng này",
+        "all": "Tất cả"
       },
       "today": {
         "title": "Thông tin hôm nay",

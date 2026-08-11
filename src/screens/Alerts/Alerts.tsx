@@ -1,6 +1,7 @@
 import { Fragment, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
+  Alert,
   ScrollView,
   Text,
   TextInput,
@@ -14,8 +15,8 @@ import type {
   AlertGroup,
   AlertSeverity,
 } from '@/hooks/domain/inventory/schema';
-import type { MainTabScreenProps } from '@/navigation/types';
 import { Paths } from '@/navigation/paths';
+import type { MainTabScreenProps } from '@/navigation/types';
 import { useTheme } from '@/theme';
 
 import { Card, IconButton, IconByVariant } from '@/components/atoms';
@@ -48,6 +49,7 @@ function Alerts({ navigation }: MainTabScreenProps<Paths.Alerts>) {
 
   const [tab, setTab] = useState<AlertTab>('all');
   const [query, setQuery] = useState('');
+  const [sortAscending, setSortAscending] = useState(true);
   const [collapsedGroups, setCollapsedGroups] = useState<readonly AlertGroup[]>(
     [],
   );
@@ -67,7 +69,7 @@ function Alerts({ navigation }: MainTabScreenProps<Paths.Alerts>) {
   const visibleItems = useMemo(() => {
     const normalized = query.trim().toLowerCase();
 
-    return alerts.filter((item) => {
+    const filteredItems = alerts.filter((item) => {
       const matchesTab = tab === 'all' || item.severity === tab;
       const matchesQuery =
         normalized.length === 0 ||
@@ -76,7 +78,14 @@ function Alerts({ navigation }: MainTabScreenProps<Paths.Alerts>) {
 
       return matchesTab && matchesQuery;
     });
-  }, [alerts, query, tab]);
+
+    // React Native's current JS target does not expose Array#toSorted yet.
+    // eslint-disable-next-line unicorn/no-array-sort
+    return filteredItems.sort((left, right) => {
+      const result = left.fullName.localeCompare(right.fullName, 'vi');
+      return sortAscending ? result : -result;
+    });
+  }, [alerts, query, sortAscending, tab]);
 
   const tabOptions = ALERT_TABS.map((id) => ({
     count: id === 'all' ? totalCount : totals[id],
@@ -107,6 +116,19 @@ function Alerts({ navigation }: MainTabScreenProps<Paths.Alerts>) {
     void alertBoardQuery.refetch();
   };
 
+  const handleFilter = () => {
+    Alert.alert(
+      t('screen_alerts.filter'),
+      undefined,
+      ALERT_TABS.map((option) => ({
+        onPress: () => {
+          setTab(option);
+        },
+        text: t(`screen_alerts.tabs.${option}`),
+      })),
+    );
+  };
+
   return (
     <SafeScreen
       edges={['top', 'left', 'right']}
@@ -128,7 +150,17 @@ function Alerts({ navigation }: MainTabScreenProps<Paths.Alerts>) {
           showsVerticalScrollIndicator={false}
         >
           <View style={[gutters.paddingHorizontal_16]}>
-            <AlertsHeader alertCount={totalCount} />
+            <AlertsHeader
+              alertCount={totalCount}
+              onBell={() => {
+                setTab('all');
+                setQuery('');
+                setCollapsedGroups([]);
+              }}
+              onMenu={() => {
+                navigation.navigate(Paths.More);
+              }}
+            />
           </View>
 
           <View style={[gutters.paddingHorizontal_16]}>
@@ -170,6 +202,7 @@ function Alerts({ navigation }: MainTabScreenProps<Paths.Alerts>) {
 
               <TouchableOpacity
                 accessibilityRole="button"
+                onPress={handleFilter}
                 style={[components.dateChip]}
                 testID="alerts-filter"
               >
@@ -190,7 +223,13 @@ function Alerts({ navigation }: MainTabScreenProps<Paths.Alerts>) {
                 />
               </TouchableOpacity>
 
-              <IconButton iconPath="sort" testID="alerts-sort" />
+              <IconButton
+                iconPath="sort"
+                onPress={() => {
+                  setSortAscending((previous) => !previous);
+                }}
+                testID="alerts-sort"
+              />
             </View>
 
             {groups.length === 0 ? (

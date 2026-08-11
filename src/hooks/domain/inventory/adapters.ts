@@ -8,6 +8,7 @@ import type {
   DocumentDetail,
   DocumentsSummary,
   IngredientItem,
+  InventoryCatalog,
   InventoryItem,
   ItemDetail,
   LedgerEntry,
@@ -150,9 +151,7 @@ export const toAlertDetails = (
   }));
 };
 
-export const toAlertTotals = (
-  alerts: readonly ServerAlert[],
-): AlertTotals => ({
+export const toAlertTotals = (alerts: readonly ServerAlert[]): AlertTotals => ({
   expiring: alerts.filter((alert) => toAlertSeverity(alert) === 'expiring')
     .length,
   low: alerts.filter((alert) => toAlertSeverity(alert) === 'low').length,
@@ -259,6 +258,25 @@ export const toIngredientItems = (
 export const toGroupNames = (items: readonly ServerItem[]) =>
   items.filter((item) => item.parent_id === null).map((item) => item.name);
 
+export const toInventoryCatalog = (
+  items: readonly ServerItem[],
+): InventoryCatalog => {
+  const byId = new Map(items.map((item) => [item.id, item]));
+
+  return {
+    groups: items
+      .filter((item) => item.parent_id === null)
+      .map((item) => ({ id: String(item.id), name: item.name })),
+    items: selectLeaves(items).map((item) => ({
+      fullName: buildTrail(item, byId),
+      id: String(item.id),
+      name: item.name,
+      unit: item.unit,
+      unitPrice: item.unit_price,
+    })),
+  };
+};
+
 // /api/items/:id không trả đường dẫn cha nên phải dựng từ cây phẳng
 export const buildItemTrail = (
   item: ServerItem,
@@ -292,7 +310,8 @@ export const toLedgerEntry = (entry: ServerLedgerEntry): LedgerEntry => {
   const sign = isIncoming ? '+' : '−';
 
   return {
-    deltaLabel: `${sign}${String(Math.abs(entry.delta))} ${entry.item_unit}`.trim(),
+    deltaLabel:
+      `${sign}${String(Math.abs(entry.delta))} ${entry.item_unit}`.trim(),
     id: String(entry.id),
     isIncoming,
     note: entry.note,

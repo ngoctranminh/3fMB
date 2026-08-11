@@ -1,6 +1,7 @@
 import { Fragment, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
+  Alert,
   ScrollView,
   Text,
   TextInput,
@@ -13,9 +14,10 @@ import { useInventory } from '@/hooks';
 import type {
   DocumentSubtype,
   TransactionKind,
+  TransactionPeriod,
 } from '@/hooks/domain/inventory/schema';
-import type { MainTabScreenProps } from '@/navigation/types';
 import { Paths } from '@/navigation/paths';
+import type { MainTabScreenProps } from '@/navigation/types';
 import { useTheme } from '@/theme';
 
 import { Card, CategoryChip, IconByVariant } from '@/components/atoms';
@@ -44,11 +46,35 @@ const SUBTYPES_BY_TAB = {
   import: ['purchase', 'return', 'other_in'],
 } as const satisfies Record<TransactionKind, readonly DocumentSubtype[]>;
 
-const QUICK_ACTIONS = [
-  { iconPath: 'tray-down', id: 'receive', tone: 'blue' },
-  { iconPath: 'box', id: 'return', tone: 'purple' },
-  { iconPath: 'document', id: 'other', tone: 'green' },
-] as const;
+const QUICK_ACTIONS = {
+  export: [
+    { iconPath: 'tray-up', id: 'usage', subtype: 'usage', tone: 'blue' },
+    {
+      iconPath: 'warning-circle',
+      id: 'waste',
+      subtype: 'waste',
+      tone: 'purple',
+    },
+    {
+      iconPath: 'document',
+      id: 'other_out',
+      subtype: 'other_out',
+      tone: 'green',
+    },
+  ],
+  import: [
+    { iconPath: 'tray-down', id: 'receive', subtype: 'purchase', tone: 'blue' },
+    { iconPath: 'box', id: 'return', subtype: 'return', tone: 'purple' },
+    {
+      iconPath: 'document',
+      id: 'other_in',
+      subtype: 'other_in',
+      tone: 'green',
+    },
+  ],
+} as const;
+
+const PERIODS: readonly TransactionPeriod[] = ['today', 'week', 'month', 'all'];
 
 function Transactions({ navigation }: MainTabScreenProps<Paths.Transactions>) {
   const { t } = useTranslation();
@@ -57,7 +83,9 @@ function Transactions({ navigation }: MainTabScreenProps<Paths.Transactions>) {
   const { useFetchTodayTotalsQuery, useFetchTransactionsQuery } =
     useInventory();
 
-  const transactionsQuery = useFetchTransactionsQuery();
+  const [period, setPeriod] = useState<TransactionPeriod>('today');
+
+  const transactionsQuery = useFetchTransactionsQuery(period);
   const todayTotalsQuery = useFetchTodayTotalsQuery();
 
   const [tab, setTab] = useState<TransactionKind>('import');
@@ -103,6 +131,37 @@ function Transactions({ navigation }: MainTabScreenProps<Paths.Transactions>) {
     void todayTotalsQuery.refetch();
   };
 
+  const handlePeriodPicker = () => {
+    Alert.alert(
+      t('screen_transactions.period_title'),
+      undefined,
+      PERIODS.map((option) => ({
+        onPress: () => {
+          setPeriod(option);
+        },
+        text: t(`screen_transactions.periods.${option}`),
+      })),
+    );
+  };
+
+  const handleSubtypePicker = () => {
+    const options: readonly SubtypeFilter[] = [
+      ALL_SUBTYPES,
+      ...SUBTYPES_BY_TAB[tab],
+    ];
+
+    Alert.alert(
+      t('screen_transactions.filter'),
+      undefined,
+      options.map((option) => ({
+        onPress: () => {
+          setSubtype(option);
+        },
+        text: t(`screen_transactions.filters.${option}`),
+      })),
+    );
+  };
+
   return (
     <SafeScreen
       edges={['top', 'left', 'right']}
@@ -124,7 +183,15 @@ function Transactions({ navigation }: MainTabScreenProps<Paths.Transactions>) {
           showsVerticalScrollIndicator={false}
         >
           <View style={[gutters.gap_12, gutters.paddingHorizontal_16]}>
-            <TransactionsHeader />
+            <TransactionsHeader
+              onBack={() => {
+                navigation.navigate(Paths.Overview);
+              }}
+              onFilter={handleSubtypePicker}
+              onHistory={() => {
+                setPeriod('all');
+              }}
+            />
 
             <SegmentTabs
               activeId={tab}
@@ -138,7 +205,7 @@ function Transactions({ navigation }: MainTabScreenProps<Paths.Transactions>) {
 
           <View style={[gutters.gap_12, gutters.paddingHorizontal_16]}>
             <View style={[layout.row, gutters.gap_8]}>
-              {QUICK_ACTIONS.map((action) => (
+              {QUICK_ACTIONS[tab].map((action) => (
                 <QuickActionTile
                   caption={t(
                     `screen_transactions.actions.${action.id}.caption`,
@@ -146,6 +213,11 @@ function Transactions({ navigation }: MainTabScreenProps<Paths.Transactions>) {
                   iconPath={action.iconPath}
                   key={action.id}
                   label={t(`screen_transactions.actions.${action.id}.label`)}
+                  onPress={() => {
+                    navigation.navigate(Paths.CreateDocument, {
+                      initialSubtype: action.subtype,
+                    });
+                  }}
                   testID={`action-${action.id}`}
                   tone={action.tone}
                 />
@@ -179,6 +251,7 @@ function Transactions({ navigation }: MainTabScreenProps<Paths.Transactions>) {
 
               <TouchableOpacity
                 accessibilityRole="button"
+                onPress={handlePeriodPicker}
                 style={[components.iconButtonSquare]}
                 testID="transactions-calendar"
               >
@@ -192,11 +265,12 @@ function Transactions({ navigation }: MainTabScreenProps<Paths.Transactions>) {
 
               <TouchableOpacity
                 accessibilityRole="button"
+                onPress={handlePeriodPicker}
                 style={[components.dateChip]}
                 testID="transactions-range"
               >
                 <Text style={[components.categoryChipLabel]}>
-                  {t('screen_transactions.range_today')}
+                  {t(`screen_transactions.periods.${period}`)}
                 </Text>
                 <IconByVariant
                   height={ICON_SIZE}

@@ -1,3 +1,9 @@
+import type {
+  CreateDocumentInput,
+  CreateItemInput,
+  TransactionPeriod,
+} from './schema';
+
 import { apiInstance } from '@/services/instance';
 
 import {
@@ -9,6 +15,7 @@ import {
   toDocumentDetail,
   toGroupNames,
   toIngredientItems,
+  toInventoryCatalog,
   toItemDetail,
   toLeafInventoryItems,
   toLedgerEntry,
@@ -22,6 +29,7 @@ import {
   serverDocumentDetailSchema,
   serverDocumentsSchema,
   serverItemDetailSchema,
+  serverItemSchema,
   serverItemsSchema,
   serverLedgerSchema,
   valueHistorySchema,
@@ -51,10 +59,30 @@ export const InventoryServices = {
     return toDocumentDetail(serverDocumentDetailSchema.parse(response));
   },
 
+  createDocument: async (document: CreateDocumentInput) => {
+    const response = await apiInstance
+      .post('api/documents', { json: document })
+      .json();
+    return toDocumentDetail(serverDocumentDetailSchema.parse(response));
+  },
+
+  createItem: async (item: CreateItemInput) => {
+    const response = await apiInstance.post('api/items', { json: item }).json();
+    return serverItemSchema.parse(response);
+  },
+
   fetchAlertBoard: async () => {
     const response = await apiInstance.get('api/alerts').json();
     const alerts = serverAlertsSchema.parse(response);
     return { items: toAlertDetails(alerts), totals: toAlertTotals(alerts) };
+  },
+  fetchAlerts: async (limit: number) => {
+    const response = await apiInstance
+      .get('api/alerts', { searchParams: { limit } })
+      .json();
+    return serverAlertsSchema
+      .parse(response)
+      .map((alert) => toAlertItem(alert));
   },
 
   fetchDocumentDetail: async (documentId: string) => {
@@ -64,6 +92,20 @@ export const InventoryServices = {
     return toDocumentDetail(serverDocumentDetailSchema.parse(response));
   },
 
+  fetchIngredients: async () => {
+    const response = await apiInstance
+      .get('api/items', { searchParams: { flat: 1 } })
+      .json();
+    const items = serverItemsSchema.parse(response);
+    return { groups: toGroupNames(items), items: toIngredientItems(items) };
+  },
+
+  fetchInventoryCatalog: async () => {
+    const response = await apiInstance
+      .get('api/items', { searchParams: { flat: 1 } })
+      .json();
+    return toInventoryCatalog(serverItemsSchema.parse(response));
+  },
   // Trail phải dựng từ cây đầy đủ vì /api/items/:id không trả đường dẫn cha
   fetchItemDetail: async (itemId: string) => {
     const [detailResponse, treeResponse] = await Promise.all([
@@ -74,7 +116,6 @@ export const InventoryServices = {
     const tree = serverItemsSchema.parse(treeResponse);
     return toItemDetail(item, buildItemTrail(item, tree));
   },
-
   fetchItemLedger: async (itemId: string) => {
     const response = await apiInstance
       .get('api/transactions', {
@@ -84,23 +125,6 @@ export const InventoryServices = {
     return serverLedgerSchema
       .parse(response)
       .items.map((entry) => toLedgerEntry(entry));
-  },
-
-  fetchAlerts: async (limit: number) => {
-    const response = await apiInstance
-      .get('api/alerts', { searchParams: { limit } })
-      .json();
-    return serverAlertsSchema
-      .parse(response)
-      .map((alert) => toAlertItem(alert));
-  },
-
-  fetchIngredients: async () => {
-    const response = await apiInstance
-      .get('api/items', { searchParams: { flat: 1 } })
-      .json();
-    const items = serverItemsSchema.parse(response);
-    return { groups: toGroupNames(items), items: toIngredientItems(items) };
   },
 
   fetchItems: async () => {
@@ -122,9 +146,11 @@ export const InventoryServices = {
     return toTodayTotals(documentsSummarySchema.parse(response));
   },
 
-  fetchTransactions: async () => {
+  fetchTransactions: async (period: TransactionPeriod = 'all') => {
     const response = await apiInstance
-      .get('api/documents', { searchParams: { limit: DOCUMENTS_LIMIT } })
+      .get('api/documents', {
+        searchParams: { limit: DOCUMENTS_LIMIT, period },
+      })
       .json();
     return serverDocumentsSchema
       .parse(response)

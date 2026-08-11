@@ -7,7 +7,15 @@ import { Paths } from '@/navigation/paths';
 import type { RootStackParamList } from '@/navigation/types';
 import { useTheme } from '@/theme';
 
-import { Example, ItemDetail, Login, ReceiptDetail, Startup } from '@/screens';
+import {
+  AddIngredient,
+  CreateDocument,
+  Example,
+  ItemDetail,
+  Login,
+  ReceiptDetail,
+  Startup,
+} from '@/screens';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -21,12 +29,14 @@ function ApplicationNavigator() {
           <Stack.Screen component={Startup} name={Paths.Startup} />
           <Stack.Screen component={Login} name={Paths.Login} />
           <Stack.Screen component={MainTabs} name={Paths.MainTabs} />
+          <Stack.Screen component={AddIngredient} name={Paths.AddIngredient} />
+          <Stack.Screen
+            component={CreateDocument}
+            name={Paths.CreateDocument}
+          />
           <Stack.Screen component={Example} name={Paths.Example} />
           <Stack.Screen component={ItemDetail} name={Paths.ItemDetail} />
-          <Stack.Screen
-            component={ReceiptDetail}
-            name={Paths.ReceiptDetail}
-          />
+          <Stack.Screen component={ReceiptDetail} name={Paths.ReceiptDetail} />
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaProvider>

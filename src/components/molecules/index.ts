@@ -3,6 +3,7 @@ export { default as AlertGroupHeader } from './AlertGroupHeader/AlertGroupHeader
 export { default as AlertRow } from './AlertRow/AlertRow';
 export { default as DefaultError } from './DefaultError/DefaultError';
 export { default as DetailField } from './DetailField/DetailField';
+export { default as FormField } from './FormField/FormField';
 export { default as IngredientDetailRow } from './IngredientDetailRow/IngredientDetailRow';
 export { default as IngredientRow } from './IngredientRow/IngredientRow';
 export { default as QuickActionTile } from './QuickActionTile/QuickActionTile';

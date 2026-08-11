@@ -5,6 +5,7 @@ import type {
 } from '@react-navigation/native';
 import type { StackScreenProps } from '@react-navigation/stack';
 
+import type { DocumentSubtype } from '@/hooks/domain/inventory/schema';
 import type { Paths } from '@/navigation/paths';
 
 export type MainTabParamList = {
@@ -28,6 +29,8 @@ export type RootScreenProps<
 > = StackScreenProps<RootStackParamList, S>;
 
 export type RootStackParamList = {
+  [Paths.AddIngredient]: undefined;
+  [Paths.CreateDocument]: { readonly initialSubtype: DocumentSubtype };
   [Paths.Example]: undefined;
   [Paths.ItemDetail]: { readonly itemId: string };
   [Paths.Login]: undefined;

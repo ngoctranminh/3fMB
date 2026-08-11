@@ -1,11 +1,10 @@
-import type { RootScreenProps } from '@/navigation/types';
-
 import { Fragment } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 
 import { useInventory } from '@/hooks';
 import { Paths } from '@/navigation/paths';
+import type { RootScreenProps } from '@/navigation/types';
 import { useTheme } from '@/theme';
 
 import { Card, IconByVariant, StatusPill } from '@/components/atoms';
@@ -120,7 +119,7 @@ function ReceiptDetail({
           <Card style={[gutters.gap_12]}>
             <SectionHeader title={t('screen_receipt_detail.lines_title')} />
 
-            {receipt && receipt.lines.length === 0 ? (
+            {receipt?.lines.length === 0 ? (
               <Text style={[components.categoryChipLabel]}>
                 {t('screen_receipt_detail.lines_empty')}
               </Text>

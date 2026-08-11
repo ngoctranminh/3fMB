@@ -10,6 +10,26 @@
       "description": "We are sorry for the inconvenience. Please try again later.",
       "cta": "Reload the screen"
     },
+    "screen_add_ingredient": {
+      "title": "Add ingredient",
+      "group": "Ingredient group",
+      "name": "Ingredient name",
+      "quantity": "Opening stock",
+      "unit": "Unit",
+      "unit_price": "Unit price",
+      "min_quantity": "Reorder level",
+      "expires_at": "Expiry date",
+      "note": "Note",
+      "submit": "Save ingredient",
+      "error": "Could not add the ingredient. Please check the form and retry.",
+      "validation": {
+        "group": "Select an ingredient group",
+        "name": "Enter an ingredient name",
+        "unit": "Enter a unit",
+        "numbers": "Quantities and prices must be non-negative numbers",
+        "date": "Date must use YYYY-MM-DD"
+      }
+    },
     "screen_alerts": {
       "title": "Alerts",
       "subtitle": "Restaurant Storage",
@@ -55,6 +75,22 @@
       "title": "Welcome on The $t(common_appName.full)",
       "description": "Do you want to discover some features? Just click on one of the three buttons at the bottom of the screen. The first allows you to call a REST API. The second lets you change the theme color. And the third allows you to change the language."
     },
+    "screen_create_document": {
+      "title": "Create stock receipt",
+      "subtype": "Receipt type",
+      "item": "Ingredient",
+      "party": "Party / department",
+      "quantity": "Quantity",
+      "unit_price": "Unit price",
+      "note": "Note",
+      "submit": "Create receipt",
+      "error": "Could not create the receipt. Check the stock and retry.",
+      "validation": {
+        "item": "Select an ingredient",
+        "quantity": "Quantity must be greater than 0",
+        "unit_price": "Unit price must be non-negative"
+      }
+    },
     "screen_ingredients": {
       "title": "Ingredients",
       "subtitle": "Restaurant Storage",
@@ -65,6 +101,13 @@
       "status_low": "Running low",
       "status_expired": "Expired",
       "status_ok": "In stock",
+      "filter_title": "Filter by status",
+      "filters": {
+        "all": "All",
+        "ok": "In stock",
+        "low": "Running low",
+        "expired": "Expired"
+      },
       "categories": {
         "all": "All",
         "dairy": "Dairy, eggs",
@@ -123,6 +166,12 @@
         "invalid_credentials": "Incorrect username or password",
         "network": "Cannot reach the server. Please check your connection and try again."
       }
+    },
+    "screen_more": {
+      "title": "More",
+      "theme": "Switch light / dark theme",
+      "language": "Change language",
+      "logout": "Sign out"
     },
     "screen_overview": {
       "title": "Overview",
@@ -185,6 +234,7 @@
       "filter": "Filter",
       "search_placeholder": "Search receipts, suppliers, notes...",
       "range_today": "Today",
+      "period_title": "Date range",
       "empty": "No receipts found",
       "tabs": {
         "import": "Stock in",
@@ -202,7 +252,29 @@
         "other": {
           "label": "Other in",
           "caption": "Internal"
+        },
+        "other_in": {
+          "label": "Other in",
+          "caption": "Internal"
+        },
+        "usage": {
+          "label": "Usage",
+          "caption": "Kitchen and bar"
+        },
+        "waste": {
+          "label": "Waste",
+          "caption": "Damaged or expired"
+        },
+        "other_out": {
+          "label": "Other out",
+          "caption": "Internal"
         }
+      },
+      "periods": {
+        "today": "Today",
+        "week": "Last 7 days",
+        "month": "This month",
+        "all": "All time"
       },
       "today": {
         "title": "Today's summary",

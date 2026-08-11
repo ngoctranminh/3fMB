@@ -1,5 +1,3 @@
-import type { MainTabScreenProps } from '@/navigation/types';
-
 import { useTranslation } from 'react-i18next';
 import { ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -7,6 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useInventory } from '@/hooks';
 import { formatCurrency } from '@/hooks/domain/inventory/adapters';
 import { Paths } from '@/navigation/paths';
+import type { MainTabScreenProps } from '@/navigation/types';
 import { useTheme } from '@/theme';
 
 import { StatTile } from '@/components/molecules';
@@ -14,7 +13,6 @@ import {
   AlertsCard,
   InventoryCard,
   OverviewHeader,
-  StockValueChart,
   TAB_BAR_BASE_HEIGHT,
 } from '@/components/organisms';
 import { SafeScreen } from '@/components/templates';
@@ -97,6 +95,10 @@ function Overview({ navigation }: MainTabScreenProps<Paths.Overview>) {
     navigation.navigate(Paths.Ingredients);
   };
 
+  const handleMenu = () => {
+    navigation.navigate(Paths.More);
+  };
+
   return (
     <SafeScreen
       edges={['top', 'left', 'right']}
@@ -121,6 +123,7 @@ function Overview({ navigation }: MainTabScreenProps<Paths.Overview>) {
             <OverviewHeader
               alertCount={summary?.alert_count ?? 0}
               onBell={handleSeeAllAlerts}
+              onMenu={handleMenu}
             />
           </View>
 
@@ -145,7 +148,7 @@ function Overview({ navigation }: MainTabScreenProps<Paths.Overview>) {
           </ScrollView>
 
           <View style={[gutters.gap_16, gutters.paddingHorizontal_16]}>
-            <StockValueChart points={historyQuery.data ?? []} />
+            {/* <StockValueChart points={historyQuery.data ?? []} /> */}
             <AlertsCard
               alerts={alertsQuery.data ?? []}
               onSeeAll={handleSeeAllAlerts}

@@ -1,10 +1,9 @@
-import type { RootScreenProps } from '@/navigation/types';
-
 import { useTranslation } from 'react-i18next';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 
 import { useInventory } from '@/hooks';
 import { Paths } from '@/navigation/paths';
+import type { RootScreenProps } from '@/navigation/types';
 import { useTheme } from '@/theme';
 
 import { Card, IconByVariant, StatusPill } from '@/components/atoms';
@@ -12,15 +11,13 @@ import { DetailField, SectionHeader } from '@/components/molecules';
 import { SafeScreen } from '@/components/templates';
 
 const CONTENT_GAP = 16;
+const HALF_STEP = 0.5;
 const ICON_SIZE = 24;
 const STEP_ICON_SIZE = 20;
 // Bước điều chỉnh nhanh; số lẻ vì nhiều mặt hàng bán theo kg
-const STEPS = [-1, -0.5, 0.5, 1];
+const STEPS = [-1, -HALF_STEP, HALF_STEP, 1];
 
-function ItemDetail({
-  navigation,
-  route,
-}: RootScreenProps<Paths.ItemDetail>) {
+function ItemDetail({ navigation, route }: RootScreenProps<Paths.ItemDetail>) {
   const { itemId } = route.params;
   const { t } = useTranslation();
   const { backgrounds, colors, components, fonts, gutters, layout } =

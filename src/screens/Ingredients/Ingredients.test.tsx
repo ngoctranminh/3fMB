@@ -163,4 +163,26 @@ describe('Ingredients screen', () => {
       screen.getByText('Không tìm thấy nguyên liệu nào'),
     ).toBeOnTheScreen();
   });
+
+  it('opens the add ingredient form', () => {
+    const navigation = createTabScreenProps(Paths.Ingredients);
+    const queryClient = new QueryClient({
+      defaultOptions: { queries: { retry: false } },
+    });
+
+    render(
+      <SafeAreaProvider>
+        <QueryClientProvider client={queryClient}>
+          <ThemeProvider storage={storage}>
+            <I18nextProvider i18n={i18n}>
+              <Ingredients {...navigation.props} />
+            </I18nextProvider>
+          </ThemeProvider>
+        </QueryClientProvider>
+      </SafeAreaProvider>,
+    );
+
+    fireEvent.press(screen.getByTestId('ingredients-add'));
+    expect(navigation.navigate).toHaveBeenCalledWith(Paths.AddIngredient);
+  });
 });

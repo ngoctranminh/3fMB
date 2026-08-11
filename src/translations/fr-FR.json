@@ -10,6 +10,26 @@
       "description": "Nous sommes désolés pour le désagrément. Veuillez réessayer plus tard.",
       "cta": "Recharger l'écran"
     },
+    "screen_add_ingredient": {
+      "title": "Ajouter un ingrédient",
+      "group": "Groupe",
+      "name": "Nom",
+      "quantity": "Stock initial",
+      "unit": "Unité",
+      "unit_price": "Prix unitaire",
+      "min_quantity": "Seuil minimum",
+      "expires_at": "Date de péremption",
+      "note": "Note",
+      "submit": "Enregistrer",
+      "error": "Impossible d'ajouter l'ingrédient. Vérifiez le formulaire.",
+      "validation": {
+        "group": "Sélectionnez un groupe",
+        "name": "Saisissez un nom",
+        "unit": "Saisissez une unité",
+        "numbers": "Les quantités et prix doivent être positifs",
+        "date": "La date doit être au format YYYY-MM-DD"
+      }
+    },
     "screen_alerts": {
       "title": "Alertes",
       "subtitle": "Stock du restaurant",
@@ -55,6 +75,22 @@
       "title": "Bienvenue sur Le $t(common_appName.full)",
       "description": "Vous voulez découvrir des fonctionnalités ? Cliquez sur l'un des trois boutons en bas de l'écran. Le premier vous permet d'appeler une API REST. Le deuxième de changer la couleur du thème. Et le troisième de changer la langue"
     },
+    "screen_create_document": {
+      "title": "Créer un bon de stock",
+      "subtype": "Type de bon",
+      "item": "Ingrédient",
+      "party": "Partenaire / service",
+      "quantity": "Quantité",
+      "unit_price": "Prix unitaire",
+      "note": "Note",
+      "submit": "Créer le bon",
+      "error": "Impossible de créer le bon. Vérifiez le stock.",
+      "validation": {
+        "item": "Sélectionnez un ingrédient",
+        "quantity": "La quantité doit être supérieure à 0",
+        "unit_price": "Le prix doit être positif"
+      }
+    },
     "screen_ingredients": {
       "title": "Ingrédients",
       "subtitle": "Stock du restaurant",
@@ -65,6 +101,13 @@
       "status_low": "Bientôt épuisé",
       "status_expired": "Périmé",
       "status_ok": "En stock",
+      "filter_title": "Filtrer par statut",
+      "filters": {
+        "all": "Tous",
+        "ok": "En stock",
+        "low": "Bientôt épuisé",
+        "expired": "Périmé"
+      },
       "categories": {
         "all": "Tous",
         "dairy": "Lait, œufs",
@@ -123,6 +166,12 @@
         "invalid_credentials": "Nom d'utilisateur ou mot de passe incorrect",
         "network": "Serveur inaccessible. Vérifiez votre connexion et réessayez."
       }
+    },
+    "screen_more": {
+      "title": "Plus",
+      "theme": "Changer le thème clair / sombre",
+      "language": "Changer la langue",
+      "logout": "Déconnexion"
     },
     "screen_overview": {
       "title": "Vue d'ensemble",
@@ -185,6 +234,7 @@
       "filter": "Filtrer",
       "search_placeholder": "Rechercher bons, fournisseurs, notes...",
       "range_today": "Aujourd'hui",
+      "period_title": "Période",
       "empty": "Aucun bon trouvé",
       "tabs": {
         "import": "Entrées",
@@ -202,7 +252,29 @@
         "other": {
           "label": "Autre entrée",
           "caption": "Interne"
+        },
+        "other_in": {
+          "label": "Autre entrée",
+          "caption": "Interne"
+        },
+        "usage": {
+          "label": "Utilisation",
+          "caption": "Cuisine et bar"
+        },
+        "waste": {
+          "label": "Perte",
+          "caption": "Abîmé ou périmé"
+        },
+        "other_out": {
+          "label": "Autre sortie",
+          "caption": "Interne"
         }
+      },
+      "periods": {
+        "today": "Aujourd'hui",
+        "week": "7 derniers jours",
+        "month": "Ce mois-ci",
+        "all": "Toute la période"
       },
       "today": {
         "title": "Résumé du jour",

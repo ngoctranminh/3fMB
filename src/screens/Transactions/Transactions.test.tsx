@@ -104,7 +104,9 @@ describe('Transactions screen', () => {
         <QueryClientProvider client={queryClient}>
           <ThemeProvider storage={storage}>
             <I18nextProvider i18n={i18n}>
-              <Transactions {...createTabScreenProps(Paths.Transactions).props} />
+              <Transactions
+                {...createTabScreenProps(Paths.Transactions).props}
+              />
             </I18nextProvider>
           </ThemeProvider>
         </QueryClientProvider>
@@ -183,5 +185,29 @@ describe('Transactions screen', () => {
     );
 
     expect(screen.getByText('Không tìm thấy phiếu nào')).toBeOnTheScreen();
+  });
+
+  it('opens the matching create receipt flow from a quick action', () => {
+    const navigation = createTabScreenProps(Paths.Transactions);
+    const queryClient = new QueryClient({
+      defaultOptions: { queries: { retry: false } },
+    });
+
+    render(
+      <SafeAreaProvider>
+        <QueryClientProvider client={queryClient}>
+          <ThemeProvider storage={storage}>
+            <I18nextProvider i18n={i18n}>
+              <Transactions {...navigation.props} />
+            </I18nextProvider>
+          </ThemeProvider>
+        </QueryClientProvider>
+      </SafeAreaProvider>,
+    );
+
+    fireEvent.press(screen.getByTestId('action-receive'));
+    expect(navigation.navigate).toHaveBeenCalledWith(Paths.CreateDocument, {
+      initialSubtype: 'purchase',
+    });
   });
 });

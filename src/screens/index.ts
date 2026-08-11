@@ -1,4 +1,6 @@
+export { default as AddIngredient } from './AddIngredient/AddIngredient';
 export { default as Alerts } from './Alerts/Alerts';
+export { default as CreateDocument } from './CreateDocument/CreateDocument';
 export { default as Example } from './Example/Example';
 export { default as Ingredients } from './Ingredients/Ingredients';
 export { default as ItemDetail } from './ItemDetail/ItemDetail';
