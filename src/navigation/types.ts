@@ -35,6 +35,9 @@ export type RootStackParamList = {
   [Paths.ItemDetail]: { readonly itemId: string };
   [Paths.Login]: undefined;
   [Paths.MainTabs]: NavigatorScreenParams<MainTabParamList> | undefined;
+  [Paths.PrepTasks]: undefined;
+  [Paths.PurchaseGuide]: undefined;
   [Paths.ReceiptDetail]: { readonly documentId: string };
+  [Paths.Sauces]: undefined;
   [Paths.Startup]: undefined;
 };

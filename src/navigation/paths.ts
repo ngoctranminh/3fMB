@@ -9,7 +9,10 @@ export const enum Paths {
   MainTabs = 'mainTabs',
   More = 'more',
   Overview = 'overview',
+  PrepTasks = 'prepTasks',
+  PurchaseGuide = 'purchaseGuide',
   ReceiptDetail = 'receiptDetail',
+  Sauces = 'sauces',
   Startup = 'startup',
   Transactions = 'transactions',
 }

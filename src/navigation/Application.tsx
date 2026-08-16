@@ -13,7 +13,10 @@ import {
   Example,
   ItemDetail,
   Login,
+  PrepTasks,
+  PurchaseGuide,
   ReceiptDetail,
+  Sauces,
   Startup,
 } from '@/screens';
 
@@ -36,7 +39,10 @@ function ApplicationNavigator() {
           />
           <Stack.Screen component={Example} name={Paths.Example} />
           <Stack.Screen component={ItemDetail} name={Paths.ItemDetail} />
+          <Stack.Screen component={PrepTasks} name={Paths.PrepTasks} />
+          <Stack.Screen component={PurchaseGuide} name={Paths.PurchaseGuide} />
           <Stack.Screen component={ReceiptDetail} name={Paths.ReceiptDetail} />
+          <Stack.Screen component={Sauces} name={Paths.Sauces} />
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaProvider>

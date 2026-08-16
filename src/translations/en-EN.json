@@ -83,12 +83,21 @@
       "quantity": "Quantity",
       "unit_price": "Unit price",
       "note": "Note",
+      "search_placeholder": "Quickly find an ingredient...",
+      "search_empty": "No matching ingredients",
+      "selected_count": "{{count}} items",
+      "lines_title": "Receipt items",
+      "editing": "Editing: {{name}}",
+      "available_stock": "Available: {{quantity}} {{unit}}",
+      "remove_line": "Remove {{name}} from receipt",
+      "total": "Estimated total",
       "submit": "Create receipt",
       "error": "Could not create the receipt. Check the stock and retry.",
       "validation": {
         "item": "Select an ingredient",
         "quantity": "Quantity must be greater than 0",
-        "unit_price": "Unit price must be non-negative"
+        "unit_price": "Unit price must be non-negative",
+        "stock": "Cannot issue more than available stock ({{quantity}} {{unit}} left)"
       }
     },
     "screen_ingredients": {
@@ -172,11 +181,39 @@
     },
     "screen_more": {
       "title": "More",
+      "operations": "Operations handbook",
+      "settings": "Settings",
+      "sauces": "Sauce recipes",
+      "purchase_guide": "Purchase checklist",
+      "prep_tasks": "Prep tasks",
       "theme": "Switch light / dark theme",
       "language": "Change language",
       "logout": "Sign out",
       "logging_out": "Signing out...",
       "logout_error": "Could not sign out from the server. Please retry."
+    },
+    "operations_common": {
+      "all": "All",
+      "empty": "No matching content",
+      "progress": "{{completed}}/{{total}} completed",
+      "reset": "Reset"
+    },
+    "screen_prep_tasks": {
+      "title": "Prep tasks",
+      "subtitle": "Hot kitchen and Sushi progress is saved on this device and reset the following day",
+      "search_placeholder": "Find a task..."
+    },
+    "screen_purchase_guide": {
+      "title": "Purchase checklist",
+      "subtitle": "Checked items are saved on this device and reset the following day",
+      "search_placeholder": "Find an item to check..."
+    },
+    "screen_sauces": {
+      "title": "Sauce recipes",
+      "subtitle": "Reference recipes from the 3F handbook",
+      "search_placeholder": "Find a sauce...",
+      "scale": "Batch size",
+      "disclaimer": "All quantities are a reference; taste, adjust and take responsibility for the final result."
     },
     "screen_overview": {
       "title": "Overview",
@@ -210,6 +247,21 @@
         "status_out": "Out of stock",
         "status_expired": "Expired",
         "status_ok": "In stock"
+      },
+      "quick_actions": {
+        "title": "Quick actions",
+        "import": {
+          "label": "Receive",
+          "caption": "Create receipt"
+        },
+        "export": {
+          "label": "Issue",
+          "caption": "Record kitchen use"
+        },
+        "item": {
+          "label": "Add new",
+          "caption": "Create ingredient"
+        }
       },
       "tabs": {
         "overview": "Overview",

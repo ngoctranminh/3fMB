@@ -279,6 +279,7 @@ export const toInventoryCatalog = (
       fullName: buildTrail(item, byId),
       id: String(item.id),
       name: item.name,
+      quantity: item.quantity,
       unit: item.unit,
       unitPrice: item.unit_price,
     })),

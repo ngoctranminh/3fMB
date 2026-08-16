@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { ScrollView, View } from 'react-native';
+import { RefreshControl, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useInventory } from '@/hooks';
@@ -8,7 +8,11 @@ import { Paths } from '@/navigation/paths';
 import type { MainTabScreenProps } from '@/navigation/types';
 import { useTheme } from '@/theme';
 
-import { StatTile } from '@/components/molecules';
+import {
+  QuickActionTile,
+  SectionHeader,
+  StatTile,
+} from '@/components/molecules';
 import {
   AlertsCard,
   InventoryCard,
@@ -102,6 +106,21 @@ function Overview({ navigation }: MainTabScreenProps<Paths.Overview>) {
     navigation.navigate(Paths.More);
   };
 
+  const handleRefresh = () => {
+    void Promise.all([
+      summaryQuery.refetch(),
+      historyQuery.refetch(),
+      alertsQuery.refetch(),
+      itemsQuery.refetch(),
+    ]);
+  };
+
+  const isRefreshing =
+    summaryQuery.isRefetching ||
+    historyQuery.isRefetching ||
+    alertsQuery.isRefetching ||
+    itemsQuery.isRefetching;
+
   return (
     <SafeScreen
       edges={['top', 'left', 'right']}
@@ -120,6 +139,12 @@ function Overview({ navigation }: MainTabScreenProps<Paths.Overview>) {
               paddingBottom: TAB_BAR_BASE_HEIGHT + insets.bottom + CONTENT_GAP,
             },
           ]}
+          refreshControl={
+            <RefreshControl
+              onRefresh={handleRefresh}
+              refreshing={isRefreshing}
+            />
+          }
           showsVerticalScrollIndicator={false}
         >
           <View style={[gutters.paddingHorizontal_16]}>
@@ -151,6 +176,45 @@ function Overview({ navigation }: MainTabScreenProps<Paths.Overview>) {
           </ScrollView>
 
           <View style={[gutters.gap_16, gutters.paddingHorizontal_16]}>
+            <View style={[gutters.gap_12]}>
+              <SectionHeader title={t('screen_overview.quick_actions.title')} />
+              <View style={[layout.row, gutters.gap_8]}>
+                <QuickActionTile
+                  caption={t('screen_overview.quick_actions.import.caption')}
+                  iconPath="tray-down"
+                  label={t('screen_overview.quick_actions.import.label')}
+                  onPress={() => {
+                    navigation.navigate(Paths.CreateDocument, {
+                      initialSubtype: 'purchase',
+                    });
+                  }}
+                  testID="overview-action-import"
+                  tone="blue"
+                />
+                <QuickActionTile
+                  caption={t('screen_overview.quick_actions.export.caption')}
+                  iconPath="tray-up"
+                  label={t('screen_overview.quick_actions.export.label')}
+                  onPress={() => {
+                    navigation.navigate(Paths.CreateDocument, {
+                      initialSubtype: 'usage',
+                    });
+                  }}
+                  testID="overview-action-export"
+                  tone="purple"
+                />
+                <QuickActionTile
+                  caption={t('screen_overview.quick_actions.item.caption')}
+                  iconPath="plus"
+                  label={t('screen_overview.quick_actions.item.label')}
+                  onPress={() => {
+                    navigation.navigate(Paths.AddIngredient);
+                  }}
+                  testID="overview-action-item"
+                  tone="green"
+                />
+              </View>
+            </View>
             {/* <StockValueChart points={historyQuery.data ?? []} /> */}
             <AlertsCard
               alerts={alertsQuery.data ?? []}

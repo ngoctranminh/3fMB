@@ -83,12 +83,21 @@
       "quantity": "Quantité",
       "unit_price": "Prix unitaire",
       "note": "Note",
+      "search_placeholder": "Rechercher rapidement un ingrédient...",
+      "search_empty": "Aucun ingrédient correspondant",
+      "selected_count": "{{count}} articles",
+      "lines_title": "Articles du bon",
+      "editing": "Modification : {{name}}",
+      "available_stock": "Disponible : {{quantity}} {{unit}}",
+      "remove_line": "Retirer {{name}} du bon",
+      "total": "Total estimé",
       "submit": "Créer le bon",
       "error": "Impossible de créer le bon. Vérifiez le stock.",
       "validation": {
         "item": "Sélectionnez un ingrédient",
         "quantity": "La quantité doit être supérieure à 0",
-        "unit_price": "Le prix doit être positif"
+        "unit_price": "Le prix doit être positif",
+        "stock": "Impossible de sortir plus que le stock disponible ({{quantity}} {{unit}} restants)"
       }
     },
     "screen_ingredients": {
@@ -172,11 +181,39 @@
     },
     "screen_more": {
       "title": "Plus",
+      "operations": "Manuel d'exploitation",
+      "settings": "Réglages",
+      "sauces": "Recettes de sauces",
+      "purchase_guide": "Liste d'achats",
+      "prep_tasks": "Tâches de préparation",
       "theme": "Changer le thème clair / sombre",
       "language": "Changer la langue",
       "logout": "Déconnexion",
       "logging_out": "Déconnexion...",
       "logout_error": "Impossible de se déconnecter du serveur. Réessayez."
+    },
+    "operations_common": {
+      "all": "Tous",
+      "empty": "Aucun contenu correspondant",
+      "progress": "{{completed}}/{{total}} terminés",
+      "reset": "Recommencer"
+    },
+    "screen_prep_tasks": {
+      "title": "Tâches de préparation",
+      "subtitle": "La progression Cuisine chaude et Sushi est enregistrée et réinitialisée le lendemain",
+      "search_placeholder": "Rechercher une tâche..."
+    },
+    "screen_purchase_guide": {
+      "title": "Liste d'achats",
+      "subtitle": "Les articles cochés sont enregistrés sur l'appareil et réinitialisés le lendemain",
+      "search_placeholder": "Rechercher un article..."
+    },
+    "screen_sauces": {
+      "title": "Recettes de sauces",
+      "subtitle": "Recettes de référence du manuel 3F",
+      "search_placeholder": "Rechercher une sauce...",
+      "scale": "Taille du lot",
+      "disclaimer": "Les quantités sont indicatives ; goûtez, ajustez et assumez le résultat final."
     },
     "screen_overview": {
       "title": "Vue d'ensemble",
@@ -210,6 +247,21 @@
         "status_out": "En rupture",
         "status_expired": "Périmé",
         "status_ok": "En stock"
+      },
+      "quick_actions": {
+        "title": "Actions rapides",
+        "import": {
+          "label": "Réception",
+          "caption": "Créer une entrée"
+        },
+        "export": {
+          "label": "Sortie",
+          "caption": "Usage en cuisine"
+        },
+        "item": {
+          "label": "Ajouter",
+          "caption": "Créer un ingrédient"
+        }
       },
       "tabs": {
         "overview": "Vue d'ensemble",

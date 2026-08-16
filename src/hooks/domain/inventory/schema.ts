@@ -235,6 +235,7 @@ export type InventoryCatalog = {
     readonly fullName: string;
     readonly id: string;
     readonly name: string;
+    readonly quantity: number;
     readonly unit: string;
     readonly unitPrice: number;
   }[];

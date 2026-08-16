@@ -161,6 +161,38 @@ describe('Overview screen', () => {
     expect(navigation.navigate).toHaveBeenCalledWith(Paths.More);
   });
 
+  it('opens stock workflows from quick actions', () => {
+    const navigation = createTabScreenProps(Paths.Overview);
+    const queryClient = new QueryClient({
+      defaultOptions: { queries: { retry: false } },
+    });
+
+    render(
+      <SafeAreaProvider>
+        <QueryClientProvider client={queryClient}>
+          <ThemeProvider storage={storage}>
+            <I18nextProvider i18n={i18n}>
+              <Overview {...navigation.props} />
+            </I18nextProvider>
+          </ThemeProvider>
+        </QueryClientProvider>
+      </SafeAreaProvider>,
+    );
+
+    fireEvent.press(screen.getByTestId('overview-action-import'));
+    expect(navigation.navigate).toHaveBeenCalledWith(Paths.CreateDocument, {
+      initialSubtype: 'purchase',
+    });
+
+    fireEvent.press(screen.getByTestId('overview-action-export'));
+    expect(navigation.navigate).toHaveBeenCalledWith(Paths.CreateDocument, {
+      initialSubtype: 'usage',
+    });
+
+    fireEvent.press(screen.getByTestId('overview-action-item'));
+    expect(navigation.navigate).toHaveBeenCalledWith(Paths.AddIngredient);
+  });
+
   it('filters the inventory list by the search query', async () => {
     renderScreen();
 

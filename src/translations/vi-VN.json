@@ -83,12 +83,21 @@
       "quantity": "Số lượng",
       "unit_price": "Đơn giá",
       "note": "Ghi chú",
+      "search_placeholder": "Tìm nhanh nguyên liệu...",
+      "search_empty": "Không tìm thấy nguyên liệu phù hợp",
+      "selected_count": "{{count}} mặt hàng",
+      "lines_title": "Mặt hàng trong phiếu",
+      "editing": "Đang sửa: {{name}}",
+      "available_stock": "Tồn hiện tại: {{quantity}} {{unit}}",
+      "remove_line": "Xoá {{name}} khỏi phiếu",
+      "total": "Tổng giá trị dự kiến",
       "submit": "Tạo phiếu",
       "error": "Không thể tạo phiếu. Vui lòng kiểm tra tồn kho và thử lại.",
       "validation": {
         "item": "Vui lòng chọn nguyên liệu",
         "quantity": "Số lượng phải lớn hơn 0",
-        "unit_price": "Đơn giá phải là số không âm"
+        "unit_price": "Đơn giá phải là số không âm",
+        "stock": "Không thể xuất quá tồn kho (còn {{quantity}} {{unit}})"
       }
     },
     "screen_ingredients": {
@@ -172,11 +181,39 @@
     },
     "screen_more": {
       "title": "Thêm",
+      "operations": "Sổ tay vận hành",
+      "settings": "Cài đặt",
+      "sauces": "Các loại sốt",
+      "purchase_guide": "Ghi giấy mua hàng",
+      "prep_tasks": "Chuẩn bị đồ",
       "theme": "Đổi giao diện sáng / tối",
       "language": "Đổi ngôn ngữ",
       "logout": "Đăng xuất",
       "logging_out": "Đang đăng xuất...",
       "logout_error": "Không thể đăng xuất khỏi server. Vui lòng thử lại."
+    },
+    "operations_common": {
+      "all": "Tất cả",
+      "empty": "Không tìm thấy nội dung phù hợp",
+      "progress": "{{completed}}/{{total}} đã hoàn thành",
+      "reset": "Làm lại"
+    },
+    "screen_prep_tasks": {
+      "title": "Chuẩn bị đồ",
+      "subtitle": "Bếp nóng và Sushi được lưu tiến độ trên máy, tự làm mới vào ngày tiếp theo",
+      "search_placeholder": "Tìm công việc..."
+    },
+    "screen_purchase_guide": {
+      "title": "Ghi giấy mua hàng",
+      "subtitle": "Món đã kiểm được lưu trên máy và tự làm mới vào ngày tiếp theo",
+      "search_placeholder": "Tìm mặt hàng cần kiểm..."
+    },
+    "screen_sauces": {
+      "title": "Các loại sốt",
+      "subtitle": "Công thức tham khảo từ sổ tay 3F",
+      "search_placeholder": "Tìm tên sốt...",
+      "scale": "Điều chỉnh mẻ làm",
+      "disclaimer": "Mọi định lượng mang tính tham khảo; người thực hiện cần nếm lại và chịu trách nhiệm cho thành phẩm."
     },
     "screen_overview": {
       "title": "Tổng quan",
@@ -210,6 +247,21 @@
         "status_out": "Hết hàng",
         "status_expired": "Hết hạn",
         "status_ok": "Đủ"
+      },
+      "quick_actions": {
+        "title": "Thao tác nhanh",
+        "import": {
+          "label": "Nhập hàng",
+          "caption": "Tạo phiếu nhập"
+        },
+        "export": {
+          "label": "Xuất dùng",
+          "caption": "Ghi nhận cho bếp"
+        },
+        "item": {
+          "label": "Thêm mới",
+          "caption": "Tạo nguyên liệu"
+        }
       },
       "tabs": {
         "overview": "Tổng quan",

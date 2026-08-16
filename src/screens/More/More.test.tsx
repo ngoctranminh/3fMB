@@ -60,4 +60,32 @@ describe('More screen', () => {
       });
     });
   });
+
+  it('opens all operation handbook pages', () => {
+    const navigate = jest.fn();
+    const props = {
+      navigation: { navigate },
+      route: { key: 'more-test', name: Paths.More },
+    } as unknown as MainTabScreenProps<Paths.More>;
+    const queryClient = new QueryClient();
+
+    render(
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider storage={createMMKV()}>
+          <I18nextProvider i18n={i18n}>
+            <More {...props} />
+          </I18nextProvider>
+        </ThemeProvider>
+      </QueryClientProvider>,
+    );
+
+    fireEvent.press(screen.getByTestId('more-sauces'));
+    expect(navigate).toHaveBeenCalledWith(Paths.Sauces);
+
+    fireEvent.press(screen.getByTestId('more-purchase-guide'));
+    expect(navigate).toHaveBeenCalledWith(Paths.PurchaseGuide);
+
+    fireEvent.press(screen.getByTestId('more-prep-tasks'));
+    expect(navigate).toHaveBeenCalledWith(Paths.PrepTasks);
+  });
 });

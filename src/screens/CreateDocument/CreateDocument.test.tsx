@@ -41,8 +41,17 @@ describe('CreateDocument screen', () => {
           fullName: 'Đông lạnh / Cá hồi',
           id: '3',
           name: 'Cá hồi',
+          quantity: 8,
           unit: 'kg',
           unitPrice: 200_000,
+        },
+        {
+          fullName: 'Đông lạnh / Tôm',
+          id: '4',
+          name: 'Tôm',
+          quantity: 2,
+          unit: 'kg',
+          unitPrice: 150_000,
         },
       ],
     });
@@ -67,7 +76,7 @@ describe('CreateDocument screen', () => {
     jest.clearAllMocks();
   });
 
-  it('creates a receipt from a selected ingredient', async () => {
+  const renderScreen = (initialSubtype: 'purchase' | 'usage' = 'purchase') => {
     const replace = jest.fn();
     const queryClient = new QueryClient({
       defaultOptions: {
@@ -80,7 +89,7 @@ describe('CreateDocument screen', () => {
       route: {
         key: 'create-document-test',
         name: Paths.CreateDocument,
-        params: { initialSubtype: 'purchase' },
+        params: { initialSubtype },
       },
     } as unknown as RootScreenProps<Paths.CreateDocument>;
 
@@ -95,6 +104,12 @@ describe('CreateDocument screen', () => {
         </QueryClientProvider>
       </SafeAreaProvider>,
     );
+
+    return { replace };
+  };
+
+  it('creates a receipt from a selected ingredient', async () => {
+    const { replace } = renderScreen();
 
     await waitFor(() => {
       expect(screen.getByTestId('create-document-item-3')).toBeOnTheScreen();
@@ -124,5 +139,53 @@ describe('CreateDocument screen', () => {
         documentId: '101',
       });
     });
+  });
+
+  it('creates one receipt with multiple ingredients', async () => {
+    renderScreen();
+
+    await waitFor(() => {
+      expect(screen.getByTestId('create-document-item-3')).toBeOnTheScreen();
+    });
+
+    fireEvent.press(screen.getByTestId('create-document-item-3'));
+    fireEvent.changeText(screen.getByTestId('create-document-quantity'), '2');
+    fireEvent.press(screen.getByTestId('create-document-item-4'));
+    fireEvent.changeText(screen.getByTestId('create-document-quantity'), '1.5');
+    fireEvent.press(screen.getByTestId('create-document-submit'));
+
+    await waitFor(() => {
+      expect(mockedServices.createDocument.mock.calls[0]?.[0].lines).toEqual([
+        {
+          item_id: 3,
+          note: '',
+          quantity: 2,
+          unit_price: 200_000,
+        },
+        {
+          item_id: 4,
+          note: '',
+          quantity: 1.5,
+          unit_price: 150_000,
+        },
+      ]);
+    });
+  });
+
+  it('prevents exporting more than the available stock', async () => {
+    renderScreen('usage');
+
+    await waitFor(() => {
+      expect(screen.getByTestId('create-document-item-4')).toBeOnTheScreen();
+    });
+
+    fireEvent.press(screen.getByTestId('create-document-item-4'));
+    fireEvent.changeText(screen.getByTestId('create-document-quantity'), '3');
+    fireEvent.press(screen.getByTestId('create-document-submit'));
+
+    expect(
+      screen.getByText('Không thể xuất quá tồn kho (còn 2 kg)'),
+    ).toBeOnTheScreen();
+    expect(mockedServices.createDocument).not.toHaveBeenCalled();
   });
 });
