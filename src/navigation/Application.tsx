@@ -20,6 +20,7 @@ import {
   SauceDetail,
   Sauces,
   Startup,
+  TransactionHistory,
 } from '@/screens';
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -50,6 +51,10 @@ function ApplicationNavigator() {
           <Stack.Screen component={ReceiptDetail} name={Paths.ReceiptDetail} />
           <Stack.Screen component={SauceDetail} name={Paths.SauceDetail} />
           <Stack.Screen component={Sauces} name={Paths.Sauces} />
+          <Stack.Screen
+            component={TransactionHistory}
+            name={Paths.TransactionHistory}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaProvider>

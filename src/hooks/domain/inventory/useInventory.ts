@@ -175,6 +175,15 @@ export const useInventory = () => {
       onSuccess: invalidateAll,
     });
 
+  const useUpdateItemPriceMutation = () =>
+    useMutation({
+      mutationFn: (variables: {
+        readonly itemId: number;
+        readonly unitPrice: number;
+      }) => InventoryServices.updateItemPrice(variables),
+      onSuccess: invalidateAll,
+    });
+
   return {
     invalidateQuery,
     useAdjustQuantityMutation,
@@ -193,5 +202,6 @@ export const useInventory = () => {
     useFetchTodayTotalsQuery,
     useFetchTransactionsQuery,
     useFetchValueHistoryQuery,
+    useUpdateItemPriceMutation,
   };
 };

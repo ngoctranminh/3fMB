@@ -42,4 +42,5 @@ export type RootStackParamList = {
   [Paths.SauceDetail]: { readonly sauceId: string };
   [Paths.Sauces]: undefined;
   [Paths.Startup]: undefined;
+  [Paths.TransactionHistory]: undefined;
 };

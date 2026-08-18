@@ -16,5 +16,6 @@ export const enum Paths {
   SauceDetail = 'sauceDetail',
   Sauces = 'sauces',
   Startup = 'startup',
+  TransactionHistory = 'transactionHistory',
   Transactions = 'transactions',
 }

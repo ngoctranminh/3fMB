@@ -1,6 +1,13 @@
-import { Fragment } from 'react';
+import { Fragment, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import {
+  Image,
+  Modal,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 
 import { useInventory } from '@/hooks';
 import { Paths } from '@/navigation/paths';
@@ -9,12 +16,13 @@ import { useTheme } from '@/theme';
 
 import { Card, IconByVariant, StatusPill } from '@/components/atoms';
 import { DetailField, SectionHeader } from '@/components/molecules';
-import { SafeScreen } from '@/components/templates';
+import { FixedScreenHeader, SafeScreen } from '@/components/templates';
 
 import { resolveApiUrl } from '@/services/instance';
 
 const CONTENT_GAP = 16;
 const ICON_SIZE = 24;
+const PREVIEW_ICON_SIZE = 28;
 
 function ReceiptDetail({
   navigation,
@@ -28,6 +36,7 @@ function ReceiptDetail({
     useInventory();
   const documentQuery = useFetchDocumentDetailQuery(documentId);
   const cancelMutation = useCancelDocumentMutation();
+  const [isPhotoPreviewVisible, setIsPhotoPreviewVisible] = useState(false);
 
   const receipt = documentQuery.data;
   const photoUrl = receipt?.imageUrl
@@ -52,14 +61,7 @@ function ReceiptDetail({
         style={[layout.flex_1, backgrounds.surfaceSunken]}
         testID="receipt-detail-screen"
       >
-        <ScrollView
-          contentContainerStyle={[
-            gutters.gap_16,
-            gutters.paddingVertical_16,
-            gutters.paddingHorizontal_16,
-          ]}
-          showsVerticalScrollIndicator={false}
-        >
+        <FixedScreenHeader>
           <View style={[layout.row, layout.itemsCenter, gutters.gap_12]}>
             <TouchableOpacity
               accessibilityRole="button"
@@ -94,7 +96,16 @@ function ReceiptDetail({
               />
             ) : undefined}
           </View>
+        </FixedScreenHeader>
 
+        <ScrollView
+          contentContainerStyle={[
+            gutters.gap_16,
+            gutters.paddingVertical_16,
+            gutters.paddingHorizontal_16,
+          ]}
+          showsVerticalScrollIndicator={false}
+        >
           <Card>
             <DetailField
               label={t('screen_receipt_detail.partner')}
@@ -125,13 +136,27 @@ function ReceiptDetail({
           {photoUrl ? (
             <Card style={[gutters.gap_12]}>
               <SectionHeader title={t('screen_receipt_detail.photo_title')} />
-              <Image
-                accessibilityLabel={t('screen_receipt_detail.photo_preview')}
-                resizeMode="cover"
-                source={{ uri: photoUrl }}
-                style={{ borderRadius: 12, height: 240, width: '100%' }}
-                testID="receipt-photo"
-              />
+              <TouchableOpacity
+                accessibilityLabel={t('screen_receipt_detail.photo_open')}
+                accessibilityRole="button"
+                onPress={() => {
+                  setIsPhotoPreviewVisible(true);
+                }}
+                testID="receipt-photo-open"
+              >
+                <Image
+                  accessibilityLabel={t('screen_receipt_detail.photo_preview')}
+                  resizeMode="contain"
+                  source={{ uri: photoUrl }}
+                  style={{
+                    backgroundColor: colors.surfaceSunken,
+                    borderRadius: 12,
+                    height: 260,
+                    width: '100%',
+                  }}
+                  testID="receipt-photo"
+                />
+              </TouchableOpacity>
             </Card>
           ) : undefined}
 
@@ -214,6 +239,58 @@ function ReceiptDetail({
 
           <View style={{ height: CONTENT_GAP }} />
         </ScrollView>
+
+        {photoUrl ? (
+          <Modal
+            animationType="fade"
+            onRequestClose={() => {
+              setIsPhotoPreviewVisible(false);
+            }}
+            statusBarTranslucent
+            transparent
+            visible={isPhotoPreviewVisible}
+          >
+            <View
+              style={[
+                layout.flex_1,
+                layout.itemsCenter,
+                layout.justifyCenter,
+                gutters.padding_16,
+                { backgroundColor: 'rgba(0, 0, 0, 0.92)' },
+              ]}
+              testID="receipt-photo-modal"
+            >
+              <TouchableOpacity
+                accessibilityLabel={t('screen_receipt_detail.photo_close')}
+                accessibilityRole="button"
+                onPress={() => {
+                  setIsPhotoPreviewVisible(false);
+                }}
+                style={[
+                  layout.absolute,
+                  layout.itemsCenter,
+                  layout.justifyCenter,
+                  { right: 20, top: 56 },
+                ]}
+                testID="receipt-photo-close"
+              >
+                <IconByVariant
+                  height={PREVIEW_ICON_SIZE}
+                  path="x-circle"
+                  stroke={colors.gray50}
+                  width={PREVIEW_ICON_SIZE}
+                />
+              </TouchableOpacity>
+
+              <Image
+                accessibilityLabel={t('screen_receipt_detail.photo_preview')}
+                resizeMode="contain"
+                source={{ uri: photoUrl }}
+                style={{ height: '80%', width: '100%' }}
+              />
+            </View>
+          </Modal>
+        ) : undefined}
       </View>
     </SafeScreen>
   );

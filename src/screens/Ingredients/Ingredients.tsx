@@ -23,7 +23,7 @@ import {
   IngredientsSummary,
   TAB_BAR_BASE_HEIGHT,
 } from '@/components/organisms';
-import { SafeScreen } from '@/components/templates';
+import { FixedScreenHeader, SafeScreen } from '@/components/templates';
 
 const ALL_GROUPS = 'all';
 const ON_BLUE = '#FFFFFF';
@@ -129,34 +129,22 @@ function Ingredients({ navigation }: MainTabScreenProps<Paths.Ingredients>) {
         style={[layout.flex_1, backgrounds.surfaceSunken]}
         testID="ingredients-screen"
       >
-        <ScrollView
-          contentContainerStyle={[
-            gutters.gap_16,
-            gutters.paddingVertical_16,
-            { paddingBottom: pillBottom + PILL_HEIGHT + PILL_GAP },
-          ]}
-          showsVerticalScrollIndicator={false}
-        >
-          <View style={[gutters.paddingHorizontal_16]}>
-            <IngredientsHeader
-              onBack={() => {
-                navigation.navigate(Paths.Overview);
-              }}
-              onFilter={handleFilter}
-              onMenu={() => {
-                navigation.navigate(Paths.More);
-              }}
-              onSearch={() => {
-                searchInputReference.current?.focus();
-              }}
-            />
-          </View>
+        <FixedScreenHeader style={[gutters.gap_12]}>
+          <IngredientsHeader
+            onBack={() => {
+              navigation.navigate(Paths.Overview);
+            }}
+            onFilter={handleFilter}
+            onMenu={() => {
+              navigation.navigate(Paths.More);
+            }}
+            onSearch={() => {
+              searchInputReference.current?.focus();
+            }}
+          />
 
           <ScrollView
-            contentContainerStyle={[
-              gutters.gap_8,
-              gutters.paddingHorizontal_16,
-            ]}
+            contentContainerStyle={[gutters.gap_8]}
             horizontal
             showsHorizontalScrollIndicator={false}
           >
@@ -176,7 +164,16 @@ function Ingredients({ navigation }: MainTabScreenProps<Paths.Ingredients>) {
               />
             ))}
           </ScrollView>
+        </FixedScreenHeader>
 
+        <ScrollView
+          contentContainerStyle={[
+            gutters.gap_16,
+            gutters.paddingVertical_16,
+            { paddingBottom: pillBottom + PILL_HEIGHT + PILL_GAP },
+          ]}
+          showsVerticalScrollIndicator={false}
+        >
           <View style={[gutters.gap_16, gutters.paddingHorizontal_16]}>
             <IngredientsSummary
               expiredCount={summary?.overdue_count ?? 0}

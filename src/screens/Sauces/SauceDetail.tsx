@@ -8,7 +8,7 @@ import type { RootScreenProps } from '@/navigation/types';
 import { useTheme } from '@/theme';
 
 import { Card, CategoryChip, IconByVariant } from '@/components/atoms';
-import { SafeScreen } from '@/components/templates';
+import { FixedScreenHeader, SafeScreen } from '@/components/templates';
 
 import SauceAccessGuard from './SauceAccessGuard';
 import { getSauceRecipe } from './sauceRecipes';
@@ -40,14 +40,7 @@ function SauceDetail({
           style={[layout.flex_1, backgrounds.surfaceSunken]}
           testID="sauce-detail-screen"
         >
-          <ScrollView
-            contentContainerStyle={[
-              gutters.gap_16,
-              gutters.padding_16,
-              gutters.paddingBottom_40,
-            ]}
-            showsVerticalScrollIndicator={false}
-          >
+          <FixedScreenHeader>
             <View style={[layout.row, layout.itemsCenter, gutters.gap_12]}>
               <TouchableOpacity
                 accessibilityRole="button"
@@ -72,7 +65,16 @@ function SauceDetail({
                 </Text>
               </View>
             </View>
+          </FixedScreenHeader>
 
+          <ScrollView
+            contentContainerStyle={[
+              gutters.gap_16,
+              gutters.padding_16,
+              gutters.paddingBottom_40,
+            ]}
+            showsVerticalScrollIndicator={false}
+          >
             {recipe ? (
               <>
                 {recipe.ingredients.length > 0 ? (

@@ -186,4 +186,19 @@ export const InventoryServices = {
       .parse(response)
       .map((point) => toChartPoint(point));
   },
+
+  updateItemPrice: async ({
+    itemId,
+    unitPrice,
+  }: {
+    readonly itemId: number;
+    readonly unitPrice: number;
+  }) => {
+    const response = await apiInstance
+      .patch(`api/items/${String(itemId)}`, {
+        json: { unit_price: unitPrice },
+      })
+      .json();
+    return serverItemDetailSchema.parse(response);
+  },
 };

@@ -1,11 +1,9 @@
 import type { BottomTabBarProps } from '@react-navigation/bottom-tabs';
-import type { NavigationProp } from '@react-navigation/native';
 
 import { Text, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Paths } from '@/navigation/paths';
-import type { RootStackParamList } from '@/navigation/types';
 import { useTheme } from '@/theme';
 
 import { Badge, IconByVariant } from '@/components/atoms';
@@ -89,14 +87,6 @@ function MainTabBar({ descriptors, navigation, state }: BottomTabBarProps) {
           };
 
           if (isFab) {
-            const handleCreateDocument = () => {
-              navigation
-                .getParent<NavigationProp<RootStackParamList>>()
-                .navigate(Paths.CreateDocument, {
-                  initialSubtype: 'purchase',
-                });
-            };
-
             return (
               <View
                 key={route.key}
@@ -105,7 +95,7 @@ function MainTabBar({ descriptors, navigation, state }: BottomTabBarProps) {
                 <TouchableOpacity
                   accessibilityLabel={label}
                   accessibilityRole="button"
-                  onPress={handleCreateDocument}
+                  onPress={onPress}
                   style={[components.tabBarFab, { marginBottom: FAB_LIFT }]}
                   testID="tab-fab"
                 >

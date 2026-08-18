@@ -293,6 +293,7 @@ export type ItemDetail = {
   readonly totalValue: string;
   readonly unit: string;
   readonly unitPrice: string;
+  readonly unitPriceValue: number;
 };
 
 export type LedgerEntry = {

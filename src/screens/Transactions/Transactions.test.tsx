@@ -119,6 +119,8 @@ describe('Transactions screen', () => {
 
     expect(screen.getByText('Nhập / Xuất kho')).toBeOnTheScreen();
     expect(screen.getByTestId('action-receive')).toBeOnTheScreen();
+    expect(screen.getByTestId('action-other_in')).toBeOnTheScreen();
+    expect(screen.queryByTestId('action-usage')).not.toBeOnTheScreen();
     expect(screen.getByTestId('transactions-today-totals')).toBeOnTheScreen();
 
     await waitFor(() => {
@@ -127,20 +129,18 @@ describe('Transactions screen', () => {
     expect(screen.getByText('569.800 Kč')).toBeOnTheScreen();
 
     expect(screen.getByText('NK260806-001')).toBeOnTheScreen();
+    expect(screen.getByText('XK260806-003')).toBeOnTheScreen();
   });
 
-  it('shows only receipts belonging to the active tab', async () => {
+  it('does not render the redundant stock-in and stock-out tabs', async () => {
     renderScreen();
 
     await waitFor(() => {
       expect(screen.getByText('NK260806-001')).toBeOnTheScreen();
     });
-    expect(screen.queryByText('XK260806-003')).not.toBeOnTheScreen();
-
-    fireEvent.press(screen.getByTestId('segment-export'));
-
     expect(screen.getByText('XK260806-003')).toBeOnTheScreen();
-    expect(screen.queryByText('NK260806-001')).not.toBeOnTheScreen();
+    expect(screen.queryByTestId('segment-import')).not.toBeOnTheScreen();
+    expect(screen.queryByTestId('segment-export')).not.toBeOnTheScreen();
   });
 
   it('filters the list by receipt subtype', async () => {
@@ -187,7 +187,7 @@ describe('Transactions screen', () => {
     expect(screen.getByText('Không tìm thấy phiếu nào')).toBeOnTheScreen();
   });
 
-  it('opens the matching create receipt flow from a quick action', () => {
+  it('opens a dedicated create flow from each quick action', () => {
     const navigation = createTabScreenProps(Paths.Transactions);
     const queryClient = new QueryClient({
       defaultOptions: { queries: { retry: false } },
@@ -209,5 +209,37 @@ describe('Transactions screen', () => {
     expect(navigation.navigate).toHaveBeenCalledWith(Paths.CreateDocument, {
       initialSubtype: 'purchase',
     });
+
+    fireEvent.press(screen.getByTestId('action-return'));
+    expect(navigation.navigate).toHaveBeenCalledWith(Paths.CreateDocument, {
+      initialSubtype: 'return',
+    });
+
+    fireEvent.press(screen.getByTestId('action-other_in'));
+    expect(navigation.navigate).toHaveBeenCalledWith(Paths.CreateDocument, {
+      initialSubtype: 'other_in',
+    });
+  });
+
+  it('opens the full transaction history', () => {
+    const navigation = createTabScreenProps(Paths.Transactions);
+    const queryClient = new QueryClient({
+      defaultOptions: { queries: { retry: false } },
+    });
+
+    render(
+      <SafeAreaProvider>
+        <QueryClientProvider client={queryClient}>
+          <ThemeProvider storage={storage}>
+            <I18nextProvider i18n={i18n}>
+              <Transactions {...navigation.props} />
+            </I18nextProvider>
+          </ThemeProvider>
+        </QueryClientProvider>
+      </SafeAreaProvider>,
+    );
+
+    fireEvent.press(screen.getByTestId('transactions-history'));
+    expect(navigation.navigate).toHaveBeenCalledWith(Paths.TransactionHistory);
   });
 });

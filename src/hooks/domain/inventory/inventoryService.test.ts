@@ -5,6 +5,7 @@ import { InventoryServices } from './inventoryService';
 jest.mock('@/services/instance', () => ({
   apiInstance: {
     get: jest.fn(),
+    patch: jest.fn(),
   },
 }));
 
@@ -53,6 +54,30 @@ describe('InventoryServices localization', () => {
 
     expect(mockedApiInstance.get).toHaveBeenCalledWith('api/alerts', {
       searchParams: { limit: 4, locale: 'cs-CZ' },
+    });
+  });
+
+  it('patches an item unit price', async () => {
+    mockedApiInstance.patch.mockReturnValue({
+      json: jest.fn().mockResolvedValue({
+        // eslint-disable-next-line unicorn/no-null
+        expires_at: null,
+        id: 1,
+        min_quantity: 2,
+        name: 'Gạo thơm',
+        note: '',
+        parent_id: 2,
+        quantity: 5,
+        translations: {},
+        unit: 'kg',
+        unit_price: 125,
+      }),
+    } as never);
+
+    await InventoryServices.updateItemPrice({ itemId: 1, unitPrice: 125 });
+
+    expect(mockedApiInstance.patch).toHaveBeenCalledWith('api/items/1', {
+      json: { unit_price: 125 },
     });
   });
 });

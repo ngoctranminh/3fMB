@@ -12,6 +12,7 @@ import { createMMKV, MMKV } from 'react-native-mmkv';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { InventoryServices } from '@/hooks/domain/inventory/inventoryService';
+import type { DocumentSubtype } from '@/hooks/domain/inventory/schema';
 import { Paths } from '@/navigation/paths';
 import type { RootScreenProps } from '@/navigation/types';
 import { ThemeProvider } from '@/theme';
@@ -85,7 +86,7 @@ describe('CreateDocument screen', () => {
     jest.clearAllMocks();
   });
 
-  const renderScreen = (initialSubtype: 'purchase' | 'usage' = 'purchase') => {
+  const renderScreen = (initialSubtype: DocumentSubtype = 'purchase') => {
     const replace = jest.fn();
     const queryClient = new QueryClient({
       defaultOptions: {
@@ -116,6 +117,25 @@ describe('CreateDocument screen', () => {
 
     return { replace };
   };
+
+  it.each([
+    ['purchase', 'Tạo phiếu nhập hàng', 'Nhà cung cấp'],
+    ['return', 'Tạo phiếu trả hàng', 'Nhà cung cấp nhận trả'],
+    ['other_in', 'Tạo phiếu nhập khác', 'Nguồn nhập / bộ phận'],
+  ] as const)(
+    'renders a dedicated %s form without redundant selectors',
+    (subtype, title, partyLabel) => {
+      renderScreen(subtype);
+
+      expect(screen.getAllByText(title).length).toBeGreaterThan(0);
+      expect(screen.getByText(partyLabel)).toBeOnTheScreen();
+      expect(screen.queryByTestId('segment-import')).not.toBeOnTheScreen();
+      expect(
+        screen.queryByTestId('create-document-subtype-purchase'),
+      ).not.toBeOnTheScreen();
+      expect(screen.queryByText('Loại phiếu')).not.toBeOnTheScreen();
+    },
+  );
 
   it('creates a receipt from a selected ingredient', async () => {
     const { replace } = renderScreen();
@@ -150,6 +170,42 @@ describe('CreateDocument screen', () => {
     });
   });
 
+  it('shows quantity and price fields before selecting an ingredient', async () => {
+    renderScreen();
+
+    const quantityInput = screen.getByTestId('create-document-quantity');
+    const unitPriceInput = screen.getByTestId('create-document-unit-price');
+
+    expect(quantityInput).toHaveProp('editable', false);
+    expect(unitPriceInput).toHaveProp('editable', false);
+    expect(screen.getByText('Số lượng và đơn giá')).toBeOnTheScreen();
+    expect(
+      screen.getAllByPlaceholderText('Chọn nguyên liệu trước'),
+    ).toHaveLength(2);
+
+    await waitFor(() => {
+      expect(screen.getByTestId('create-document-item-3')).toBeOnTheScreen();
+    });
+    fireEvent.press(screen.getByTestId('create-document-item-3'));
+
+    expect(screen.getByTestId('create-document-item-3')).toHaveProp(
+      'accessibilityState',
+      { selected: true },
+    );
+    expect(screen.getByTestId('create-document-line-3')).toHaveProp(
+      'accessibilityState',
+      { selected: true },
+    );
+    expect(screen.getByText('Đang sửa: Đông lạnh / Cá hồi')).toBeOnTheScreen();
+    expect(
+      screen.getByTestId('create-document-editing-banner'),
+    ).toBeOnTheScreen();
+    expect(quantityInput).toHaveProp('editable', true);
+    expect(unitPriceInput).toHaveProp('editable', true);
+    expect(quantityInput).toHaveProp('value', '1');
+    expect(unitPriceInput).toHaveProp('value', '200000');
+  });
+
   it('creates one receipt with multiple ingredients', async () => {
     renderScreen();
 
@@ -181,6 +237,23 @@ describe('CreateDocument screen', () => {
     });
   });
 
+  it('keeps the subtype selected by the outer quick action', async () => {
+    renderScreen('return');
+
+    await waitFor(() => {
+      expect(screen.getByTestId('create-document-item-3')).toBeOnTheScreen();
+    });
+
+    fireEvent.press(screen.getByTestId('create-document-item-3'));
+    fireEvent.press(screen.getByTestId('create-document-submit'));
+
+    await waitFor(() => {
+      expect(mockedServices.createDocument.mock.calls[0]?.[0].subtype).toBe(
+        'return',
+      );
+    });
+  });
+
   it('captures and uploads a photo with an import receipt', async () => {
     mockedLaunchCamera.mockResolvedValue({
       assets: [
@@ -203,6 +276,13 @@ describe('CreateDocument screen', () => {
     fireEvent.press(screen.getByTestId('create-document-take-photo'));
 
     await waitFor(() => {
+      expect(mockedLaunchCamera).toHaveBeenCalledWith(
+        expect.objectContaining({
+          maxHeight: 1024,
+          maxWidth: 1024,
+          quality: 0.5,
+        }),
+      );
       expect(
         screen.getByTestId('create-document-photo-preview'),
       ).toBeOnTheScreen();

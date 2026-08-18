@@ -14,4 +14,5 @@ export { default as ReceiptDetail } from './ReceiptDetail/ReceiptDetail';
 export { default as SauceDetail } from './Sauces/SauceDetail';
 export { default as Sauces } from './Sauces/Sauces';
 export { default as Startup } from './Startup/Startup';
+export { default as TransactionHistory } from './Transactions/TransactionHistory';
 export { default as Transactions } from './Transactions/Transactions';

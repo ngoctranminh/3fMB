@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 
@@ -7,8 +8,8 @@ import type { RootScreenProps } from '@/navigation/types';
 import { useTheme } from '@/theme';
 
 import { Card, IconByVariant, StatusPill } from '@/components/atoms';
-import { DetailField, SectionHeader } from '@/components/molecules';
-import { SafeScreen } from '@/components/templates';
+import { DetailField, FormField, SectionHeader } from '@/components/molecules';
+import { FixedScreenHeader, SafeScreen } from '@/components/templates';
 
 const CONTENT_GAP = 16;
 const HALF_STEP = 0.5;
@@ -26,11 +27,16 @@ function ItemDetail({ navigation, route }: RootScreenProps<Paths.ItemDetail>) {
     useAdjustQuantityMutation,
     useFetchItemDetailQuery,
     useFetchItemLedgerQuery,
+    useUpdateItemPriceMutation,
   } = useInventory();
 
   const itemQuery = useFetchItemDetailQuery(itemId);
   const ledgerQuery = useFetchItemLedgerQuery(itemId);
   const adjustMutation = useAdjustQuantityMutation();
+  const priceMutation = useUpdateItemPriceMutation();
+  const [isEditingPrice, setIsEditingPrice] = useState(false);
+  const [priceDraft, setPriceDraft] = useState('');
+  const [priceError, setPriceError] = useState<string>();
 
   const item = itemQuery.data;
   const ledger = ledgerQuery.data ?? [];
@@ -54,6 +60,36 @@ function ItemDetail({ navigation, route }: RootScreenProps<Paths.ItemDetail>) {
       return;
     }
     adjustMutation.mutate({ delta, itemId: item.id });
+  };
+
+  const handleStartPriceEdit = () => {
+    if (!item) {
+      return;
+    }
+    setPriceDraft(String(item.unitPriceValue));
+    setPriceError(undefined);
+    setIsEditingPrice(true);
+  };
+
+  const handleSavePrice = () => {
+    if (!item) {
+      return;
+    }
+    const unitPrice = Number(priceDraft.trim().replace(',', '.'));
+    if (!Number.isFinite(unitPrice) || unitPrice < 0) {
+      setPriceError(t('screen_item_detail.price_validation'));
+      return;
+    }
+
+    setPriceError(undefined);
+    priceMutation.mutate(
+      { itemId: item.id, unitPrice },
+      {
+        onSuccess: () => {
+          setIsEditingPrice(false);
+        },
+      },
+    );
   };
 
   const handleResetError = () => {
@@ -91,14 +127,7 @@ function ItemDetail({ navigation, route }: RootScreenProps<Paths.ItemDetail>) {
         style={[layout.flex_1, backgrounds.surfaceSunken]}
         testID="item-detail-screen"
       >
-        <ScrollView
-          contentContainerStyle={[
-            gutters.gap_16,
-            gutters.paddingVertical_16,
-            gutters.paddingHorizontal_16,
-          ]}
-          showsVerticalScrollIndicator={false}
-        >
+        <FixedScreenHeader>
           <View style={[layout.row, layout.itemsCenter, gutters.gap_12]}>
             <TouchableOpacity
               accessibilityRole="button"
@@ -132,16 +161,90 @@ function ItemDetail({ navigation, route }: RootScreenProps<Paths.ItemDetail>) {
               />
             ) : undefined}
           </View>
+        </FixedScreenHeader>
 
+        <ScrollView
+          contentContainerStyle={[
+            gutters.gap_16,
+            gutters.paddingVertical_16,
+            gutters.paddingHorizontal_16,
+          ]}
+          showsVerticalScrollIndicator={false}
+        >
           <Card>
             <DetailField
               label={t('screen_item_detail.stock')}
               value={item?.quantityLabel ?? '—'}
             />
-            <DetailField
-              label={t('screen_item_detail.unit_price')}
-              value={item?.unitPrice ?? '—'}
-            />
+            {isEditingPrice ? (
+              <View style={[gutters.gap_8, gutters.paddingVertical_8]}>
+                <FormField
+                  error={priceError}
+                  keyboardType="decimal-pad"
+                  label={t('screen_item_detail.unit_price')}
+                  onChangeText={setPriceDraft}
+                  testID="item-unit-price-input"
+                  value={priceDraft}
+                />
+                <View
+                  style={[
+                    layout.row,
+                    layout.itemsCenter,
+                    layout.justifyEnd,
+                    gutters.gap_16,
+                  ]}
+                >
+                  <TouchableOpacity
+                    accessibilityRole="button"
+                    disabled={priceMutation.isPending}
+                    onPress={() => {
+                      setIsEditingPrice(false);
+                      setPriceError(undefined);
+                    }}
+                    testID="item-cancel-price"
+                  >
+                    <Text style={[fonts.size_14, fonts.gray200]}>
+                      {t('screen_item_detail.cancel_price')}
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    accessibilityRole="button"
+                    disabled={priceMutation.isPending}
+                    onPress={handleSavePrice}
+                    testID="item-save-price"
+                  >
+                    <Text style={[fonts.size_14, fonts.blue500, fonts.bold]}>
+                      {priceMutation.isPending
+                        ? t('screen_item_detail.price_updating')
+                        : t('screen_item_detail.save_price')}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+                {priceMutation.isError ? (
+                  <Text style={[fonts.size_12, fonts.red500]}>
+                    {t('screen_item_detail.price_update_failed')}
+                  </Text>
+                ) : undefined}
+              </View>
+            ) : (
+              <View style={[layout.row, layout.itemsCenter]}>
+                <DetailField
+                  label={t('screen_item_detail.unit_price')}
+                  style={[layout.flex_1]}
+                  value={item?.unitPrice ?? '—'}
+                />
+                <TouchableOpacity
+                  accessibilityRole="button"
+                  disabled={!item}
+                  onPress={handleStartPriceEdit}
+                  testID="item-edit-price"
+                >
+                  <Text style={[fonts.size_12, fonts.blue500, fonts.bold]}>
+                    {t('screen_item_detail.edit_price')}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            )}
             <DetailField
               label={t('screen_item_detail.total_value')}
               value={item?.totalValue ?? '—'}

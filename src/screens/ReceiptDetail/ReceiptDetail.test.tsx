@@ -136,10 +136,27 @@ describe('ReceiptDetail screen', () => {
       expect(screen.getByTestId('receipt-photo')).toBeOnTheScreen();
     });
 
-    expect(screen.getByText('Ảnh nhập hàng')).toBeOnTheScreen();
+    expect(screen.getByText('Hình ảnh đính kèm')).toBeOnTheScreen();
     expect(screen.getByTestId('receipt-photo')).toHaveProp('source', {
       uri: resolveApiUrl('/api/documents/22/image'),
     });
+
+    fireEvent.press(screen.getByTestId('receipt-photo-open'));
+    expect(screen.getByTestId('receipt-photo-modal')).toBeOnTheScreen();
+
+    fireEvent.press(screen.getByTestId('receipt-photo-close'));
+    expect(screen.queryByTestId('receipt-photo-modal')).not.toBeOnTheScreen();
+  });
+
+  it('does not render an image section when the receipt has no image', async () => {
+    renderScreen(storage);
+
+    await waitFor(() => {
+      expect(screen.getByText('XK260806-001')).toBeOnTheScreen();
+    });
+
+    expect(screen.queryByTestId('receipt-photo')).not.toBeOnTheScreen();
+    expect(screen.queryByTestId('receipt-photo-modal')).not.toBeOnTheScreen();
   });
 
   it('cancels the receipt when the cancel button is pressed', async () => {

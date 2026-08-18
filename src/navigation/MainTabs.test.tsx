@@ -1,6 +1,6 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { render, screen } from '@testing-library/react-native';
+import { fireEvent, render, screen } from '@testing-library/react-native';
 import { I18nextProvider } from 'react-i18next';
 import { createMMKV, MMKV } from 'react-native-mmkv';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -58,5 +58,8 @@ describe('MainTabs navigator', () => {
     expect(screen.getByTestId('tab-more')).toBeOnTheScreen();
 
     expect(screen.getByText('Nhập/Xuất')).toBeOnTheScreen();
+
+    fireEvent.press(screen.getByTestId('tab-fab'));
+    expect(screen.getByTestId('transactions-screen')).toBeOnTheScreen();
   });
 });

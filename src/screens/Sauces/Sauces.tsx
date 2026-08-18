@@ -13,7 +13,7 @@ import type { RootScreenProps } from '@/navigation/types';
 import { useTheme } from '@/theme';
 
 import { Card, IconByVariant } from '@/components/atoms';
-import { SafeScreen } from '@/components/templates';
+import { FixedScreenHeader, SafeScreen } from '@/components/templates';
 
 import SauceAccessGuard from './SauceAccessGuard';
 import { SAUCE_RECIPES } from './sauceRecipes';
@@ -52,15 +52,7 @@ function Sauces({ navigation }: RootScreenProps<Paths.Sauces>) {
           style={[layout.flex_1, backgrounds.surfaceSunken]}
           testID="sauces-screen"
         >
-          <ScrollView
-            contentContainerStyle={[
-              gutters.gap_16,
-              gutters.padding_16,
-              gutters.paddingBottom_40,
-            ]}
-            keyboardShouldPersistTaps="handled"
-            showsVerticalScrollIndicator={false}
-          >
+          <FixedScreenHeader>
             <View style={[layout.row, layout.itemsCenter, gutters.gap_12]}>
               <TouchableOpacity
                 accessibilityRole="button"
@@ -85,7 +77,17 @@ function Sauces({ navigation }: RootScreenProps<Paths.Sauces>) {
                 </Text>
               </View>
             </View>
+          </FixedScreenHeader>
 
+          <ScrollView
+            contentContainerStyle={[
+              gutters.gap_16,
+              gutters.padding_16,
+              gutters.paddingBottom_40,
+            ]}
+            keyboardShouldPersistTaps="handled"
+            showsVerticalScrollIndicator={false}
+          >
             <View style={[components.searchInputWrapper]}>
               <IconByVariant
                 height={SEARCH_ICON_SIZE}

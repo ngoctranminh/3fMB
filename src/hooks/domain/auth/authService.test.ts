@@ -30,8 +30,8 @@ describe('AuthServices', () => {
       'api/auth/change-password',
       {
         json: {
-          currentPassword: 'old-password',
-          newPassword: 'new-password',
+          current_password: 'old-password',
+          new_password: 'new-password',
         },
       },
     );

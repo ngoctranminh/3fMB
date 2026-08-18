@@ -24,8 +24,8 @@ import type { RootScreenProps } from '@/navigation/types';
 import { useTheme } from '@/theme';
 
 import { Card, CategoryChip, IconByVariant } from '@/components/atoms';
-import { FormField, SegmentTabs } from '@/components/molecules';
-import { SafeScreen } from '@/components/templates';
+import { FormField } from '@/components/molecules';
+import { FixedScreenHeader, SafeScreen } from '@/components/templates';
 
 type CapturedPhoto = {
   readonly dataUrl: string;
@@ -48,17 +48,14 @@ type FieldErrors = {
 
 const ICON_SIZE = 24;
 const SEARCH_ICON_SIZE = 18;
-const SUBTYPES_BY_TAB = {
-  export: ['usage', 'waste', 'other_out'],
-  import: ['purchase', 'return', 'other_in'],
-} as const satisfies Record<TransactionKind, readonly DocumentSubtype[]>;
+const IMPORT_SUBTYPES = new Set<DocumentSubtype>([
+  'other_in',
+  'purchase',
+  'return',
+]);
 
-const tabForSubtype = (subtype: DocumentSubtype): TransactionKind =>
-  SUBTYPES_BY_TAB.import.includes(
-    subtype as (typeof SUBTYPES_BY_TAB.import)[number],
-  )
-    ? 'import'
-    : 'export';
+const kindForSubtype = (subtype: DocumentSubtype): TransactionKind =>
+  IMPORT_SUBTYPES.has(subtype) ? 'import' : 'export';
 
 const normalizeSearch = (value: string) =>
   value
@@ -89,10 +86,8 @@ function CreateDocument({
   const [party, setParty] = useState('');
   const [photo, setPhoto] = useState<CapturedPhoto>();
   const [query, setQuery] = useState('');
-  const [subtype, setSubtype] = useState(route.params.initialSubtype);
-  const [tab, setTab] = useState<TransactionKind>(() =>
-    tabForSubtype(route.params.initialSubtype),
-  );
+  const subtype = route.params.initialSubtype;
+  const kind = kindForSubtype(subtype);
 
   const selectedLine = lines.find((line) => line.itemId === itemId);
   const selectedItem = catalogQuery.data?.items.find(
@@ -186,7 +181,7 @@ function CreateDocument({
         invalidItemId = line.itemId;
         break;
       }
-      if (tab === 'export' && item && quantityValue > item.quantity) {
+      if (kind === 'export' && item && quantityValue > item.quantity) {
         errors.stock = t('screen_create_document.validation.stock', {
           quantity: item.quantity,
           unit: item.unit,
@@ -208,7 +203,7 @@ function CreateDocument({
     createMutation.mutate(
       {
         created_by: 'Admin',
-        ...(tab === 'import' && photo
+        ...(kind === 'import' && photo
           ? { image: photo.dataUrl, image_name: photo.fileName }
           : {}),
         lines: lines.map((line) => ({
@@ -240,10 +235,10 @@ function CreateDocument({
         assetRepresentationMode: 'compatible',
         cameraType: 'back',
         includeBase64: true,
-        maxHeight: 1280,
-        maxWidth: 1280,
+        maxHeight: 1024,
+        maxWidth: 1024,
         mediaType: 'photo',
-        quality: 0.6,
+        quality: 0.5,
       });
 
       if (response.didCancel) return;
@@ -274,11 +269,6 @@ function CreateDocument({
     }
   };
 
-  const tabOptions = (['import', 'export'] as const).map((id) => ({
-    id,
-    label: t(`screen_transactions.tabs.${id}`),
-  }));
-
   return (
     <SafeScreen
       edges={['top', 'left', 'right']}
@@ -291,14 +281,7 @@ function CreateDocument({
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         style={[layout.flex_1, backgrounds.surfaceSunken]}
       >
-        <ScrollView
-          contentContainerStyle={[
-            gutters.gap_16,
-            gutters.padding_16,
-            gutters.paddingBottom_40,
-          ]}
-          keyboardShouldPersistTaps="handled"
-        >
+        <FixedScreenHeader>
           <View style={[layout.row, layout.itemsCenter, gutters.gap_12]}>
             <TouchableOpacity
               accessibilityRole="button"
@@ -317,45 +300,20 @@ function CreateDocument({
             <Text
               style={[layout.flex_1, fonts.size_20, fonts.gray800, fonts.bold]}
             >
-              {t('screen_create_document.title')}
+              {t(`screen_create_document.titles.${subtype}`)}
             </Text>
           </View>
+        </FixedScreenHeader>
 
+        <ScrollView
+          contentContainerStyle={[
+            gutters.gap_16,
+            gutters.padding_16,
+            gutters.paddingBottom_40,
+          ]}
+          keyboardShouldPersistTaps="handled"
+        >
           <Card style={[gutters.gap_16]}>
-            <SegmentTabs
-              activeId={tab}
-              onSelect={(id) => {
-                const nextTab = id as TransactionKind;
-                setTab(nextTab);
-                setSubtype(SUBTYPES_BY_TAB[nextTab][0]);
-                setFieldErrors({});
-              }}
-              options={tabOptions}
-            />
-
-            <View style={[gutters.gap_8]}>
-              <Text style={[fonts.size_14, fonts.gray800]}>
-                {t('screen_create_document.subtype')}
-              </Text>
-              <ScrollView
-                contentContainerStyle={[gutters.gap_8]}
-                horizontal
-                showsHorizontalScrollIndicator={false}
-              >
-                {SUBTYPES_BY_TAB[tab].map((option) => (
-                  <CategoryChip
-                    isActive={option === subtype}
-                    key={option}
-                    label={t(`screen_transactions.filters.${option}`)}
-                    onPress={() => {
-                      setSubtype(option);
-                    }}
-                    testID={`create-document-subtype-${option}`}
-                  />
-                ))}
-              </ScrollView>
-            </View>
-
             <View style={[gutters.gap_8]}>
               <View
                 style={[layout.row, layout.itemsCenter, layout.justifyBetween]}
@@ -394,7 +352,7 @@ function CreateDocument({
               >
                 {visibleItems.map((item) => (
                   <CategoryChip
-                    isActive={lines.some((line) => line.itemId === item.id)}
+                    isActive={item.id === itemId}
                     key={item.id}
                     label={item.fullName}
                     onPress={() => {
@@ -425,6 +383,7 @@ function CreateDocument({
                   const item = catalogQuery.data?.items.find(
                     (entry) => entry.id === line.itemId,
                   );
+                  const isEditing = itemId === line.itemId;
                   const lineValue =
                     Number(line.quantity) * Number(line.unitPrice);
 
@@ -435,11 +394,23 @@ function CreateDocument({
                         layout.row,
                         layout.itemsCenter,
                         gutters.gap_8,
-                        gutters.paddingVertical_4,
+                        gutters.paddingVertical_8,
+                        gutters.paddingHorizontal_8,
+                        {
+                          backgroundColor: isEditing
+                            ? colors.blue50
+                            : undefined,
+                          borderColor: isEditing
+                            ? colors.blue500
+                            : 'transparent',
+                          borderRadius: 8,
+                          borderWidth: 1,
+                        },
                       ]}
                     >
                       <TouchableOpacity
                         accessibilityRole="button"
+                        accessibilityState={{ selected: isEditing }}
                         onPress={() => {
                           setItemId(line.itemId);
                           setFieldErrors({});
@@ -450,13 +421,18 @@ function CreateDocument({
                         <Text
                           style={[
                             fonts.size_14,
-                            fonts.gray800,
-                            itemId === line.itemId ? fonts.bold : undefined,
+                            isEditing ? fonts.blue500 : fonts.gray800,
+                            isEditing ? fonts.bold : undefined,
                           ]}
                         >
                           {item?.fullName ?? line.itemId}
                         </Text>
-                        <Text style={[fonts.size_12, fonts.gray200]}>
+                        <Text
+                          style={[
+                            fonts.size_12,
+                            isEditing ? fonts.blue500 : fonts.gray200,
+                          ]}
+                        >
                           {line.quantity} {item?.unit} ·{' '}
                           {Number.isFinite(lineValue)
                             ? formatCurrency(lineValue)
@@ -487,44 +463,91 @@ function CreateDocument({
               </View>
             ) : undefined}
 
-            {selectedLine && selectedItem ? (
-              <View style={[gutters.gap_12]}>
-                <Text style={[fonts.size_14, fonts.gray800, fonts.bold]}>
-                  {t('screen_create_document.editing', {
-                    name: selectedItem.fullName,
-                  })}
+            <View style={[gutters.gap_12]}>
+              <View
+                style={[
+                  gutters.gap_4,
+                  gutters.padding_12,
+                  {
+                    backgroundColor: selectedItem
+                      ? colors.blue50
+                      : colors.surfaceSunken,
+                    borderColor: selectedItem
+                      ? colors.blue500
+                      : colors.inputBorder,
+                    borderRadius: 12,
+                    borderWidth: 1,
+                  },
+                ]}
+                testID="create-document-editing-banner"
+              >
+                <Text
+                  style={[
+                    fonts.size_14,
+                    selectedItem ? fonts.blue500 : fonts.gray800,
+                    fonts.bold,
+                  ]}
+                >
+                  {selectedItem
+                    ? t('screen_create_document.editing', {
+                        name: selectedItem.fullName,
+                      })
+                    : t('screen_create_document.line_details')}
                 </Text>
-                <Text style={[fonts.size_12, fonts.gray200]}>
-                  {t('screen_create_document.available_stock', {
-                    quantity: selectedItem.quantity,
-                    unit: selectedItem.unit,
-                  })}
+                <Text
+                  style={[
+                    fonts.size_12,
+                    selectedItem ? fonts.blue500 : fonts.gray200,
+                  ]}
+                >
+                  {selectedItem
+                    ? t('screen_create_document.available_stock', {
+                        quantity: selectedItem.quantity,
+                        unit: selectedItem.unit,
+                      })
+                    : t('screen_create_document.select_item_hint')}
                 </Text>
-                <FormField
-                  error={fieldErrors.quantity ?? fieldErrors.stock}
-                  keyboardType="decimal-pad"
-                  label={`${t('screen_create_document.quantity')} (${selectedItem.unit})`}
-                  onChangeText={(value) => {
-                    updateSelectedLine('quantity', value);
-                  }}
-                  testID="create-document-quantity"
-                  value={selectedLine.quantity}
-                />
-                <FormField
-                  error={fieldErrors.unitPrice}
-                  keyboardType="decimal-pad"
-                  label={t('screen_create_document.unit_price')}
-                  onChangeText={(value) => {
-                    updateSelectedLine('unitPrice', value);
-                  }}
-                  testID="create-document-unit-price"
-                  value={selectedLine.unitPrice}
-                />
               </View>
-            ) : undefined}
+              <FormField
+                editable={Boolean(selectedLine && selectedItem)}
+                error={fieldErrors.quantity ?? fieldErrors.stock}
+                keyboardType="decimal-pad"
+                label={
+                  selectedItem
+                    ? `${t('screen_create_document.quantity')} (${selectedItem.unit})`
+                    : t('screen_create_document.quantity')
+                }
+                onChangeText={(value) => {
+                  updateSelectedLine('quantity', value);
+                }}
+                placeholder={t(
+                  selectedItem
+                    ? 'screen_create_document.quantity_placeholder'
+                    : 'screen_create_document.select_item_placeholder',
+                )}
+                testID="create-document-quantity"
+                value={selectedLine?.quantity ?? ''}
+              />
+              <FormField
+                editable={Boolean(selectedLine && selectedItem)}
+                error={fieldErrors.unitPrice}
+                keyboardType="decimal-pad"
+                label={t('screen_create_document.unit_price')}
+                onChangeText={(value) => {
+                  updateSelectedLine('unitPrice', value);
+                }}
+                placeholder={t(
+                  selectedItem
+                    ? 'screen_create_document.unit_price_placeholder'
+                    : 'screen_create_document.select_item_placeholder',
+                )}
+                testID="create-document-unit-price"
+                value={selectedLine?.unitPrice ?? ''}
+              />
+            </View>
 
             <FormField
-              label={t('screen_create_document.party')}
+              label={t(`screen_create_document.party_labels.${subtype}`)}
               onChangeText={setParty}
               testID="create-document-party"
               value={party}
@@ -538,7 +561,7 @@ function CreateDocument({
               value={note}
             />
 
-            {tab === 'import' ? (
+            {kind === 'import' ? (
               <View style={[gutters.gap_8]}>
                 <Text style={[fonts.size_14, fonts.gray800]}>
                   {t('screen_create_document.photo_title')}
@@ -672,7 +695,7 @@ function CreateDocument({
               <ActivityIndicator color={components.buttonPrimaryLabel.color} />
             ) : (
               <Text style={[components.buttonPrimaryLabel]}>
-                {t('screen_create_document.submit')}
+                {t(`screen_create_document.titles.${subtype}`)}
               </Text>
             )}
           </TouchableOpacity>

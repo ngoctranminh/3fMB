@@ -9,8 +9,11 @@ import { ChecklistScreen } from '@/components/templates';
 
 import {
   loadPurchaseChecklist,
+  loadUrgentPurchaseItems,
   savePurchaseChecklist,
+  saveUrgentPurchaseItems,
 } from './purchaseGuideStorage';
+import PurchaseListExporter from './PurchaseListExporter';
 
 const PURCHASE_GROUPS = [
   {
@@ -188,6 +191,7 @@ const PURCHASE_GROUPS = [
 function PurchaseGuide({ navigation }: RootScreenProps<Paths.PurchaseGuide>) {
   const { t } = useTranslation();
   const initialCheckedItemIds = useMemo(() => loadPurchaseChecklist(), []);
+  const initialPriorityItemIds = useMemo(() => loadUrgentPurchaseItems(), []);
 
   return (
     <ChecklistScreen
@@ -198,10 +202,16 @@ function PurchaseGuide({ navigation }: RootScreenProps<Paths.PurchaseGuide>) {
       emptyLabel={t('operations_common.empty')}
       groups={PURCHASE_GROUPS}
       initialCheckedItemIds={initialCheckedItemIds}
+      initialPriorityItemIds={initialPriorityItemIds}
       onBack={() => {
         navigation.goBack();
       }}
       onCheckedItemIdsChange={savePurchaseChecklist}
+      onPriorityItemIdsChange={saveUrgentPurchaseItems}
+      priorityLabel={t('screen_purchase_guide.priority_action')}
+      renderSelectionAction={(selectedGroups) => (
+        <PurchaseListExporter groups={selectedGroups} />
+      )}
       resetLabel={t('operations_common.reset')}
       searchPlaceholder={t('screen_purchase_guide.search_placeholder')}
       subtitle={t('screen_purchase_guide.subtitle')}

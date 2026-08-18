@@ -346,6 +346,7 @@ export const toItemDetail = (
     totalValue: formatCurrency(item.quantity * item.unit_price),
     unit,
     unitPrice: formatCurrency(item.unit_price),
+    unitPriceValue: item.unit_price,
   };
 };
 

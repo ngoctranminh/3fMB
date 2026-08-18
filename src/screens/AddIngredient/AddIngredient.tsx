@@ -17,7 +17,7 @@ import { useTheme } from '@/theme';
 
 import { Card, CategoryChip, IconByVariant } from '@/components/atoms';
 import { FormField } from '@/components/molecules';
-import { SafeScreen } from '@/components/templates';
+import { FixedScreenHeader, SafeScreen } from '@/components/templates';
 
 type FieldErrors = {
   czechName?: string;
@@ -135,14 +135,7 @@ function AddIngredient({ navigation }: RootScreenProps<Paths.AddIngredient>) {
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         style={[layout.flex_1, backgrounds.surfaceSunken]}
       >
-        <ScrollView
-          contentContainerStyle={[
-            gutters.gap_16,
-            gutters.padding_16,
-            gutters.paddingBottom_40,
-          ]}
-          keyboardShouldPersistTaps="handled"
-        >
+        <FixedScreenHeader>
           <View style={[layout.row, layout.itemsCenter, gutters.gap_12]}>
             <TouchableOpacity
               accessibilityRole="button"
@@ -164,7 +157,16 @@ function AddIngredient({ navigation }: RootScreenProps<Paths.AddIngredient>) {
               {t('screen_add_ingredient.title')}
             </Text>
           </View>
+        </FixedScreenHeader>
 
+        <ScrollView
+          contentContainerStyle={[
+            gutters.gap_16,
+            gutters.padding_16,
+            gutters.paddingBottom_40,
+          ]}
+          keyboardShouldPersistTaps="handled"
+        >
           <Card style={[gutters.gap_16]}>
             <View style={[gutters.gap_8]}>
               <Text style={[fonts.size_14, fonts.gray800]}>

@@ -30,7 +30,10 @@ export const AuthServices = {
   changePassword: async (passwords: ChangePasswordInput) => {
     try {
       await authInstance.post('api/auth/change-password', {
-        json: passwords,
+        json: {
+          current_password: passwords.currentPassword,
+          new_password: passwords.newPassword,
+        },
       });
     } catch (error) {
       if (error instanceof HTTPError) {

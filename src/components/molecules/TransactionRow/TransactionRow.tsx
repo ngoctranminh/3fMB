@@ -82,7 +82,7 @@ function TransactionRow({ item, style, ...props }: Properties) {
           </Text>
           <TagChip
             background={background}
-            label={t(`screen_transactions.kinds.${item.kind}`)}
+            label={t(`screen_transactions.filters.${item.subtype}`)}
             tint={tint}
           />
         </View>

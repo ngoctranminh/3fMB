@@ -13,7 +13,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useInventory } from '@/hooks';
 import type {
   DocumentSubtype,
-  TransactionKind,
   TransactionPeriod,
 } from '@/hooks/domain/inventory/schema';
 import { Paths } from '@/navigation/paths';
@@ -21,58 +20,40 @@ import type { MainTabScreenProps } from '@/navigation/types';
 import { useTheme } from '@/theme';
 
 import { Card, CategoryChip, IconByVariant } from '@/components/atoms';
-import {
-  QuickActionTile,
-  SegmentTabs,
-  TransactionRow,
-} from '@/components/molecules';
+import { QuickActionTile, TransactionRow } from '@/components/molecules';
 import {
   TAB_BAR_BASE_HEIGHT,
   TodayTotalsCard,
   TransactionsHeader,
 } from '@/components/organisms';
-import { SafeScreen } from '@/components/templates';
+import { FixedScreenHeader, SafeScreen } from '@/components/templates';
 
 type SubtypeFilter = 'all' | DocumentSubtype;
 
 const ALL_SUBTYPES = 'all';
 const CONTENT_GAP = 16;
 const ICON_SIZE = 18;
-const TRANSACTION_TABS = ['import', 'export'] as const;
 
-// Chip lọc bám theo subtype thật của server, đổi theo tab đang mở
-const SUBTYPES_BY_TAB = {
-  export: ['usage', 'waste', 'other_out'],
-  import: ['purchase', 'return', 'other_in'],
-} as const satisfies Record<TransactionKind, readonly DocumentSubtype[]>;
+const SUBTYPE_FILTERS: readonly SubtypeFilter[] = [
+  ALL_SUBTYPES,
+  'purchase',
+  'return',
+  'other_in',
+  'usage',
+  'waste',
+  'other_out',
+];
 
-const QUICK_ACTIONS = {
-  export: [
-    { iconPath: 'tray-up', id: 'usage', subtype: 'usage', tone: 'blue' },
-    {
-      iconPath: 'warning-circle',
-      id: 'waste',
-      subtype: 'waste',
-      tone: 'purple',
-    },
-    {
-      iconPath: 'document',
-      id: 'other_out',
-      subtype: 'other_out',
-      tone: 'green',
-    },
-  ],
-  import: [
-    { iconPath: 'tray-down', id: 'receive', subtype: 'purchase', tone: 'blue' },
-    { iconPath: 'box', id: 'return', subtype: 'return', tone: 'purple' },
-    {
-      iconPath: 'document',
-      id: 'other_in',
-      subtype: 'other_in',
-      tone: 'green',
-    },
-  ],
-} as const;
+const QUICK_ACTIONS = [
+  { iconPath: 'tray-down', id: 'receive', subtype: 'purchase', tone: 'blue' },
+  { iconPath: 'box', id: 'return', subtype: 'return', tone: 'purple' },
+  {
+    iconPath: 'document',
+    id: 'other_in',
+    subtype: 'other_in',
+    tone: 'green',
+  },
+] as const;
 
 const PERIODS: readonly TransactionPeriod[] = ['today', 'week', 'month', 'all'];
 
@@ -88,7 +69,6 @@ function Transactions({ navigation }: MainTabScreenProps<Paths.Transactions>) {
   const transactionsQuery = useFetchTransactionsQuery(period);
   const todayTotalsQuery = useFetchTodayTotalsQuery();
 
-  const [tab, setTab] = useState<TransactionKind>('import');
   const [subtype, setSubtype] = useState<SubtypeFilter>(ALL_SUBTYPES);
   const [query, setQuery] = useState('');
 
@@ -101,27 +81,18 @@ function Transactions({ navigation }: MainTabScreenProps<Paths.Transactions>) {
     const normalized = query.trim().toLowerCase();
 
     return transactions.filter((item) => {
-      const matchesTab = item.kind === tab;
       const matchesSubtype =
         subtype === ALL_SUBTYPES || item.subtype === subtype;
       const matchesQuery =
         normalized.length === 0 ||
         item.code.toLowerCase().includes(normalized) ||
-        item.partner.toLowerCase().includes(normalized);
+        item.partner.toLowerCase().includes(normalized) ||
+        item.subtypeLabel.toLowerCase().includes(normalized) ||
+        item.user.toLowerCase().includes(normalized);
 
-      return matchesTab && matchesSubtype && matchesQuery;
+      return matchesSubtype && matchesQuery;
     });
-  }, [query, subtype, tab, transactions]);
-
-  const tabOptions = TRANSACTION_TABS.map((id) => ({
-    id,
-    label: t(`screen_transactions.tabs.${id}`),
-  }));
-
-  const subtypeFilters: readonly SubtypeFilter[] = [
-    ALL_SUBTYPES,
-    ...SUBTYPES_BY_TAB[tab],
-  ];
+  }, [query, subtype, transactions]);
 
   const todayTotals = todayTotalsQuery.data;
   const isError = transactionsQuery.isError || todayTotalsQuery.isError;
@@ -145,15 +116,10 @@ function Transactions({ navigation }: MainTabScreenProps<Paths.Transactions>) {
   };
 
   const handleSubtypePicker = () => {
-    const options: readonly SubtypeFilter[] = [
-      ALL_SUBTYPES,
-      ...SUBTYPES_BY_TAB[tab],
-    ];
-
     Alert.alert(
       t('screen_transactions.filter'),
       undefined,
-      options.map((option) => ({
+      SUBTYPE_FILTERS.map((option) => ({
         onPress: () => {
           setSubtype(option);
         },
@@ -172,6 +138,18 @@ function Transactions({ navigation }: MainTabScreenProps<Paths.Transactions>) {
         style={[layout.flex_1, backgrounds.surfaceSunken]}
         testID="transactions-screen"
       >
+        <FixedScreenHeader>
+          <TransactionsHeader
+            onBack={() => {
+              navigation.navigate(Paths.Overview);
+            }}
+            onFilter={handleSubtypePicker}
+            onHistory={() => {
+              navigation.navigate(Paths.TransactionHistory);
+            }}
+          />
+        </FixedScreenHeader>
+
         <ScrollView
           contentContainerStyle={[
             gutters.gap_16,
@@ -183,29 +161,8 @@ function Transactions({ navigation }: MainTabScreenProps<Paths.Transactions>) {
           showsVerticalScrollIndicator={false}
         >
           <View style={[gutters.gap_12, gutters.paddingHorizontal_16]}>
-            <TransactionsHeader
-              onBack={() => {
-                navigation.navigate(Paths.Overview);
-              }}
-              onFilter={handleSubtypePicker}
-              onHistory={() => {
-                setPeriod('all');
-              }}
-            />
-
-            <SegmentTabs
-              activeId={tab}
-              onSelect={(id) => {
-                setTab(id as TransactionKind);
-                setSubtype(ALL_SUBTYPES);
-              }}
-              options={tabOptions}
-            />
-          </View>
-
-          <View style={[gutters.gap_12, gutters.paddingHorizontal_16]}>
             <View style={[layout.row, gutters.gap_8]}>
-              {QUICK_ACTIONS[tab].map((action) => (
+              {QUICK_ACTIONS.map((action) => (
                 <QuickActionTile
                   caption={t(
                     `screen_transactions.actions.${action.id}.caption`,
@@ -287,7 +244,7 @@ function Transactions({ navigation }: MainTabScreenProps<Paths.Transactions>) {
                 horizontal
                 showsHorizontalScrollIndicator={false}
               >
-                {subtypeFilters.map((option) => (
+                {SUBTYPE_FILTERS.map((option) => (
                   <CategoryChip
                     isActive={option === subtype}
                     key={option}

@@ -19,7 +19,7 @@ import { useTheme } from '@/theme';
 
 import { Card, IconByVariant } from '@/components/atoms';
 import { FormField } from '@/components/molecules';
-import { SafeScreen } from '@/components/templates';
+import { FixedScreenHeader, SafeScreen } from '@/components/templates';
 
 type FieldErrors = {
   confirmPassword?: string;
@@ -131,14 +131,7 @@ function ChangePassword({ navigation }: RootScreenProps<Paths.ChangePassword>) {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={[layout.flex_1, backgrounds.surfaceSunken]}
       >
-        <ScrollView
-          contentContainerStyle={[
-            gutters.gap_16,
-            gutters.padding_16,
-            gutters.paddingBottom_40,
-          ]}
-          keyboardShouldPersistTaps="handled"
-        >
+        <FixedScreenHeader>
           <View style={[layout.row, layout.itemsCenter, gutters.gap_12]}>
             <TouchableOpacity
               accessibilityLabel={t('screen_change_password.back')}
@@ -161,7 +154,16 @@ function ChangePassword({ navigation }: RootScreenProps<Paths.ChangePassword>) {
               {t('screen_change_password.title')}
             </Text>
           </View>
+        </FixedScreenHeader>
 
+        <ScrollView
+          contentContainerStyle={[
+            gutters.gap_16,
+            gutters.padding_16,
+            gutters.paddingBottom_40,
+          ]}
+          keyboardShouldPersistTaps="handled"
+        >
           <Text style={[fonts.size_14, fonts.gray200]}>
             {t('screen_change_password.subtitle')}
           </Text>

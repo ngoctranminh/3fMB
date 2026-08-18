@@ -23,6 +23,7 @@ jest.mock('@/hooks/domain/inventory/inventoryService', () => ({
     adjustItemQuantity: jest.fn(),
     fetchItemDetail: jest.fn(),
     fetchItemLedger: jest.fn(),
+    updateItemPrice: jest.fn(),
   },
 }));
 
@@ -43,6 +44,7 @@ const ITEM = {
   totalValue: '1.080.000 Kč',
   unit: 'kg',
   unitPrice: '180.000 Kč',
+  unitPriceValue: 180_000,
 };
 
 const LEDGER = [
@@ -112,6 +114,19 @@ describe('ItemDetail screen', () => {
       unit: 'kg',
       unit_price: 180_000,
     });
+    mockedServices.updateItemPrice.mockResolvedValue({
+      // eslint-disable-next-line unicorn/no-null
+      expires_at: null,
+      id: 3,
+      min_quantity: 3,
+      name: 'Chưa làm',
+      note: '',
+      parent_id: 2,
+      quantity: 6,
+      translations: {},
+      unit: 'kg',
+      unit_price: 200_000,
+    });
   });
 
   afterEach(() => {
@@ -166,6 +181,25 @@ describe('ItemDetail screen', () => {
       expect(mockedServices.adjustItemQuantity).toHaveBeenCalledWith({
         delta: -0.5,
         itemId: 3,
+      });
+    });
+  });
+
+  it('edits the item unit price', async () => {
+    renderScreen(storage);
+
+    await waitFor(() => {
+      expect(screen.getByText('180.000 Kč')).toBeOnTheScreen();
+    });
+
+    fireEvent.press(screen.getByTestId('item-edit-price'));
+    fireEvent.changeText(screen.getByTestId('item-unit-price-input'), '200000');
+    fireEvent.press(screen.getByTestId('item-save-price'));
+
+    await waitFor(() => {
+      expect(mockedServices.updateItemPrice).toHaveBeenCalledWith({
+        itemId: 3,
+        unitPrice: 200_000,
       });
     });
   });
