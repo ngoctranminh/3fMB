@@ -48,7 +48,7 @@ const INGREDIENTS = {
       quantity: '6',
       status: 'ok' as const,
       unit: 'kg',
-      value: '1.080.000đ',
+      value: '1.080.000 Kč',
     },
     {
       fullName: 'Rau củ quả / Hành lá',
@@ -59,7 +59,7 @@ const INGREDIENTS = {
       quantity: '0.5',
       status: 'low' as const,
       unit: 'kg',
-      value: '15.000đ',
+      value: '15.000 Kč',
     },
   ],
 };
@@ -114,7 +114,7 @@ describe('Ingredients screen', () => {
     });
 
     expect(screen.getByTestId('ingredients-summary')).toBeOnTheScreen();
-    expect(screen.getByText('34.449.500đ')).toBeOnTheScreen();
+    expect(screen.getByText('34.449.500 Kč')).toBeOnTheScreen();
 
     expect(screen.getByText('Mực chưa làm')).toBeOnTheScreen();
     expect(screen.getByText('Hành lá')).toBeOnTheScreen();

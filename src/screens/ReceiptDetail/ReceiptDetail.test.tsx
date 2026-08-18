@@ -44,16 +44,17 @@ const RECEIPT = {
       name: 'Tỏi',
       note: '',
       quantity: '0.9 kg',
-      totalPrice: '40.500 đ',
-      unitPrice: '45.000 đ',
+      totalPrice: '40.500 Kč',
+      unitPrice: '45.000 Kč',
     },
   ],
   note: '',
   partner: 'Bếp chính',
   status: 'done' as const,
   statusLabel: 'Hoàn thành',
+  subtype: 'usage' as const,
   subtypeLabel: 'Xuất dùng',
-  totalValue: '352.000 đ',
+  totalValue: '352.000 Kč',
   user: 'Admin',
 };
 
@@ -115,12 +116,12 @@ describe('ReceiptDetail screen', () => {
 
     expect(screen.getByText('Xuất dùng')).toBeOnTheScreen();
     expect(screen.getByText('Bếp chính')).toBeOnTheScreen();
-    expect(screen.getByText('352.000 đ')).toBeOnTheScreen();
+    expect(screen.getByText('352.000 Kč')).toBeOnTheScreen();
     expect(screen.getByText('Hoàn thành')).toBeOnTheScreen();
 
     expect(screen.getByText('Tỏi')).toBeOnTheScreen();
     expect(screen.getByText('0.9 kg')).toBeOnTheScreen();
-    expect(screen.getByText('40.500 đ')).toBeOnTheScreen();
+    expect(screen.getByText('40.500 Kč')).toBeOnTheScreen();
   });
 
   it('shows the receiving photo returned by the server', async () => {

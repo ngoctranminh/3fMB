@@ -18,6 +18,7 @@ import More from './More';
 
 jest.mock('@/hooks/domain/auth/authService', () => ({
   AuthServices: {
+    getCurrentUser: jest.fn(),
     logout: jest.fn(),
   },
 }));
@@ -25,6 +26,13 @@ jest.mock('@/hooks/domain/auth/authService', () => ({
 const mockedServices = jest.mocked(AuthServices);
 
 describe('More screen', () => {
+  beforeEach(() => {
+    mockedServices.getCurrentUser.mockResolvedValue({
+      id: 1,
+      username: 'manhtu3f',
+    });
+  });
+
   afterEach(() => {
     jest.clearAllMocks();
   });
@@ -61,7 +69,7 @@ describe('More screen', () => {
     });
   });
 
-  it('opens all operation handbook pages', () => {
+  it('opens all operation handbook pages for a sauce viewer', async () => {
     const navigate = jest.fn();
     const props = {
       navigation: { navigate },
@@ -79,6 +87,10 @@ describe('More screen', () => {
       </QueryClientProvider>,
     );
 
+    await waitFor(() => {
+      expect(screen.getByTestId('more-sauces')).toBeOnTheScreen();
+    });
+
     fireEvent.press(screen.getByTestId('more-sauces'));
     expect(navigate).toHaveBeenCalledWith(Paths.Sauces);
 
@@ -87,5 +99,56 @@ describe('More screen', () => {
 
     fireEvent.press(screen.getByTestId('more-prep-tasks'));
     expect(navigate).toHaveBeenCalledWith(Paths.PrepTasks);
+  });
+
+  it('hides sauce recipes from other users', async () => {
+    mockedServices.getCurrentUser.mockResolvedValue({
+      id: 4,
+      username: 'other3f',
+    });
+    const props = {
+      navigation: { navigate: jest.fn() },
+      route: { key: 'more-test', name: Paths.More },
+    } as unknown as MainTabScreenProps<Paths.More>;
+    const queryClient = new QueryClient();
+
+    render(
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider storage={createMMKV()}>
+          <I18nextProvider i18n={i18n}>
+            <More {...props} />
+          </I18nextProvider>
+        </ThemeProvider>
+      </QueryClientProvider>,
+    );
+
+    await waitFor(() => {
+      expect(mockedServices.getCurrentUser).toHaveBeenCalled();
+    });
+    expect(screen.queryByTestId('more-sauces')).not.toBeOnTheScreen();
+    expect(screen.getByTestId('more-purchase-guide')).toBeOnTheScreen();
+  });
+
+  it('opens the change password page from settings', () => {
+    const navigate = jest.fn();
+    const props = {
+      navigation: { navigate },
+      route: { key: 'more-test', name: Paths.More },
+    } as unknown as MainTabScreenProps<Paths.More>;
+    const queryClient = new QueryClient();
+
+    render(
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider storage={createMMKV()}>
+          <I18nextProvider i18n={i18n}>
+            <More {...props} />
+          </I18nextProvider>
+        </ThemeProvider>
+      </QueryClientProvider>,
+    );
+
+    fireEvent.press(screen.getByTestId('more-change-password'));
+
+    expect(navigate).toHaveBeenCalledWith(Paths.ChangePassword);
   });
 });

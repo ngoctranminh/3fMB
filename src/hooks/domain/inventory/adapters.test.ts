@@ -1,13 +1,20 @@
 /* eslint-disable unicorn/no-null -- API fields are explicitly nullable. */
-import type { ServerAlert, ServerItem, ServerItemDetail } from './schema';
+import type {
+  ServerAlert,
+  ServerItem,
+  ServerItemDetail,
+  ServerLedgerEntry,
+} from './schema';
 
 import {
+  localizeUnit,
   toAlertDetails,
   toAlertItem,
   toAlertTotals,
   toIngredientItems,
   toItemDetail,
   toLeafInventoryItems,
+  toLedgerEntry,
 } from './adapters';
 
 const ITEM: ServerItem = {
@@ -17,6 +24,7 @@ const ITEM: ServerItem = {
   name: 'Hành lá',
   parent_id: null,
   quantity: 0,
+  translations: {},
   unit: 'kg',
   unit_price: 10_000,
 };
@@ -35,6 +43,12 @@ const ALERT: ServerAlert = {
 };
 
 describe('inventory status adapters', () => {
+  it('localizes inventory units', () => {
+    expect(localizeUnit('hộp', 'en-US')).toBe('box');
+    expect(localizeUnit('chai', 'cs-CZ')).toBe('láhev');
+    expect(localizeUnit('kg', 'en-US')).toBe('kg');
+  });
+
   it('maps zero quantity to out of stock across inventory views', () => {
     expect(toLeafInventoryItems([ITEM])[0]).toMatchObject({
       isLow: true,
@@ -62,5 +76,28 @@ describe('inventory status adapters', () => {
     expect(toAlertItem(ALERT).severity).toBe('out');
     expect(toAlertDetails([ALERT])[0].severity).toBe('out');
     expect(toAlertTotals([ALERT])).toEqual({ expiring: 0, low: 0, out: 1 });
+  });
+});
+
+describe('ledger adapters', () => {
+  it('keeps the username that changed the item quantity', () => {
+    const entry = {
+      delta: 1,
+      document_id: null,
+      id: 53,
+      item_unit: 'kg',
+      kind: 'in',
+      note: 'Thêm nhanh',
+      occurred_at: '2026-08-06 09:04:37',
+      source: 'adjust',
+      total_price: 50_000,
+      user_id: 1,
+      username: 'manhtu3f',
+    } satisfies ServerLedgerEntry;
+
+    expect(toLedgerEntry(entry)).toMatchObject({
+      userId: 1,
+      username: 'manhtu3f',
+    });
   });
 });

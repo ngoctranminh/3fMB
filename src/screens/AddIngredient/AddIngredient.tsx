@@ -20,6 +20,8 @@ import { FormField } from '@/components/molecules';
 import { SafeScreen } from '@/components/templates';
 
 type FieldErrors = {
+  czechName?: string;
+  englishName?: string;
   expiresAt?: string;
   group?: string;
   name?: string;
@@ -41,6 +43,10 @@ function AddIngredient({ navigation }: RootScreenProps<Paths.AddIngredient>) {
   const createMutation = useCreateItemMutation();
 
   const [expiresAt, setExpiresAt] = useState('');
+  const [czechName, setCzechName] = useState('');
+  const [czechNote, setCzechNote] = useState('');
+  const [englishName, setEnglishName] = useState('');
+  const [englishNote, setEnglishNote] = useState('');
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [groupId, setGroupId] = useState<string>();
   const [minQuantity, setMinQuantity] = useState('0');
@@ -63,6 +69,14 @@ function AddIngredient({ navigation }: RootScreenProps<Paths.AddIngredient>) {
     if (expiresAt && !DATE_PATTERN.test(expiresAt)) {
       errors.expiresAt = t('screen_add_ingredient.validation.date');
     }
+    if (englishNote.trim() && !englishName.trim()) {
+      errors.englishName = t(
+        'screen_add_ingredient.validation.translation_name',
+      );
+    }
+    if (czechNote.trim() && !czechName.trim()) {
+      errors.czechName = t('screen_add_ingredient.validation.translation_name');
+    }
 
     setFieldErrors(errors);
     return Object.keys(errors).length === 0;
@@ -80,6 +94,24 @@ function AddIngredient({ navigation }: RootScreenProps<Paths.AddIngredient>) {
         note: note.trim(),
         parent_id: Number(groupId),
         quantity: Number(quantity),
+        translations: {
+          ...(englishName.trim()
+            ? {
+                'en-US': {
+                  name: englishName.trim(),
+                  note: englishNote.trim(),
+                },
+              }
+            : {}),
+          ...(czechName.trim()
+            ? {
+                'cs-CZ': {
+                  name: czechName.trim(),
+                  note: czechNote.trim(),
+                },
+              }
+            : {}),
+        },
         unit: unit.trim(),
         unit_price: Number(unitPrice),
       },
@@ -219,6 +251,46 @@ function AddIngredient({ navigation }: RootScreenProps<Paths.AddIngredient>) {
               style={{ height: 88, textAlignVertical: 'top' }}
               testID="add-ingredient-note"
               value={note}
+            />
+
+            <View style={[gutters.gap_4]}>
+              <Text style={[fonts.size_16, fonts.gray800, fonts.bold]}>
+                {t('screen_add_ingredient.translations_title')}
+              </Text>
+              <Text style={[fonts.size_12, fonts.gray200]}>
+                {t('screen_add_ingredient.translations_hint')}
+              </Text>
+            </View>
+
+            <FormField
+              error={fieldErrors.englishName}
+              label={t('screen_add_ingredient.english_name')}
+              onChangeText={setEnglishName}
+              testID="add-ingredient-name-en"
+              value={englishName}
+            />
+            <FormField
+              label={t('screen_add_ingredient.english_note')}
+              multiline
+              onChangeText={setEnglishNote}
+              style={{ height: 72, textAlignVertical: 'top' }}
+              testID="add-ingredient-note-en"
+              value={englishNote}
+            />
+            <FormField
+              error={fieldErrors.czechName}
+              label={t('screen_add_ingredient.czech_name')}
+              onChangeText={setCzechName}
+              testID="add-ingredient-name-cs"
+              value={czechName}
+            />
+            <FormField
+              label={t('screen_add_ingredient.czech_note')}
+              multiline
+              onChangeText={setCzechNote}
+              style={{ height: 72, textAlignVertical: 'top' }}
+              testID="add-ingredient-note-cs"
+              value={czechNote}
             />
           </Card>
 

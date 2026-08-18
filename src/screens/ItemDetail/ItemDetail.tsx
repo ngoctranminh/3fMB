@@ -61,6 +61,26 @@ function ItemDetail({ navigation, route }: RootScreenProps<Paths.ItemDetail>) {
     void ledgerQuery.refetch();
   };
 
+  const ledgerNote = (entry: (typeof ledger)[number]) => {
+    if (entry.source === 'adjust') {
+      return entry.isIncoming
+        ? t('screen_item_detail.history_notes.quick_add')
+        : t('screen_item_detail.history_notes.quick_remove');
+    }
+    if (entry.source === 'edit') {
+      return t('screen_item_detail.history_notes.direct_edit');
+    }
+    if (entry.source === 'initial') {
+      return t('screen_item_detail.history_notes.initial_stock');
+    }
+    if (entry.documentId !== null) {
+      return entry.isIncoming
+        ? t('screen_item_detail.history_notes.receipt_in')
+        : t('screen_item_detail.history_notes.receipt_out');
+    }
+    return entry.note || t('screen_item_detail.history_notes.manual');
+  };
+
   return (
     <SafeScreen
       edges={['top', 'left', 'right']}
@@ -212,10 +232,19 @@ function ItemDetail({ navigation, route }: RootScreenProps<Paths.ItemDetail>) {
                 >
                   <View style={[layout.flex_1, gutters.gap_4]}>
                     <Text style={[fonts.size_14, fonts.gray800]}>
-                      {entry.note}
+                      {ledgerNote(entry)}
                     </Text>
                     <Text style={[fonts.size_10, fonts.gray200]}>
                       {entry.occurredAt}
+                    </Text>
+                    <Text style={[fonts.size_10, fonts.gray200]}>
+                      {t('screen_item_detail.changed_by')}{' '}
+                      <Text style={[fonts.bold]}>
+                        {entry.username ??
+                          (entry.userId === null
+                            ? t('screen_item_detail.unknown_user')
+                            : `#${String(entry.userId)}`)}
+                      </Text>
                     </Text>
                   </View>
 

@@ -1,6 +1,9 @@
 import type { TransactionPeriod } from './schema';
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
+
+import { toItemLocale } from '@/hooks/language/schema';
 
 import { InventoryServices } from './inventoryService';
 
@@ -19,47 +22,66 @@ const enum InventoryQueryKey {
   fetchValueHistory = 'fetchInventoryValueHistory',
 }
 
-const useFetchDocumentDetailQuery = (documentId: string) =>
-  useQuery({
-    queryFn: () => InventoryServices.fetchDocumentDetail(documentId),
-    queryKey: [InventoryQueryKey.fetchDocumentDetail, documentId],
-  });
+const useItemLocale = () => {
+  const { i18n } = useTranslation();
+  return toItemLocale(i18n.resolvedLanguage ?? i18n.language);
+};
 
-const useFetchItemDetailQuery = (itemId: string) =>
-  useQuery({
-    queryFn: () => InventoryServices.fetchItemDetail(itemId),
-    queryKey: [InventoryQueryKey.fetchItemDetail, itemId],
+const useFetchDocumentDetailQuery = (documentId: string) => {
+  const locale = useItemLocale();
+  return useQuery({
+    queryFn: () => InventoryServices.fetchDocumentDetail(documentId, locale),
+    queryKey: [InventoryQueryKey.fetchDocumentDetail, documentId, locale],
   });
+};
 
-const useFetchItemLedgerQuery = (itemId: string) =>
-  useQuery({
-    queryFn: () => InventoryServices.fetchItemLedger(itemId),
-    queryKey: [InventoryQueryKey.fetchItemLedger, itemId],
+const useFetchItemDetailQuery = (itemId: string) => {
+  const locale = useItemLocale();
+  return useQuery({
+    queryFn: () => InventoryServices.fetchItemDetail(itemId, locale),
+    queryKey: [InventoryQueryKey.fetchItemDetail, itemId, locale],
   });
+};
 
-const useFetchAlertBoardQuery = () =>
-  useQuery({
-    queryFn: () => InventoryServices.fetchAlertBoard(),
-    queryKey: [InventoryQueryKey.fetchAlertBoard],
+const useFetchItemLedgerQuery = (itemId: string) => {
+  const locale = useItemLocale();
+  return useQuery({
+    queryFn: () => InventoryServices.fetchItemLedger(itemId, locale),
+    queryKey: [InventoryQueryKey.fetchItemLedger, itemId, locale],
   });
+};
 
-const useFetchAlertsQuery = (limit: number) =>
-  useQuery({
-    queryFn: () => InventoryServices.fetchAlerts(limit),
-    queryKey: [InventoryQueryKey.fetchAlerts, limit],
+const useFetchAlertBoardQuery = () => {
+  const locale = useItemLocale();
+  return useQuery({
+    queryFn: () => InventoryServices.fetchAlertBoard(locale),
+    queryKey: [InventoryQueryKey.fetchAlertBoard, locale],
   });
+};
 
-const useFetchIngredientsQuery = () =>
-  useQuery({
-    queryFn: () => InventoryServices.fetchIngredients(),
-    queryKey: [InventoryQueryKey.fetchIngredients],
+const useFetchAlertsQuery = (limit: number) => {
+  const locale = useItemLocale();
+  return useQuery({
+    queryFn: () => InventoryServices.fetchAlerts(limit, locale),
+    queryKey: [InventoryQueryKey.fetchAlerts, limit, locale],
   });
+};
 
-const useFetchItemsQuery = () =>
-  useQuery({
-    queryFn: () => InventoryServices.fetchItems(),
-    queryKey: [InventoryQueryKey.fetchItems],
+const useFetchIngredientsQuery = () => {
+  const locale = useItemLocale();
+  return useQuery({
+    queryFn: () => InventoryServices.fetchIngredients(locale),
+    queryKey: [InventoryQueryKey.fetchIngredients, locale],
   });
+};
+
+const useFetchItemsQuery = () => {
+  const locale = useItemLocale();
+  return useQuery({
+    queryFn: () => InventoryServices.fetchItems(locale),
+    queryKey: [InventoryQueryKey.fetchItems, locale],
+  });
+};
 
 const useFetchSummaryQuery = () =>
   useQuery({
@@ -79,11 +101,13 @@ const useFetchTransactionsQuery = (period: TransactionPeriod = 'all') =>
     queryKey: [InventoryQueryKey.fetchTransactions, period],
   });
 
-const useFetchInventoryCatalogQuery = () =>
-  useQuery({
-    queryFn: () => InventoryServices.fetchInventoryCatalog(),
-    queryKey: [InventoryQueryKey.fetchInventoryCatalog],
+const useFetchInventoryCatalogQuery = () => {
+  const locale = useItemLocale();
+  return useQuery({
+    queryFn: () => InventoryServices.fetchInventoryCatalog(locale),
+    queryKey: [InventoryQueryKey.fetchInventoryCatalog, locale],
   });
+};
 
 const useFetchValueHistoryQuery = (days: number) =>
   useQuery({

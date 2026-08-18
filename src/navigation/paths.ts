@@ -1,6 +1,7 @@
 export const enum Paths {
   AddIngredient = 'addIngredient',
   Alerts = 'alerts',
+  ChangePassword = 'changePassword',
   CreateDocument = 'createDocument',
   Example = 'example',
   Ingredients = 'ingredients',
@@ -12,6 +13,7 @@ export const enum Paths {
   PrepTasks = 'prepTasks',
   PurchaseGuide = 'purchaseGuide',
   ReceiptDetail = 'receiptDetail',
+  SauceDetail = 'sauceDetail',
   Sauces = 'sauces',
   Startup = 'startup',
   Transactions = 'transactions',

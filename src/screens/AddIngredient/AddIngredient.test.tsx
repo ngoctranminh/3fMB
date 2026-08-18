@@ -47,6 +47,7 @@ describe('AddIngredient screen', () => {
       name: 'Cá hồi',
       parent_id: 1,
       quantity: 5,
+      translations: {},
       unit: 'kg',
       unit_price: 200_000,
     });
@@ -96,6 +97,11 @@ describe('AddIngredient screen', () => {
       screen.getByTestId('add-ingredient-min-quantity'),
       '2',
     );
+    fireEvent.changeText(
+      screen.getByTestId('add-ingredient-name-en'),
+      'Salmon',
+    );
+    fireEvent.changeText(screen.getByTestId('add-ingredient-name-cs'), 'Losos');
     fireEvent.press(screen.getByTestId('add-ingredient-submit'));
 
     await waitFor(() => {
@@ -105,6 +111,10 @@ describe('AddIngredient screen', () => {
           name: 'Cá hồi',
           parent_id: 1,
           quantity: 5,
+          translations: {
+            'cs-CZ': { name: 'Losos', note: '' },
+            'en-US': { name: 'Salmon', note: '' },
+          },
           unit: 'kg',
           unit_price: 200_000,
         }),

@@ -1,5 +1,6 @@
 import i18next from 'i18next';
 
+import { saveLanguage } from './languageStorage';
 import { SupportedLanguages } from './schema';
 
 const LANGUAGE_CYCLE = [
@@ -9,6 +10,7 @@ const LANGUAGE_CYCLE = [
 ] as const;
 
 const changeLanguage = (lang: SupportedLanguages) => {
+  saveLanguage(lang);
   void i18next.changeLanguage(lang);
 };
 
@@ -18,7 +20,7 @@ const toggleLanguage = () => {
   );
   const nextIndex = (currentIndex + 1) % LANGUAGE_CYCLE.length;
 
-  void i18next.changeLanguage(LANGUAGE_CYCLE[nextIndex]);
+  changeLanguage(LANGUAGE_CYCLE[nextIndex]);
 };
 
 export const useI18n = () => {

@@ -1,5 +1,6 @@
 export { default as AddIngredient } from './AddIngredient/AddIngredient';
 export { default as Alerts } from './Alerts/Alerts';
+export { default as ChangePassword } from './ChangePassword/ChangePassword';
 export { default as CreateDocument } from './CreateDocument/CreateDocument';
 export { default as Example } from './Example/Example';
 export { default as Ingredients } from './Ingredients/Ingredients';
@@ -10,6 +11,7 @@ export { default as Overview } from './Overview/Overview';
 export { default as PrepTasks } from './PrepTasks/PrepTasks';
 export { default as PurchaseGuide } from './PurchaseGuide/PurchaseGuide';
 export { default as ReceiptDetail } from './ReceiptDetail/ReceiptDetail';
+export { default as SauceDetail } from './Sauces/SauceDetail';
 export { default as Sauces } from './Sauces/Sauces';
 export { default as Startup } from './Startup/Startup';
 export { default as Transactions } from './Transactions/Transactions';

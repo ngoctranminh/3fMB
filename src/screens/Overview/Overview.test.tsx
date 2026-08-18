@@ -10,6 +10,7 @@ import { Alert } from 'react-native';
 import { createMMKV, MMKV } from 'react-native-mmkv';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+import { AuthServices } from '@/hooks/domain/auth/authService';
 import { InventoryServices } from '@/hooks/domain/inventory/inventoryService';
 import { Paths } from '@/navigation/paths';
 import { ThemeProvider } from '@/theme';
@@ -28,6 +29,13 @@ jest.mock('@/hooks/domain/inventory/inventoryService', () => ({
   },
 }));
 
+jest.mock('@/hooks/domain/auth/authService', () => ({
+  AuthServices: {
+    getCurrentUser: jest.fn(),
+  },
+}));
+
+const mockedAuthServices = jest.mocked(AuthServices);
 const mockedServices = jest.mocked(InventoryServices);
 
 const SUMMARY = {
@@ -86,6 +94,10 @@ describe('Overview screen', () => {
   // it fires after the Jest environment is torn down and crashes the worker.
   beforeEach(() => {
     jest.useFakeTimers();
+    mockedAuthServices.getCurrentUser.mockResolvedValue({
+      id: 1,
+      username: 'manhtu3f',
+    });
     mockedServices.fetchSummary.mockResolvedValue(SUMMARY);
     mockedServices.fetchValueHistory.mockResolvedValue(HISTORY);
     mockedServices.fetchAlerts.mockResolvedValue(ALERTS);
@@ -130,7 +142,8 @@ describe('Overview screen', () => {
     await waitFor(() => {
       expect(screen.getByText('66')).toBeOnTheScreen();
     });
-    expect(screen.getByText('34.449.500đ')).toBeOnTheScreen();
+    expect(screen.getByText('Xin chào, manhtu3f')).toBeOnTheScreen();
+    expect(screen.getByText('34.449.500 Kč')).toBeOnTheScreen();
 
     expect(screen.getAllByText('Giá trị tồn kho')).toHaveLength(1);
 

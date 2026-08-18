@@ -46,7 +46,7 @@ function AlertRow({
 
       <View style={[layout.flex_1, gutters.gap_4]}>
         <Text style={[fonts.size_14, fonts.gray800]}>{title}</Text>
-        <Text style={[fonts.size_12, fonts.red500]}>
+        <Text style={[fonts.size_12, isLow ? fonts.amber500 : fonts.red500]}>
           {isOut
             ? t('screen_overview.alerts.out_stock')
             : isLow

@@ -94,10 +94,11 @@ function AlertDetailRow({ item, style, ...props }: Properties) {
 
   const status = {
     color: tint,
-    text:
-      item.severity === 'out'
-        ? t('screen_alerts.statuses.out')
-        : item.statusLabel,
+    text: {
+      expiring: t('screen_alerts.statuses.expiring_on', { date: item.date }),
+      low: t('screen_alerts.statuses.low', { quantity: item.quantity }),
+      out: t('screen_alerts.statuses.out'),
+    }[item.severity],
   };
 
   return (

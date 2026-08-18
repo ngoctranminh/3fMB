@@ -23,6 +23,8 @@ import type {
   ValuePoint,
 } from './schema';
 
+import type { ItemLocale } from '@/hooks/language/schema';
+
 const THOUSANDS_GROUP = /\B(?=(\d{3})+(?!\d))/g;
 const MONTH_START = 5;
 const MONTH_END = 10;
@@ -31,9 +33,32 @@ const MONTH_OFFSET = 1;
 const PAD_LENGTH = 2;
 const TIME_LENGTH = 5;
 
+const UNIT_LABELS: Readonly<
+  Record<ItemLocale, Readonly<Record<string, string>>>
+> = {
+  'cs-CZ': {
+    cái: 'kus',
+    chai: 'láhev',
+    cuộn: 'role',
+    gói: 'balení',
+    hộp: 'krabice',
+  },
+  'en-US': {
+    cái: 'piece',
+    chai: 'bottle',
+    cuộn: 'roll',
+    gói: 'pack',
+    hộp: 'box',
+  },
+  'vi-VN': {},
+};
+
+export const localizeUnit = (unit: string, locale: ItemLocale) =>
+  UNIT_LABELS[locale][unit] ?? unit;
+
 export const formatCurrency = (value: number) => {
   const rounded = Math.round(value);
-  return `${String(rounded).replaceAll(THOUSANDS_GROUP, '.')}đ`;
+  return `${String(rounded).replaceAll(THOUSANDS_GROUP, '.')} Kč`;
 };
 
 // Server trả "2026-08-06 09:04:37" (không phải ISO) nên cắt chuỗi, không parse Date
@@ -56,16 +81,20 @@ export const toChartPoint = (point: ValuePoint): ChartPoint => ({
 });
 
 // AlertRow hiển thị ngày hết hạn qua prop `quantity`, không phải `date`
-export const toAlertItem = (alert: ServerAlert): AlertItem => {
+export const toAlertItem = (
+  alert: ServerAlert,
+  locale: ItemLocale = 'vi-VN',
+): AlertItem => {
   const isLow = alert.kind === 'low_stock';
   const severity = alert.quantity <= 0 ? 'out' : isLow ? 'low' : 'expired';
+  const unit = localizeUnit(alert.unit, locale);
 
   return {
     date: alert.date,
     id: String(alert.id),
     quantity:
       isLow || severity === 'out'
-        ? `${String(alert.quantity)} ${alert.unit}`.trim()
+        ? `${String(alert.quantity)} ${unit}`.trim()
         : alert.date,
     severity,
     title: alert.full_name,
@@ -143,6 +172,7 @@ const toAlertSeverity = (alert: ServerAlert): AlertSeverity => {
 
 export const toAlertDetails = (
   alerts: readonly ServerAlert[],
+  locale: ItemLocale = 'vi-VN',
 ): readonly AlertDetail[] => {
   const today = todayIsoDate();
 
@@ -152,8 +182,10 @@ export const toAlertDetails = (
     group: toAlertGroup(alert.updated_at, today),
     id: String(alert.id),
     name: alert.name,
-    quantity: `${String(alert.quantity)} ${alert.unit}`.trim(),
-    reorderLevel: `${String(alert.min_quantity)} ${alert.unit}`.trim(),
+    quantity:
+      `${String(alert.quantity)} ${localizeUnit(alert.unit, locale)}`.trim(),
+    reorderLevel:
+      `${String(alert.min_quantity)} ${localizeUnit(alert.unit, locale)}`.trim(),
     severity: toAlertSeverity(alert),
     statusLabel: alert.label,
   }));
@@ -166,9 +198,7 @@ export const toAlertTotals = (alerts: readonly ServerAlert[]): AlertTotals => ({
   out: alerts.filter((alert) => toAlertSeverity(alert) === 'out').length,
 });
 
-// Transactions hiển thị tiền có khoảng trắng trước "đ", khác Overview/Ingredients
-const formatDocumentValue = (value: number) =>
-  `${formatCurrency(value).slice(0, -1)} đ`;
+const formatDocumentValue = (value: number) => formatCurrency(value);
 
 export const toTransactionItem = (
   document: ServerDocument,
@@ -220,6 +250,7 @@ const selectLeaves = (items: readonly ServerItem[]) => {
 
 export const toLeafInventoryItems = (
   items: readonly ServerItem[],
+  locale: ItemLocale = 'vi-VN',
 ): readonly InventoryItem[] => {
   const byId = new Map(items.map((item) => [item.id, item]));
   const today = todayIsoDate();
@@ -234,13 +265,14 @@ export const toLeafInventoryItems = (
       name: item.name,
       quantity: String(item.quantity),
       status,
-      unit: item.unit,
+      unit: localizeUnit(item.unit, locale),
     };
   });
 };
 
 export const toIngredientItems = (
   items: readonly ServerItem[],
+  locale: ItemLocale = 'vi-VN',
 ): readonly IngredientItem[] => {
   const byId = new Map(items.map((item) => [item.id, item]));
   const today = todayIsoDate();
@@ -256,7 +288,7 @@ export const toIngredientItems = (
       name: item.name,
       quantity: String(item.quantity),
       status,
-      unit: item.unit,
+      unit: localizeUnit(item.unit, locale),
       value: formatCurrency(item.quantity * item.unit_price),
     };
   });
@@ -268,6 +300,7 @@ export const toGroupNames = (items: readonly ServerItem[]) =>
 
 export const toInventoryCatalog = (
   items: readonly ServerItem[],
+  locale: ItemLocale = 'vi-VN',
 ): InventoryCatalog => {
   const byId = new Map(items.map((item) => [item.id, item]));
 
@@ -280,7 +313,7 @@ export const toInventoryCatalog = (
       id: String(item.id),
       name: item.name,
       quantity: item.quantity,
-      unit: item.unit,
+      unit: localizeUnit(item.unit, locale),
       unitPrice: item.unit_price,
     })),
   };
@@ -295,64 +328,88 @@ export const buildItemTrail = (
 export const toItemDetail = (
   item: ServerItemDetail,
   trail: string,
+  locale: ItemLocale = 'vi-VN',
 ): ItemDetail => {
   const status = toStatus(item, todayIsoDate());
+  const unit = localizeUnit(item.unit, locale);
 
   return {
     expiresAt: item.expires_at,
     fullName: trail,
     id: item.id,
-    minQuantity: `${String(item.min_quantity)} ${item.unit}`.trim(),
+    minQuantity: `${String(item.min_quantity)} ${unit}`.trim(),
     name: item.name,
     note: item.note,
     quantity: item.quantity,
-    quantityLabel: `${String(item.quantity)} ${item.unit}`.trim(),
+    quantityLabel: `${String(item.quantity)} ${unit}`.trim(),
     status,
     totalValue: formatCurrency(item.quantity * item.unit_price),
-    unit: item.unit,
+    unit,
     unitPrice: formatCurrency(item.unit_price),
   };
 };
 
-export const toLedgerEntry = (entry: ServerLedgerEntry): LedgerEntry => {
+export const toLedgerEntry = (
+  entry: ServerLedgerEntry,
+  locale: ItemLocale = 'vi-VN',
+): LedgerEntry => {
   const isIncoming = entry.kind === 'in';
   const sign = isIncoming ? '+' : '−';
 
   return {
     deltaLabel:
-      `${sign}${String(Math.abs(entry.delta))} ${entry.item_unit}`.trim(),
+      `${sign}${String(Math.abs(entry.delta))} ${localizeUnit(entry.item_unit, locale)}`.trim(),
+    documentId: entry.document_id,
     id: String(entry.id),
     isIncoming,
     note: entry.note,
     // occurred_at là "2026-08-06 09:04:37", cắt chuỗi thay vì parse Date
     occurredAt: toDateTimeLabel(entry.occurred_at),
+    source: entry.source,
     totalPrice: formatDocumentValue(entry.total_price),
+    userId: entry.user_id,
+    username: entry.username,
   };
 };
 
 export const toDocumentDetail = (
   document: ServerDocumentDetail,
-): DocumentDetail => ({
-  canCancel: document.status === 'completed',
-  code: document.code,
-  date: document.occurred_at_label,
-  id: String(document.id),
-  imageUrl: document.image_url,
-  kind: document.type === 'in' ? 'import' : 'export',
-  lines: document.lines.map((line) => ({
-    fullName: line.item_full_name,
-    id: String(line.id),
-    name: line.item_name,
-    note: line.note,
-    quantity: `${String(line.quantity)} ${line.item_unit}`.trim(),
-    totalPrice: formatDocumentValue(line.total_price),
-    unitPrice: formatDocumentValue(line.unit_price),
-  })),
-  note: document.note,
-  partner: document.party,
-  status: document.status === 'completed' ? 'done' : 'cancelled',
-  statusLabel: document.status_label,
-  subtypeLabel: document.subtype_label,
-  totalValue: formatDocumentValue(document.total_value),
-  user: document.created_by,
-});
+  locale: ItemLocale = 'vi-VN',
+  localizedItems: readonly ServerItem[] = [],
+): DocumentDetail => {
+  const localizedItemsById = new Map(
+    localizedItems.map((item) => [item.id, item]),
+  );
+
+  return {
+    canCancel: document.status === 'completed',
+    code: document.code,
+    date: document.occurred_at_label,
+    id: String(document.id),
+    imageUrl: document.image_url,
+    kind: document.type === 'in' ? 'import' : 'export',
+    lines: document.lines.map((line) => {
+      const localizedItem = localizedItemsById.get(line.item_id);
+      return {
+        fullName: localizedItem
+          ? buildTrail(localizedItem, localizedItemsById)
+          : line.item_full_name,
+        id: String(line.id),
+        name: localizedItem?.name ?? line.item_name,
+        note: line.note,
+        quantity:
+          `${String(line.quantity)} ${localizeUnit(line.item_unit, locale)}`.trim(),
+        totalPrice: formatDocumentValue(line.total_price),
+        unitPrice: formatDocumentValue(line.unit_price),
+      };
+    }),
+    note: document.note,
+    partner: document.party,
+    status: document.status === 'completed' ? 'done' : 'cancelled',
+    statusLabel: document.status_label,
+    subtype: document.subtype,
+    subtypeLabel: document.subtype_label,
+    totalValue: formatDocumentValue(document.total_value),
+    user: document.created_by,
+  };
+};

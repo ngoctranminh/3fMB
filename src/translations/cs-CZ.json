@@ -20,6 +20,12 @@
       "min_quantity": "Minimální zásoba",
       "expires_at": "Datum spotřeby",
       "note": "Poznámka",
+      "translations_title": "Překlady",
+      "translations_hint": "Volitelné. Vyplňte pouze jazyky, které chcete zobrazit.",
+      "english_name": "Anglický název (en-US)",
+      "english_note": "Anglická poznámka",
+      "czech_name": "Český název (cs-CZ)",
+      "czech_note": "Česká poznámka",
       "submit": "Uložit surovinu",
       "error": "Surovinu se nepodařilo přidat. Zkontrolujte formulář a zkuste to znovu.",
       "validation": {
@@ -27,7 +33,8 @@
         "name": "Zadejte název suroviny",
         "unit": "Zadejte jednotku",
         "numbers": "Množství a ceny musí být nezáporná čísla",
-        "date": "Datum musí být ve formátu RRRR-MM-DD"
+        "date": "Datum musí být ve formátu RRRR-MM-DD",
+        "translation_name": "Pokud zadáte přeloženou poznámku, zadejte také název"
       }
     },
     "screen_alerts": {
@@ -160,12 +167,50 @@
       "adjust_title": "Rychlá úprava",
       "history_title": "Historie transakcí",
       "history_empty": "Zatím žádné transakce",
+      "changed_by": "Provedl(a):",
+      "unknown_user": "Neznámý uživatel",
+      "history_notes": {
+        "quick_add": "Rychlé přidání",
+        "quick_remove": "Rychlý úbytek",
+        "direct_edit": "Přímá úprava množství",
+        "initial_stock": "Počáteční zásoba",
+        "receipt_in": "Příjem prostřednictvím dokladu",
+        "receipt_out": "Výdej prostřednictvím dokladu",
+        "manual": "Ruční úprava"
+      },
       "adjusting": "Aktualizace...",
       "adjust_failed": "Aktualizace se nezdařila, zkuste to znovu.",
       "status_low": "Nízká zásoba",
       "status_out": "Vyprodáno",
       "status_expired": "Po datu spotřeby",
       "status_ok": "Skladem"
+    },
+    "screen_change_password": {
+      "title": "Změnit heslo",
+      "subtitle": "Zadejte své aktuální heslo a zvolte nové heslo k účtu.",
+      "back": "Zpět",
+      "current_label": "Aktuální heslo",
+      "current_placeholder": "Zadejte aktuální heslo",
+      "new_label": "Nové heslo",
+      "new_placeholder": "Zadejte nové heslo",
+      "confirm_label": "Potvrdit nové heslo",
+      "confirm_placeholder": "Zadejte nové heslo znovu",
+      "show_password": "Zobrazit heslo",
+      "hide_password": "Skrýt heslo",
+      "submit": "Změnit heslo",
+      "success": "Heslo bylo úspěšně změněno.",
+      "validation": {
+        "current_required": "Zadejte aktuální heslo",
+        "new_required": "Zadejte nové heslo",
+        "new_too_short": "Nové heslo musí mít alespoň 8 znaků",
+        "new_must_differ": "Nové heslo se musí lišit od aktuálního hesla",
+        "confirm_required": "Potvrďte nové heslo",
+        "confirm_mismatch": "Potvrzení hesla se neshoduje"
+      },
+      "error": {
+        "invalid_current": "Aktuální heslo není správné.",
+        "network": "Heslo se nepodařilo změnit. Zkontrolujte připojení a zkuste to znovu."
+      }
     },
     "screen_login": {
       "title": "Přihlášení",
@@ -194,6 +239,7 @@
       "sauces": "Recepty na omáčky",
       "purchase_guide": "Nákupní seznam",
       "prep_tasks": "Přípravné úkoly",
+      "change_password": "Změnit heslo",
       "theme": "Přepnout světlý / tmavý motiv",
       "language": "Změnit jazyk",
       "logout": "Odhlásit se",
@@ -221,16 +267,25 @@
       "subtitle": "Referenční recepty z příručky 3F",
       "search_placeholder": "Najít omáčku...",
       "scale": "Velikost dávky",
+      "ingredient_count": "Počet surovin: {{count}}",
+      "ratio_recipe": "Poměrový recept",
+      "view_recipe": "Zobrazit",
+      "detail_title": "Detail receptu",
+      "detail_subtitle": "Množství a příprava",
+      "ingredients": "Suroviny",
+      "formula": "Receptura",
+      "instructions": "Postup",
       "disclaimer": "Všechna množství jsou pouze orientační; ochutnejte, upravte a převezměte odpovědnost za konečný výsledek."
     },
     "screen_overview": {
       "title": "Přehled",
       "subtitle": "Sklad restaurace",
+      "greeting": "Dobrý den,",
       "stats": {
         "total_label": "Celkem surovin",
         "total_unit": "Druhy",
         "value_label": "Hodnota zásob",
-        "value_unit": "VND",
+        "value_unit": "Kč",
         "low_label": "Dochází zásoby",
         "low_unit": "Druhy",
         "expired_label": "Po datu spotřeby",

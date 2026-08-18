@@ -63,12 +63,19 @@ export const serverAlertSchema = z.object({
 });
 
 export const serverItemSchema = z.object({
+  default_name: z.string().optional(),
+  default_note: z.string().optional(),
   expires_at: z.string().nullable(),
   id: z.number(),
   min_quantity: z.number(),
   name: z.string(),
   parent_id: z.number().nullable(),
   quantity: z.number(),
+  resolved_locale: z.string().optional(),
+  translations: z.record(
+    z.string(),
+    z.object({ name: z.string(), note: z.string() }),
+  ),
   unit: z.string(),
   unit_price: z.number(),
 });
@@ -90,12 +97,16 @@ export const serverItemDetailSchema = serverItemSchema.extend({
 
 export const serverLedgerEntrySchema = z.object({
   delta: z.number(),
+  document_id: z.number().nullable(),
   id: z.number(),
   item_unit: z.string(),
   kind: z.enum(['in', 'out']),
   note: z.string(),
   occurred_at: z.string(),
+  source: z.enum(['adjust', 'edit', 'initial', 'manual']),
   total_price: z.number(),
+  user_id: z.number().nullable(),
+  username: z.string().nullable(),
 });
 
 export const serverLedgerSchema = z.object({
@@ -183,6 +194,15 @@ export type CreateItemInput = {
   readonly note: string;
   readonly parent_id: number;
   readonly quantity: number;
+  readonly translations: Readonly<
+    Record<
+      string,
+      {
+        readonly name: string;
+        readonly note: string;
+      }
+    >
+  >;
   readonly unit: string;
   readonly unit_price: number;
 };
@@ -199,6 +219,7 @@ export type DocumentDetail = {
   readonly partner: string;
   readonly status: 'cancelled' | 'done';
   readonly statusLabel: string;
+  readonly subtype: DocumentSubtype;
   readonly subtypeLabel: string;
   readonly totalValue: string;
   readonly user: string;
@@ -276,11 +297,15 @@ export type ItemDetail = {
 
 export type LedgerEntry = {
   readonly deltaLabel: string;
+  readonly documentId: null | number;
   readonly id: string;
   readonly isIncoming: boolean;
   readonly note: string;
   readonly occurredAt: string;
+  readonly source: 'adjust' | 'edit' | 'initial' | 'manual';
   readonly totalPrice: string;
+  readonly userId: null | number;
+  readonly username: null | string;
 };
 
 export type ServerAlert = z.infer<typeof serverAlertSchema>;

@@ -12,4 +12,18 @@ export const languageSchema = z.enum([
   SupportedLanguages.VI_VN,
 ]);
 
+export type ItemLocale = 'cs-CZ' | 'en-US' | 'vi-VN';
+
 export type Language = z.infer<typeof languageSchema>;
+
+export const toItemLocale = (language: string): ItemLocale => {
+  if (language === 'cs-CZ') {
+    return 'cs-CZ';
+  }
+
+  if (language === 'en-EN') {
+    return 'en-US';
+  }
+
+  return 'vi-VN';
+};

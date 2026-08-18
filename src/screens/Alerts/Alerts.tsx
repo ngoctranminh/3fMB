@@ -40,7 +40,7 @@ const CONTENT_GAP = 16;
 const ICON_SIZE = 18;
 
 function Alerts({ navigation }: MainTabScreenProps<Paths.Alerts>) {
-  const { t } = useTranslation();
+  const { i18n, t } = useTranslation();
   const insets = useSafeAreaInsets();
   const { backgrounds, colors, components, gutters, layout } = useTheme();
   const { useFetchAlertBoardQuery } = useInventory();
@@ -82,10 +82,13 @@ function Alerts({ navigation }: MainTabScreenProps<Paths.Alerts>) {
     // React Native's current JS target does not expose Array#toSorted yet.
     // eslint-disable-next-line unicorn/no-array-sort
     return filteredItems.sort((left, right) => {
-      const result = left.fullName.localeCompare(right.fullName, 'vi');
+      const result = left.fullName.localeCompare(
+        right.fullName,
+        i18n.resolvedLanguage ?? i18n.language,
+      );
       return sortAscending ? result : -result;
     });
-  }, [alerts, query, sortAscending, tab]);
+  }, [alerts, i18n.language, i18n.resolvedLanguage, query, sortAscending, tab]);
 
   const tabOptions = ALERT_TABS.map((id) => ({
     count: id === 'all' ? totalCount : totals[id],
@@ -193,7 +196,7 @@ function Alerts({ navigation }: MainTabScreenProps<Paths.Alerts>) {
                 <TextInput
                   onChangeText={setQuery}
                   placeholder={t('screen_alerts.search_placeholder')}
-                  placeholderTextColor={colors.gray200}
+                  placeholderTextColor={colors.inputPlaceholder}
                   style={[components.searchInput]}
                   testID="alerts-search-input"
                   value={query}

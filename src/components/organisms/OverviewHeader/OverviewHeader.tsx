@@ -9,6 +9,7 @@ type Properties = {
   readonly alertCount: number;
   readonly onBell?: () => void;
   readonly onMenu?: () => void;
+  readonly username?: string;
 };
 
 const ICON_SIZE = 24;
@@ -17,6 +18,7 @@ function OverviewHeader({
   alertCount,
   onBell = undefined,
   onMenu = undefined,
+  username = undefined,
 }: Properties) {
   const { t } = useTranslation();
   const { colors, fonts, gutters, layout } = useTheme();
@@ -50,6 +52,12 @@ function OverviewHeader({
         <Text style={[fonts.size_12, fonts.gray200]}>
           {t('screen_overview.subtitle')}
         </Text>
+        {username ? (
+          <Text style={[fonts.size_12, fonts.gray200]}>
+            {t('screen_overview.greeting')}{' '}
+            <Text style={[fonts.bold]}>{username}</Text>
+          </Text>
+        ) : undefined}
       </View>
 
       <TouchableOpacity

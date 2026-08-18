@@ -172,7 +172,7 @@ function ChecklistScreen({
             <TextInput
               onChangeText={setQuery}
               placeholder={searchPlaceholder}
-              placeholderTextColor={colors.gray200}
+              placeholderTextColor={colors.inputPlaceholder}
               style={[components.searchInput]}
               testID={`${testID}-search`}
               value={query}

@@ -29,9 +29,9 @@ const mockedServices = jest.mocked(InventoryServices);
 
 const TODAY_TOTALS = {
   exportCount: 3,
-  exportValue: '569.800 đ',
+  exportValue: '569.800 Kč',
   importCount: 2,
-  importValue: '70.000 đ',
+  importValue: '70.000 Kč',
 };
 
 const TRANSACTIONS = [
@@ -45,7 +45,7 @@ const TRANSACTIONS = [
     subtype: 'purchase' as const,
     subtypeLabel: 'Nhập hàng',
     user: 'Admin',
-    value: '50.000 đ',
+    value: '50.000 Kč',
   },
   {
     code: 'NK260806-002',
@@ -57,7 +57,7 @@ const TRANSACTIONS = [
     subtype: 'return' as const,
     subtypeLabel: 'Trả hàng',
     user: 'Admin',
-    value: '20.000 đ',
+    value: '20.000 Kč',
   },
   {
     code: 'XK260806-003',
@@ -69,7 +69,7 @@ const TRANSACTIONS = [
     subtype: 'usage' as const,
     subtypeLabel: 'Xuất dùng',
     user: 'Admin',
-    value: '51.000 đ',
+    value: '51.000 Kč',
   },
 ];
 
@@ -122,9 +122,9 @@ describe('Transactions screen', () => {
     expect(screen.getByTestId('transactions-today-totals')).toBeOnTheScreen();
 
     await waitFor(() => {
-      expect(screen.getByText('70.000 đ')).toBeOnTheScreen();
+      expect(screen.getByText('70.000 Kč')).toBeOnTheScreen();
     });
-    expect(screen.getByText('569.800 đ')).toBeOnTheScreen();
+    expect(screen.getByText('569.800 Kč')).toBeOnTheScreen();
 
     expect(screen.getByText('NK260806-001')).toBeOnTheScreen();
   });

@@ -74,8 +74,9 @@ describe('CreateDocument screen', () => {
       partner: 'NCC A',
       status: 'done',
       statusLabel: 'Hoàn thành',
+      subtype: 'purchase',
       subtypeLabel: 'Nhập hàng',
-      totalValue: '400.000 đ',
+      totalValue: '400.000 Kč',
       user: 'Admin',
     });
   });

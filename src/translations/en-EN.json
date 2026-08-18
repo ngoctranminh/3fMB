@@ -20,6 +20,12 @@
       "min_quantity": "Reorder level",
       "expires_at": "Expiry date",
       "note": "Note",
+      "translations_title": "Translations",
+      "translations_hint": "Optional. Only fill in the languages you want to display.",
+      "english_name": "English name (en-US)",
+      "english_note": "English note",
+      "czech_name": "Czech name (cs-CZ)",
+      "czech_note": "Czech note",
       "submit": "Save ingredient",
       "error": "Could not add the ingredient. Please check the form and retry.",
       "validation": {
@@ -27,7 +33,8 @@
         "name": "Enter an ingredient name",
         "unit": "Enter a unit",
         "numbers": "Quantities and prices must be non-negative numbers",
-        "date": "Date must use YYYY-MM-DD"
+        "date": "Date must use YYYY-MM-DD",
+        "translation_name": "Enter a name when a translated note is provided"
       }
     },
     "screen_alerts": {
@@ -160,12 +167,50 @@
       "adjust_title": "Quick adjust",
       "history_title": "Transaction history",
       "history_empty": "No transactions yet",
+      "changed_by": "Performed by:",
+      "unknown_user": "Unknown",
+      "history_notes": {
+        "quick_add": "Quick add",
+        "quick_remove": "Quick remove",
+        "direct_edit": "Direct quantity edit",
+        "initial_stock": "Opening stock",
+        "receipt_in": "Received through a receipt",
+        "receipt_out": "Issued through a receipt",
+        "manual": "Manual adjustment"
+      },
       "adjusting": "Updating...",
       "adjust_failed": "Update failed, please retry.",
       "status_low": "Low",
       "status_out": "Out of stock",
       "status_expired": "Expired",
       "status_ok": "In stock"
+    },
+    "screen_change_password": {
+      "title": "Change password",
+      "subtitle": "Enter your current password and choose a new password for your account.",
+      "back": "Go back",
+      "current_label": "Current password",
+      "current_placeholder": "Enter your current password",
+      "new_label": "New password",
+      "new_placeholder": "Enter your new password",
+      "confirm_label": "Confirm new password",
+      "confirm_placeholder": "Enter your new password again",
+      "show_password": "Show password",
+      "hide_password": "Hide password",
+      "submit": "Change password",
+      "success": "Password changed successfully.",
+      "validation": {
+        "current_required": "Please enter your current password",
+        "new_required": "Please enter a new password",
+        "new_too_short": "The new password must be at least 8 characters",
+        "new_must_differ": "The new password must differ from the current password",
+        "confirm_required": "Please confirm your new password",
+        "confirm_mismatch": "The password confirmation does not match"
+      },
+      "error": {
+        "invalid_current": "The current password is incorrect.",
+        "network": "Could not change the password. Please check your connection and try again."
+      }
     },
     "screen_login": {
       "title": "Sign in",
@@ -194,6 +239,7 @@
       "sauces": "Sauce recipes",
       "purchase_guide": "Purchase checklist",
       "prep_tasks": "Prep tasks",
+      "change_password": "Change password",
       "theme": "Switch light / dark theme",
       "language": "Change language",
       "logout": "Sign out",
@@ -221,16 +267,25 @@
       "subtitle": "Reference recipes from the 3F handbook",
       "search_placeholder": "Find a sauce...",
       "scale": "Batch size",
+      "ingredient_count": "{{count}} ingredients",
+      "ratio_recipe": "Ratio-based recipe",
+      "view_recipe": "View",
+      "detail_title": "Recipe details",
+      "detail_subtitle": "Quantities and preparation",
+      "ingredients": "Ingredients",
+      "formula": "Formula",
+      "instructions": "Preparation",
       "disclaimer": "All quantities are a reference; taste, adjust and take responsibility for the final result."
     },
     "screen_overview": {
       "title": "Overview",
       "subtitle": "Restaurant Storage",
+      "greeting": "Hello,",
       "stats": {
         "total_label": "Total ingredients",
         "total_unit": "Types",
         "value_label": "Stock value",
-        "value_unit": "VND",
+        "value_unit": "Kč",
         "low_label": "Running low",
         "low_unit": "Types",
         "expired_label": "Expired",

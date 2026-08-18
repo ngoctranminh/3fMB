@@ -34,7 +34,7 @@ const PLUS_SIZE = 20;
 type StatusFilter = 'all' | 'expired' | 'low' | 'ok' | 'out';
 
 function Ingredients({ navigation }: MainTabScreenProps<Paths.Ingredients>) {
-  const { t } = useTranslation();
+  const { i18n, t } = useTranslation();
   const insets = useSafeAreaInsets();
   const { backgrounds, components, gutters, layout } = useTheme();
   const { useFetchIngredientsQuery, useFetchSummaryQuery } = useInventory();
@@ -74,10 +74,21 @@ function Ingredients({ navigation }: MainTabScreenProps<Paths.Ingredients>) {
     // React Native's current JS target does not expose Array#toSorted yet.
     // eslint-disable-next-line unicorn/no-array-sort
     return filteredItems.sort((left, right) => {
-      const result = left.fullName.localeCompare(right.fullName, 'vi');
+      const result = left.fullName.localeCompare(
+        right.fullName,
+        i18n.resolvedLanguage ?? i18n.language,
+      );
       return sortAscending ? result : -result;
     });
-  }, [group, items, query, sortAscending, statusFilter]);
+  }, [
+    group,
+    i18n.language,
+    i18n.resolvedLanguage,
+    items,
+    query,
+    sortAscending,
+    statusFilter,
+  ]);
 
   const summary = summaryQuery.data;
   const isError = ingredientsQuery.isError || summaryQuery.isError;

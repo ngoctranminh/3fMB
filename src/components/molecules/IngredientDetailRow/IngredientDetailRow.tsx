@@ -75,7 +75,14 @@ function IngredientDetailRow({ item, style, ...props }: Properties) {
             {t('screen_ingredients.stock_label')}
           </Text>
           <Text
-            style={[fonts.size_12, item.isLow ? fonts.red500 : fonts.gray800]}
+            style={[
+              fonts.size_12,
+              item.status === 'low'
+                ? fonts.amber500
+                : item.isLow
+                  ? fonts.red500
+                  : fonts.gray800,
+            ]}
           >
             {item.quantity} {item.unit}
           </Text>

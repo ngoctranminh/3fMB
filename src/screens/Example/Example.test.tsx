@@ -4,6 +4,7 @@ import { I18nextProvider } from 'react-i18next';
 import { createMMKV, MMKV } from 'react-native-mmkv';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+import { languageStorage } from '@/hooks/language/languageStorage';
 import { SupportedLanguages } from '@/hooks/language/schema';
 import { ThemeProvider } from '@/theme';
 import i18n from '@/translations';
@@ -50,6 +51,9 @@ describe('Example screen should render correctly', () => {
     fireEvent.press(button);
 
     expect(i18n.language).toBe(SupportedLanguages.EN_EN);
+    expect(languageStorage.getString('language')).toBe(
+      SupportedLanguages.EN_EN,
+    );
   });
 
   test('the user change the theme', () => {

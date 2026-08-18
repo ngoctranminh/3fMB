@@ -1,8 +1,14 @@
-import type { Credentials } from './schema';
+import type { ChangePasswordInput, Credentials } from './schema';
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { AuthServices } from './authService';
+
+const useChangePasswordMutation = () =>
+  useMutation({
+    mutationFn: (passwords: ChangePasswordInput) =>
+      AuthServices.changePassword(passwords),
+  });
 
 const useLoginMutation = () =>
   useMutation({
@@ -26,5 +32,10 @@ export const useAuth = () => {
       },
     });
 
-  return { useCurrentUserQuery, useLoginMutation, useLogoutMutation };
+  return {
+    useChangePasswordMutation,
+    useCurrentUserQuery,
+    useLoginMutation,
+    useLogoutMutation,
+  };
 };

@@ -9,6 +9,7 @@ import { useTheme } from '@/theme';
 
 import {
   AddIngredient,
+  ChangePassword,
   CreateDocument,
   Example,
   ItemDetail,
@@ -16,6 +17,7 @@ import {
   PrepTasks,
   PurchaseGuide,
   ReceiptDetail,
+  SauceDetail,
   Sauces,
   Startup,
 } from '@/screens';
@@ -34,6 +36,10 @@ function ApplicationNavigator() {
           <Stack.Screen component={MainTabs} name={Paths.MainTabs} />
           <Stack.Screen component={AddIngredient} name={Paths.AddIngredient} />
           <Stack.Screen
+            component={ChangePassword}
+            name={Paths.ChangePassword}
+          />
+          <Stack.Screen
             component={CreateDocument}
             name={Paths.CreateDocument}
           />
@@ -42,6 +48,7 @@ function ApplicationNavigator() {
           <Stack.Screen component={PrepTasks} name={Paths.PrepTasks} />
           <Stack.Screen component={PurchaseGuide} name={Paths.PurchaseGuide} />
           <Stack.Screen component={ReceiptDetail} name={Paths.ReceiptDetail} />
+          <Stack.Screen component={SauceDetail} name={Paths.SauceDetail} />
           <Stack.Screen component={Sauces} name={Paths.Sauces} />
         </Stack.Navigator>
       </NavigationContainer>

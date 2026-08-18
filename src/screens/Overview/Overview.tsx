@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { RefreshControl, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { useInventory } from '@/hooks';
+import { useAuth, useInventory } from '@/hooks';
 import { formatCurrency } from '@/hooks/domain/inventory/adapters';
 import { Paths } from '@/navigation/paths';
 import type { MainTabScreenProps } from '@/navigation/types';
@@ -29,6 +29,7 @@ function Overview({ navigation }: MainTabScreenProps<Paths.Overview>) {
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
   const { backgrounds, gutters, layout } = useTheme();
+  const { useCurrentUserQuery } = useAuth();
   const {
     useFetchAlertsQuery,
     useFetchItemsQuery,
@@ -36,12 +37,16 @@ function Overview({ navigation }: MainTabScreenProps<Paths.Overview>) {
     useFetchValueHistoryQuery,
   } = useInventory();
 
+  const currentUserQuery = useCurrentUserQuery();
   const summaryQuery = useFetchSummaryQuery();
   const historyQuery = useFetchValueHistoryQuery(CHART_DAYS);
   const alertsQuery = useFetchAlertsQuery(ALERTS_LIMIT);
   const itemsQuery = useFetchItemsQuery();
 
   const summary = summaryQuery.data;
+  const username = currentUserQuery.data
+    ? currentUserQuery.data.username
+    : undefined;
   const lowStockCount = itemsQuery.data?.filter(
     (item) => item.status === 'low',
   ).length;
@@ -152,6 +157,7 @@ function Overview({ navigation }: MainTabScreenProps<Paths.Overview>) {
               alertCount={summary?.alert_count ?? 0}
               onBell={handleSeeAllAlerts}
               onMenu={handleMenu}
+              username={username}
             />
           </View>
 

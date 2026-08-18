@@ -29,10 +29,18 @@ function IngredientRow({ item, style, ...props }: Properties) {
 
   const statusTones = {
     expired: 'danger',
-    low: 'danger',
+    low: 'warning',
     ok: 'success',
     out: 'danger',
   } as const;
+
+  const stockColor =
+    item.status === 'low'
+      ? colors.amber500
+      : item.status === 'out'
+        ? colors.red500
+        : colors.gray800;
+  const stockDotColor = item.isLow ? stockColor : colors.green500;
 
   return (
     <TouchableOpacity
@@ -64,19 +72,13 @@ function IngredientRow({ item, style, ...props }: Properties) {
       <Text style={[fonts.size_12, fonts.gray200]}>{item.unit}</Text>
 
       <View style={[layout.row, layout.itemsCenter, gutters.gap_4]}>
-        <Text
-          style={[
-            fonts.size_14,
-            item.isLow ? fonts.red500 : fonts.gray800,
-            fonts.bold,
-          ]}
-        >
+        <Text style={[fonts.size_14, { color: stockColor }, fonts.bold]}>
           {item.quantity}
         </Text>
         <View
           style={[
             {
-              backgroundColor: item.isLow ? colors.red500 : colors.green500,
+              backgroundColor: stockDotColor,
               borderRadius: DOT_SIZE / 2,
               height: DOT_SIZE,
               width: DOT_SIZE,

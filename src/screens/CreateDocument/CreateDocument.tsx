@@ -380,7 +380,7 @@ function CreateDocument({
                 <TextInput
                   onChangeText={setQuery}
                   placeholder={t('screen_create_document.search_placeholder')}
-                  placeholderTextColor={colors.gray200}
+                  placeholderTextColor={colors.inputPlaceholder}
                   style={[components.searchInput]}
                   testID="create-document-item-search"
                   value={query}

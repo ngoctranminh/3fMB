@@ -4,6 +4,8 @@ import type {
   TransactionPeriod,
 } from './schema';
 
+import type { ItemLocale } from '@/hooks/language/schema';
+
 import { apiInstance } from '@/services/instance';
 
 import {
@@ -71,52 +73,71 @@ export const InventoryServices = {
     return serverItemSchema.parse(response);
   },
 
-  fetchAlertBoard: async () => {
-    const response = await apiInstance.get('api/alerts').json();
-    const alerts = serverAlertsSchema.parse(response);
-    return { items: toAlertDetails(alerts), totals: toAlertTotals(alerts) };
-  },
-  fetchAlerts: async (limit: number) => {
+  fetchAlertBoard: async (locale: ItemLocale) => {
     const response = await apiInstance
-      .get('api/alerts', { searchParams: { limit } })
+      .get('api/alerts', { searchParams: { locale } })
+      .json();
+    const alerts = serverAlertsSchema.parse(response);
+    return {
+      items: toAlertDetails(alerts, locale),
+      totals: toAlertTotals(alerts),
+    };
+  },
+  fetchAlerts: async (limit: number, locale: ItemLocale) => {
+    const response = await apiInstance
+      .get('api/alerts', { searchParams: { limit, locale } })
       .json();
     return serverAlertsSchema
       .parse(response)
-      .map((alert) => toAlertItem(alert));
+      .map((alert) => toAlertItem(alert, locale));
   },
 
-  fetchDocumentDetail: async (documentId: string) => {
-    const response = await apiInstance
-      .get(`api/documents/${documentId}`)
-      .json();
-    return toDocumentDetail(serverDocumentDetailSchema.parse(response));
+  fetchDocumentDetail: async (documentId: string, locale: ItemLocale) => {
+    const [documentResponse, itemsResponse] = await Promise.all([
+      apiInstance.get(`api/documents/${documentId}`).json(),
+      apiInstance
+        .get('api/items', { searchParams: { flat: 1, locale } })
+        .json(),
+    ]);
+    return toDocumentDetail(
+      serverDocumentDetailSchema.parse(documentResponse),
+      locale,
+      serverItemsSchema.parse(itemsResponse),
+    );
   },
 
-  fetchIngredients: async () => {
+  fetchIngredients: async (locale: ItemLocale) => {
     const response = await apiInstance
-      .get('api/items', { searchParams: { flat: 1 } })
+      .get('api/items', { searchParams: { flat: 1, locale } })
       .json();
     const items = serverItemsSchema.parse(response);
-    return { groups: toGroupNames(items), items: toIngredientItems(items) };
+    return {
+      groups: toGroupNames(items),
+      items: toIngredientItems(items, locale),
+    };
   },
 
-  fetchInventoryCatalog: async () => {
+  fetchInventoryCatalog: async (locale: ItemLocale) => {
     const response = await apiInstance
-      .get('api/items', { searchParams: { flat: 1 } })
+      .get('api/items', { searchParams: { flat: 1, locale } })
       .json();
-    return toInventoryCatalog(serverItemsSchema.parse(response));
+    return toInventoryCatalog(serverItemsSchema.parse(response), locale);
   },
   // Trail phải dựng từ cây đầy đủ vì /api/items/:id không trả đường dẫn cha
-  fetchItemDetail: async (itemId: string) => {
+  fetchItemDetail: async (itemId: string, locale: ItemLocale) => {
     const [detailResponse, treeResponse] = await Promise.all([
-      apiInstance.get(`api/items/${itemId}`).json(),
-      apiInstance.get('api/items', { searchParams: { flat: 1 } }).json(),
+      apiInstance
+        .get(`api/items/${itemId}`, { searchParams: { locale } })
+        .json(),
+      apiInstance
+        .get('api/items', { searchParams: { flat: 1, locale } })
+        .json(),
     ]);
     const item = serverItemDetailSchema.parse(detailResponse);
     const tree = serverItemsSchema.parse(treeResponse);
-    return toItemDetail(item, buildItemTrail(item, tree));
+    return toItemDetail(item, buildItemTrail(item, tree), locale);
   },
-  fetchItemLedger: async (itemId: string) => {
+  fetchItemLedger: async (itemId: string, locale: ItemLocale) => {
     const response = await apiInstance
       .get('api/transactions', {
         searchParams: { item_id: itemId, limit: LEDGER_LIMIT },
@@ -124,14 +145,14 @@ export const InventoryServices = {
       .json();
     return serverLedgerSchema
       .parse(response)
-      .items.map((entry) => toLedgerEntry(entry));
+      .items.map((entry) => toLedgerEntry(entry, locale));
   },
 
-  fetchItems: async () => {
+  fetchItems: async (locale: ItemLocale) => {
     const response = await apiInstance
-      .get('api/items', { searchParams: { flat: 1 } })
+      .get('api/items', { searchParams: { flat: 1, locale } })
       .json();
-    return toLeafInventoryItems(serverItemsSchema.parse(response));
+    return toLeafInventoryItems(serverItemsSchema.parse(response), locale);
   },
 
   fetchSummary: async () => {

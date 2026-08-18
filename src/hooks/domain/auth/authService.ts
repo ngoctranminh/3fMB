@@ -1,4 +1,4 @@
-import type { Credentials } from './schema';
+import type { ChangePasswordInput, Credentials } from './schema';
 
 import { HTTPError } from 'ky';
 
@@ -8,6 +8,7 @@ import { authUserEnvelopeSchema } from './schema';
 
 export const enum AuthErrorKind {
   invalidCredentials = 'invalidCredentials',
+  invalidCurrentPassword = 'invalidCurrentPassword',
   network = 'network',
 }
 
@@ -26,6 +27,27 @@ const CLIENT_ERROR_FLOOR = 400;
 const CLIENT_ERROR_CEILING = 500;
 
 export const AuthServices = {
+  changePassword: async (passwords: ChangePasswordInput) => {
+    try {
+      await authInstance.post('api/auth/change-password', {
+        json: passwords,
+      });
+    } catch (error) {
+      if (error instanceof HTTPError) {
+        const { status } = error.response;
+
+        if (
+          status === UNAUTHORIZED ||
+          (status >= CLIENT_ERROR_FLOOR && status < CLIENT_ERROR_CEILING)
+        ) {
+          throw new AuthError(AuthErrorKind.invalidCurrentPassword);
+        }
+      }
+
+      throw new AuthError(AuthErrorKind.network);
+    }
+  },
+
   getCurrentUser: async () => {
     try {
       const response = await authInstance.get('api/auth/me').json();

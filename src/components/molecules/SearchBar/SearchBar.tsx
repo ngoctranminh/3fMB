@@ -46,7 +46,7 @@ function SearchBar({
         <TextInput
           onChangeText={onChangeText}
           placeholder={t('screen_overview.inventory.search_placeholder')}
-          placeholderTextColor={colors.gray200}
+          placeholderTextColor={colors.inputPlaceholder}
           ref={inputReference}
           style={[components.searchInput]}
           testID="inventory-search-input"

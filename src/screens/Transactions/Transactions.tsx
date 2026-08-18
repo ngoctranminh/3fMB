@@ -242,7 +242,7 @@ function Transactions({ navigation }: MainTabScreenProps<Paths.Transactions>) {
                 <TextInput
                   onChangeText={setQuery}
                   placeholder={t('screen_transactions.search_placeholder')}
-                  placeholderTextColor={colors.gray200}
+                  placeholderTextColor={colors.inputPlaceholder}
                   style={[components.searchInput]}
                   testID="transactions-search-input"
                   value={query}

@@ -81,13 +81,15 @@ function ReceiptDetail({
                 {receipt?.code ?? t('screen_receipt_detail.title')}
               </Text>
               <Text style={[fonts.size_12, fonts.gray200]}>
-                {receipt?.subtypeLabel ?? ''}
+                {receipt
+                  ? t(`screen_transactions.filters.${receipt.subtype}`)
+                  : ''}
               </Text>
             </View>
 
             {receipt ? (
               <StatusPill
-                label={receipt.statusLabel}
+                label={t(`screen_transactions.statuses.${receipt.status}`)}
                 tone={receipt.status === 'done' ? 'success' : 'danger'}
               />
             ) : undefined}

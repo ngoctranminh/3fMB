@@ -126,7 +126,7 @@ describe('Alerts screen', () => {
     });
     expect(screen.getAllByText('Hết hàng').length).toBeGreaterThan(0);
     expect(screen.queryByText('Sắp hết (0 kg)')).not.toBeOnTheScreen();
-    expect(screen.getByText('Còn 3 ngày')).toBeOnTheScreen();
+    expect(screen.getByText('Hết hạn vào 09/08/2026')).toBeOnTheScreen();
   });
 
   it('filters the list by severity tab', async () => {

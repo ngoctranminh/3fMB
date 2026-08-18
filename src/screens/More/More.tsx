@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 
 import { useAuth, useI18n } from '@/hooks';
+import { canViewSauces } from '@/hooks/domain/auth/permissions';
 import { Paths } from '@/navigation/paths';
 import type { MainTabScreenProps } from '@/navigation/types';
 import type { RootStackParamList } from '@/navigation/types';
@@ -24,11 +25,15 @@ type Action = {
 
 function More({ navigation }: MainTabScreenProps<Paths.More>) {
   const { t } = useTranslation();
-  const { useLogoutMutation } = useAuth();
+  const { useCurrentUserQuery, useLogoutMutation } = useAuth();
   const { toggleLanguage } = useI18n();
   const { backgrounds, changeTheme, colors, fonts, gutters, layout, variant } =
     useTheme();
   const logoutMutation = useLogoutMutation();
+  const currentUserQuery = useCurrentUserQuery();
+  const username = currentUserQuery.data
+    ? currentUserQuery.data.username
+    : undefined;
 
   const handleLogout = () => {
     logoutMutation.reset();
@@ -42,15 +47,19 @@ function More({ navigation }: MainTabScreenProps<Paths.More>) {
   };
 
   const operationActions: readonly Action[] = [
-    {
-      disabled: false,
-      handlePress: () => {
-        navigation.navigate(Paths.Sauces);
-      },
-      icon: 'fire',
-      label: t('screen_more.sauces'),
-      testID: 'more-sauces',
-    },
+    ...(canViewSauces(username)
+      ? [
+          {
+            disabled: false,
+            handlePress: () => {
+              navigation.navigate(Paths.Sauces);
+            },
+            icon: 'fire',
+            label: t('screen_more.sauces'),
+            testID: 'more-sauces',
+          },
+        ]
+      : []),
     {
       disabled: false,
       handlePress: () => {
@@ -72,6 +81,15 @@ function More({ navigation }: MainTabScreenProps<Paths.More>) {
   ];
 
   const settingActions: readonly Action[] = [
+    {
+      disabled: false,
+      handlePress: () => {
+        navigation.navigate(Paths.ChangePassword);
+      },
+      icon: 'arrow-path',
+      label: t('screen_more.change_password'),
+      testID: 'more-change-password',
+    },
     {
       disabled: false,
       handlePress: () => {

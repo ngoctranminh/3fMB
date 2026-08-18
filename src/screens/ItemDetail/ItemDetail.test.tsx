@@ -40,19 +40,24 @@ const ITEM = {
   quantity: 6,
   quantityLabel: '6 kg',
   status: 'ok' as const,
-  totalValue: '1.080.000đ',
+  totalValue: '1.080.000 Kč',
   unit: 'kg',
-  unitPrice: '180.000đ',
+  unitPrice: '180.000 Kč',
 };
 
 const LEDGER = [
   {
     deltaLabel: '+50 kg',
+    // eslint-disable-next-line unicorn/no-null -- API uses null without a source document.
+    documentId: null,
     id: '53',
     isIncoming: true,
     note: 'Nhập hàng — T',
     occurredAt: '06/08/2026 09:04',
-    totalPrice: '50.000 đ',
+    source: 'manual' as const,
+    totalPrice: '50.000 Kč',
+    userId: 1,
+    username: 'manhtu3f',
   },
 ];
 
@@ -103,6 +108,7 @@ describe('ItemDetail screen', () => {
       note: '',
       parent_id: 2,
       quantity: 7,
+      translations: {},
       unit: 'kg',
       unit_price: 180_000,
     });
@@ -121,11 +127,12 @@ describe('ItemDetail screen', () => {
 
     expect(screen.getByText('Đông lạnh / Mực / Chưa làm')).toBeOnTheScreen();
     expect(screen.getByText('6 kg')).toBeOnTheScreen();
-    expect(screen.getByText('180.000đ')).toBeOnTheScreen();
-    expect(screen.getByText('1.080.000đ')).toBeOnTheScreen();
+    expect(screen.getByText('180.000 Kč')).toBeOnTheScreen();
+    expect(screen.getByText('1.080.000 Kč')).toBeOnTheScreen();
     expect(screen.getByText('Không có hạn')).toBeOnTheScreen();
 
     expect(screen.getByText('Nhập hàng — T')).toBeOnTheScreen();
+    expect(screen.getByText('Người thực hiện: manhtu3f')).toBeOnTheScreen();
     expect(screen.getByText('+50 kg')).toBeOnTheScreen();
   });
 
@@ -170,6 +177,19 @@ describe('ItemDetail screen', () => {
 
     await waitFor(() => {
       expect(screen.getByText('Chưa có giao dịch nào')).toBeOnTheScreen();
+    });
+  });
+
+  it('falls back to the user id when a transaction has no username', async () => {
+    mockedServices.fetchItemLedger.mockResolvedValue([
+      // eslint-disable-next-line unicorn/no-null -- API uses null for a missing username.
+      { ...LEDGER[0], username: null },
+    ]);
+
+    renderScreen(storage);
+
+    await waitFor(() => {
+      expect(screen.getByText('Người thực hiện: #1')).toBeOnTheScreen();
     });
   });
 

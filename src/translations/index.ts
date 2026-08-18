@@ -3,6 +3,7 @@ import 'intl-pluralrules';
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
+import { loadLanguage } from '@/hooks/language/languageStorage';
 import type { Language } from '@/hooks/language/schema';
 
 import cs from './cs-CZ.json';
@@ -23,7 +24,7 @@ void i18n.use(initReactI18next).init({
   // React Native renders text nodes, so HTML escaping would leak entities
   // like &#x2F; into interpolated dates and quantities.
   interpolation: { escapeValue: false },
-  lng: 'vi-VN',
+  lng: loadLanguage(),
   resources,
 });
 

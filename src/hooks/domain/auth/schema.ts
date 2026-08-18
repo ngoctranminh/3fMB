@@ -8,6 +8,11 @@ export const credentialsSchema = z.object({
   username: z.string().min(MIN_USERNAME_LENGTH),
 });
 
+export const changePasswordSchema = z.object({
+  currentPassword: z.string().min(MIN_PASSWORD_LENGTH),
+  newPassword: z.string().min(MIN_PASSWORD_LENGTH),
+});
+
 export const authenticatedUserSchema = z.object({
   id: z.number(),
   username: z.string(),
@@ -18,5 +23,7 @@ export const authUserEnvelopeSchema = z.object({
 });
 
 export type AuthenticatedUser = z.infer<typeof authenticatedUserSchema>;
+
+export type ChangePasswordInput = z.infer<typeof changePasswordSchema>;
 
 export type Credentials = z.infer<typeof credentialsSchema>;

@@ -16,6 +16,27 @@ describe('AuthServices', () => {
     jest.clearAllMocks();
   });
 
+  it('changes the password through the authenticated endpoint', async () => {
+    mockedAuthInstance.post.mockResolvedValue({} as never);
+
+    await expect(
+      AuthServices.changePassword({
+        currentPassword: 'old-password',
+        newPassword: 'new-password',
+      }),
+    ).resolves.toBeUndefined();
+
+    expect(mockedAuthInstance.post).toHaveBeenCalledWith(
+      'api/auth/change-password',
+      {
+        json: {
+          currentPassword: 'old-password',
+          newPassword: 'new-password',
+        },
+      },
+    );
+  });
+
   it('logs in against the warehouse server and unwraps the user', async () => {
     mockedAuthInstance.post.mockReturnValue({
       json: jest.fn().mockResolvedValue({

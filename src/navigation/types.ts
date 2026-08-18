@@ -30,6 +30,7 @@ export type RootScreenProps<
 
 export type RootStackParamList = {
   [Paths.AddIngredient]: undefined;
+  [Paths.ChangePassword]: undefined;
   [Paths.CreateDocument]: { readonly initialSubtype: DocumentSubtype };
   [Paths.Example]: undefined;
   [Paths.ItemDetail]: { readonly itemId: string };
@@ -38,6 +39,7 @@ export type RootStackParamList = {
   [Paths.PrepTasks]: undefined;
   [Paths.PurchaseGuide]: undefined;
   [Paths.ReceiptDetail]: { readonly documentId: string };
+  [Paths.SauceDetail]: { readonly sauceId: string };
   [Paths.Sauces]: undefined;
   [Paths.Startup]: undefined;
 };
