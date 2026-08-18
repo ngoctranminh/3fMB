@@ -337,6 +337,7 @@ export const toDocumentDetail = (
   code: document.code,
   date: document.occurred_at_label,
   id: String(document.id),
+  imageUrl: document.image_url,
   kind: document.type === 'in' ? 'import' : 'export',
   lines: document.lines.map((line) => ({
     fullName: line.item_full_name,

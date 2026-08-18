@@ -1,8 +1,16 @@
 import ky from 'ky';
 
-const prefixUrl = `${process.env.API_URL ?? ''}/`;
+const toPrefixUrl = (value: string | undefined) =>
+  `${(value ?? '').replace(/\/+$/, '')}/`;
 
-const apiPrefixUrl = `${process.env.API_BASE_URL ?? ''}/`;
+const prefixUrl = toPrefixUrl(process.env.API_URL);
+
+const apiPrefixUrl = toPrefixUrl(process.env.API_BASE_URL);
+
+export const resolveApiUrl = (path: string) => {
+  if (/^https?:\/\//i.test(path)) return path;
+  return `${apiPrefixUrl}${path.replace(/^\/+/, '')}`;
+};
 
 export const instance = ky.extend({
   headers: {

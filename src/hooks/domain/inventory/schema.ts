@@ -116,6 +116,7 @@ export const serverDocumentLineSchema = z.object({
 });
 
 export const serverDocumentDetailSchema = serverDocumentSchema.extend({
+  image_url: z.string().nullable(),
   lines: z.array(serverDocumentLineSchema),
   note: z.string(),
   occurred_at: z.string(),
@@ -162,6 +163,8 @@ export type ChartPoint = {
 
 export type CreateDocumentInput = {
   readonly created_by: string;
+  readonly image?: string;
+  readonly image_name?: string;
   readonly lines: readonly {
     readonly item_id: number;
     readonly note: string;
@@ -189,6 +192,7 @@ export type DocumentDetail = {
   readonly code: string;
   readonly date: string;
   readonly id: string;
+  readonly imageUrl: null | string;
   readonly kind: TransactionKind;
   readonly lines: readonly DocumentLine[];
   readonly note: string;

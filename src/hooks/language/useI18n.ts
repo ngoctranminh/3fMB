@@ -5,7 +5,7 @@ import { SupportedLanguages } from './schema';
 const LANGUAGE_CYCLE = [
   SupportedLanguages.VI_VN,
   SupportedLanguages.EN_EN,
-  SupportedLanguages.FR_FR,
+  SupportedLanguages.CS_CZ,
 ] as const;
 
 const changeLanguage = (lang: SupportedLanguages) => {

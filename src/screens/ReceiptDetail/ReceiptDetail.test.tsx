@@ -1,3 +1,4 @@
+/* eslint-disable unicorn/no-null -- API fields are explicitly nullable. */
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import {
   fireEvent,
@@ -16,6 +17,8 @@ import i18n from '@/translations';
 
 import { createDetailScreenProps } from '@/tests/navigationProps';
 
+import { resolveApiUrl } from '@/services/instance';
+
 import ReceiptDetail from './ReceiptDetail';
 
 jest.mock('@/hooks/domain/inventory/inventoryService', () => ({
@@ -32,6 +35,7 @@ const RECEIPT = {
   code: 'XK260806-001',
   date: '06/08/2026 09:04',
   id: '22',
+  imageUrl: null,
   kind: 'export' as const,
   lines: [
     {
@@ -117,6 +121,24 @@ describe('ReceiptDetail screen', () => {
     expect(screen.getByText('Tỏi')).toBeOnTheScreen();
     expect(screen.getByText('0.9 kg')).toBeOnTheScreen();
     expect(screen.getByText('40.500 đ')).toBeOnTheScreen();
+  });
+
+  it('shows the receiving photo returned by the server', async () => {
+    mockedServices.fetchDocumentDetail.mockResolvedValue({
+      ...RECEIPT,
+      imageUrl: '/api/documents/22/image',
+    });
+
+    renderScreen(storage);
+
+    await waitFor(() => {
+      expect(screen.getByTestId('receipt-photo')).toBeOnTheScreen();
+    });
+
+    expect(screen.getByText('Ảnh nhập hàng')).toBeOnTheScreen();
+    expect(screen.getByTestId('receipt-photo')).toHaveProp('source', {
+      uri: resolveApiUrl('/api/documents/22/image'),
+    });
   });
 
   it('cancels the receipt when the cancel button is pressed', async () => {

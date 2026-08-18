@@ -1,3 +1,4 @@
+/* eslint-disable unicorn/no-null -- API fields are explicitly nullable. */
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import {
   fireEvent,
@@ -6,6 +7,7 @@ import {
   waitFor,
 } from '@testing-library/react-native';
 import { I18nextProvider } from 'react-i18next';
+import { launchCamera } from 'react-native-image-picker';
 import { createMMKV, MMKV } from 'react-native-mmkv';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
@@ -23,8 +25,12 @@ jest.mock('@/hooks/domain/inventory/inventoryService', () => ({
     fetchInventoryCatalog: jest.fn(),
   },
 }));
+jest.mock('react-native-image-picker', () => ({
+  launchCamera: jest.fn(),
+}));
 
 const mockedServices = jest.mocked(InventoryServices);
+const mockedLaunchCamera = jest.mocked(launchCamera);
 
 describe('CreateDocument screen', () => {
   let storage: MMKV;
@@ -34,6 +40,7 @@ describe('CreateDocument screen', () => {
   });
 
   beforeEach(() => {
+    mockedLaunchCamera.mockResolvedValue({ didCancel: true });
     mockedServices.fetchInventoryCatalog.mockResolvedValue({
       groups: [{ id: '1', name: 'Đông lạnh' }],
       items: [
@@ -60,6 +67,7 @@ describe('CreateDocument screen', () => {
       code: 'NK260811-001',
       date: '11/08/2026 18:00',
       id: '101',
+      imageUrl: null,
       kind: 'import',
       lines: [],
       note: '',
@@ -170,6 +178,58 @@ describe('CreateDocument screen', () => {
         },
       ]);
     });
+  });
+
+  it('captures and uploads a photo with an import receipt', async () => {
+    mockedLaunchCamera.mockResolvedValue({
+      assets: [
+        {
+          base64: 'captured-photo',
+          fileName: 'hoa-don.jpg',
+          type: 'image/jpeg',
+          uri: 'file:///captured-photo.jpg',
+        },
+      ],
+    });
+    renderScreen();
+
+    await waitFor(() => {
+      expect(
+        screen.getByTestId('create-document-take-photo'),
+      ).toBeOnTheScreen();
+    });
+
+    fireEvent.press(screen.getByTestId('create-document-take-photo'));
+
+    await waitFor(() => {
+      expect(
+        screen.getByTestId('create-document-photo-preview'),
+      ).toBeOnTheScreen();
+    });
+
+    fireEvent.press(screen.getByTestId('create-document-item-3'));
+    fireEvent.press(screen.getByTestId('create-document-submit'));
+
+    await waitFor(() => {
+      expect(mockedServices.createDocument.mock.calls[0]?.[0]).toEqual(
+        expect.objectContaining({
+          image: 'data:image/jpeg;base64,captured-photo',
+          image_name: 'hoa-don.jpg',
+        }),
+      );
+    });
+  });
+
+  it('only offers photo capture for import receipts', async () => {
+    renderScreen('usage');
+
+    await waitFor(() => {
+      expect(screen.getByTestId('create-document-item-3')).toBeOnTheScreen();
+    });
+
+    expect(
+      screen.queryByTestId('create-document-take-photo'),
+    ).not.toBeOnTheScreen();
   });
 
   it('prevents exporting more than the available stock', async () => {

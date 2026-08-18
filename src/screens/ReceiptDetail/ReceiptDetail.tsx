@@ -1,6 +1,6 @@
 import { Fragment } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 
 import { useInventory } from '@/hooks';
 import { Paths } from '@/navigation/paths';
@@ -10,6 +10,8 @@ import { useTheme } from '@/theme';
 import { Card, IconByVariant, StatusPill } from '@/components/atoms';
 import { DetailField, SectionHeader } from '@/components/molecules';
 import { SafeScreen } from '@/components/templates';
+
+import { resolveApiUrl } from '@/services/instance';
 
 const CONTENT_GAP = 16;
 const ICON_SIZE = 24;
@@ -24,11 +26,13 @@ function ReceiptDetail({
     useTheme();
   const { useCancelDocumentMutation, useFetchDocumentDetailQuery } =
     useInventory();
-
   const documentQuery = useFetchDocumentDetailQuery(documentId);
   const cancelMutation = useCancelDocumentMutation();
 
   const receipt = documentQuery.data;
+  const photoUrl = receipt?.imageUrl
+    ? resolveApiUrl(receipt.imageUrl)
+    : undefined;
 
   const handleCancel = () => {
     cancelMutation.mutate(documentId);
@@ -115,6 +119,19 @@ function ReceiptDetail({
               }
             />
           </Card>
+
+          {photoUrl ? (
+            <Card style={[gutters.gap_12]}>
+              <SectionHeader title={t('screen_receipt_detail.photo_title')} />
+              <Image
+                accessibilityLabel={t('screen_receipt_detail.photo_preview')}
+                resizeMode="cover"
+                source={{ uri: photoUrl }}
+                style={{ borderRadius: 12, height: 240, width: '100%' }}
+                testID="receipt-photo"
+              />
+            </Card>
+          ) : undefined}
 
           <Card style={[gutters.gap_12]}>
             <SectionHeader title={t('screen_receipt_detail.lines_title')} />

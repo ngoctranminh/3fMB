@@ -6,6 +6,7 @@ import {
   waitFor,
 } from '@testing-library/react-native';
 import { I18nextProvider } from 'react-i18next';
+import { KeyboardAvoidingView, Platform } from 'react-native';
 import { createMMKV, MMKV } from 'react-native-mmkv';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
@@ -71,6 +72,25 @@ describe('Login screen', () => {
       </SafeAreaProvider>,
     );
   };
+
+  test('uses keyboard avoidance on Android so the password field stays visible', () => {
+    const originalPlatformOs = Platform.OS;
+    Object.defineProperty(Platform, 'OS', {
+      configurable: true,
+      get: () => 'android',
+    });
+
+    renderScreen();
+
+    const keyboardAvoidingView = screen.UNSAFE_getByType(KeyboardAvoidingView);
+
+    expect(keyboardAvoidingView.props.behavior).toBe('height');
+
+    Object.defineProperty(Platform, 'OS', {
+      configurable: true,
+      get: () => originalPlatformOs,
+    });
+  });
 
   test('shows validation errors when both fields are empty', () => {
     renderScreen();

@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   ActivityIndicator,
+  Image,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -10,6 +11,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { launchCamera } from 'react-native-image-picker';
 
 import { useInventory } from '@/hooks';
 import { formatCurrency } from '@/hooks/domain/inventory/adapters';
@@ -24,6 +26,12 @@ import { useTheme } from '@/theme';
 import { Card, CategoryChip, IconByVariant } from '@/components/atoms';
 import { FormField, SegmentTabs } from '@/components/molecules';
 import { SafeScreen } from '@/components/templates';
+
+type CapturedPhoto = {
+  readonly dataUrl: string;
+  readonly fileName: string;
+  readonly uri: string;
+};
 
 type DraftLine = {
   readonly itemId: string;
@@ -73,10 +81,13 @@ function CreateDocument({
   const createMutation = useCreateDocumentMutation();
 
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
+  const [cameraError, setCameraError] = useState<string>();
+  const [isCameraPending, setIsCameraPending] = useState(false);
   const [itemId, setItemId] = useState<string>();
   const [lines, setLines] = useState<readonly DraftLine[]>([]);
   const [note, setNote] = useState('');
   const [party, setParty] = useState('');
+  const [photo, setPhoto] = useState<CapturedPhoto>();
   const [query, setQuery] = useState('');
   const [subtype, setSubtype] = useState(route.params.initialSubtype);
   const [tab, setTab] = useState<TransactionKind>(() =>
@@ -197,6 +208,9 @@ function CreateDocument({
     createMutation.mutate(
       {
         created_by: 'Admin',
+        ...(tab === 'import' && photo
+          ? { image: photo.dataUrl, image_name: photo.fileName }
+          : {}),
         lines: lines.map((line) => ({
           item_id: Number(line.itemId),
           note: note.trim(),
@@ -215,6 +229,49 @@ function CreateDocument({
         },
       },
     );
+  };
+
+  const handleTakePhoto = async () => {
+    setCameraError(undefined);
+    setIsCameraPending(true);
+
+    try {
+      const response = await launchCamera({
+        assetRepresentationMode: 'compatible',
+        cameraType: 'back',
+        includeBase64: true,
+        maxHeight: 1280,
+        maxWidth: 1280,
+        mediaType: 'photo',
+        quality: 0.6,
+      });
+
+      if (response.didCancel) return;
+      if (response.errorCode) {
+        setCameraError(
+          response.errorCode === 'permission'
+            ? t('screen_create_document.photo_permission_error')
+            : t('screen_create_document.photo_error'),
+        );
+        return;
+      }
+
+      const asset = response.assets?.[0];
+      if (!asset?.base64 || !asset.uri) {
+        setCameraError(t('screen_create_document.photo_error'));
+        return;
+      }
+
+      setPhoto({
+        dataUrl: `data:${asset.type ?? 'image/jpeg'};base64,${asset.base64}`,
+        fileName: asset.fileName ?? 'anh-nhap-hang.jpg',
+        uri: asset.uri,
+      });
+    } catch {
+      setCameraError(t('screen_create_document.photo_error'));
+    } finally {
+      setIsCameraPending(false);
+    }
   };
 
   const tabOptions = (['import', 'export'] as const).map((id) => ({
@@ -480,6 +537,101 @@ function CreateDocument({
               testID="create-document-note"
               value={note}
             />
+
+            {tab === 'import' ? (
+              <View style={[gutters.gap_8]}>
+                <Text style={[fonts.size_14, fonts.gray800]}>
+                  {t('screen_create_document.photo_title')}
+                </Text>
+                <Text style={[fonts.size_12, fonts.gray200]}>
+                  {t('screen_create_document.photo_hint')}
+                </Text>
+
+                {photo ? (
+                  <Image
+                    accessibilityLabel={t(
+                      'screen_create_document.photo_preview',
+                    )}
+                    resizeMode="cover"
+                    source={{ uri: photo.uri }}
+                    style={{ borderRadius: 12, height: 200, width: '100%' }}
+                    testID="create-document-photo-preview"
+                  />
+                ) : undefined}
+
+                <View style={[layout.row, gutters.gap_8]}>
+                  <TouchableOpacity
+                    accessibilityRole="button"
+                    disabled={isCameraPending}
+                    onPress={() => {
+                      void handleTakePhoto();
+                    }}
+                    style={[
+                      layout.flex_1,
+                      layout.row,
+                      layout.itemsCenter,
+                      layout.justifyCenter,
+                      gutters.gap_8,
+                      gutters.paddingVertical_12,
+                      components.iconButtonSquare,
+                      { backgroundColor: colors.blue50 },
+                    ]}
+                    testID="create-document-take-photo"
+                  >
+                    {isCameraPending ? (
+                      <ActivityIndicator color={colors.blue500} />
+                    ) : (
+                      <IconByVariant
+                        height={ICON_SIZE}
+                        path="camera"
+                        stroke={colors.blue500}
+                        width={ICON_SIZE}
+                      />
+                    )}
+                    <Text style={[fonts.size_14, fonts.blue500, fonts.bold]}>
+                      {t(
+                        photo
+                          ? 'screen_create_document.retake_photo'
+                          : 'screen_create_document.take_photo',
+                      )}
+                    </Text>
+                  </TouchableOpacity>
+
+                  {photo ? (
+                    <TouchableOpacity
+                      accessibilityLabel={t(
+                        'screen_create_document.remove_photo',
+                      )}
+                      accessibilityRole="button"
+                      onPress={() => {
+                        setPhoto(undefined);
+                        setCameraError(undefined);
+                      }}
+                      style={[
+                        layout.itemsCenter,
+                        layout.justifyCenter,
+                        components.iconButtonSquare,
+                        { backgroundColor: colors.red50, width: 48 },
+                      ]}
+                      testID="create-document-remove-photo"
+                    >
+                      <IconByVariant
+                        height={ICON_SIZE}
+                        path="x-circle"
+                        stroke={colors.red500}
+                        width={ICON_SIZE}
+                      />
+                    </TouchableOpacity>
+                  ) : undefined}
+                </View>
+
+                {cameraError ? (
+                  <Text style={[fonts.size_12, fonts.red500]}>
+                    {cameraError}
+                  </Text>
+                ) : undefined}
+              </View>
+            ) : undefined}
           </Card>
 
           <Card style={[layout.row, layout.itemsCenter, layout.justifyBetween]}>

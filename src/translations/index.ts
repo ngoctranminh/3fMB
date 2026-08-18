@@ -5,15 +5,15 @@ import { initReactI18next } from 'react-i18next';
 
 import type { Language } from '@/hooks/language/schema';
 
+import cs from './cs-CZ.json';
 import en from './en-EN.json';
-import fr from './fr-FR.json';
 import vi from './vi-VN.json';
 
 export const defaultNS = 'threefffapp';
 
 export const resources = {
+  'cs-CZ': cs,
   'en-EN': en,
-  'fr-FR': fr,
   'vi-VN': vi,
 } as const satisfies Record<Language, unknown>;
 

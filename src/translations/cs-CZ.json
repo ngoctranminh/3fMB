@@ -1,0 +1,373 @@
+{
+  "threefffapp": {
+    "common_appName": {
+      "full": "React Native threefffApp",
+      "initials": "3F"
+    },
+    "common_error": "Jejda! Něco se pokazilo.",
+    "error_boundary": {
+      "title": "Jejda! Něco se pokazilo.",
+      "description": "Omlouváme se za komplikace. Zkuste to prosím znovu později.",
+      "cta": "Znovu načíst obrazovku"
+    },
+    "screen_add_ingredient": {
+      "title": "Přidat surovinu",
+      "group": "Skupina surovin",
+      "name": "Název suroviny",
+      "quantity": "Počáteční zásoba",
+      "unit": "Jednotka",
+      "unit_price": "Jednotková cena",
+      "min_quantity": "Minimální zásoba",
+      "expires_at": "Datum spotřeby",
+      "note": "Poznámka",
+      "submit": "Uložit surovinu",
+      "error": "Surovinu se nepodařilo přidat. Zkontrolujte formulář a zkuste to znovu.",
+      "validation": {
+        "group": "Vyberte skupinu surovin",
+        "name": "Zadejte název suroviny",
+        "unit": "Zadejte jednotku",
+        "numbers": "Množství a ceny musí být nezáporná čísla",
+        "date": "Datum musí být ve formátu RRRR-MM-DD"
+      }
+    },
+    "screen_alerts": {
+      "title": "Upozornění",
+      "subtitle": "Sklad restaurace",
+      "search_placeholder": "Hledat suroviny, kódy, balení...",
+      "filter": "Filtry",
+      "empty": "Nebyla nalezena žádná upozornění",
+      "summary": {
+        "low_label": "Dochází zásoby",
+        "out_label": "Vyprodáno",
+        "expiring_label": "Blíží se datum spotřeby",
+        "overdue_label": "Opožděné doplnění",
+        "unit": "Druhy"
+      },
+      "tabs": {
+        "all": "Vše",
+        "low": "Dochází zásoby",
+        "out": "Vyprodáno",
+        "expiring": "Blíží se datum spotřeby",
+        "overdue": "Opožděné doplnění"
+      },
+      "groups": {
+        "today": "Dnes",
+        "yesterday": "Včera",
+        "earlier": "Dříve"
+      },
+      "statuses": {
+        "low": "Dochází zásoby ({{quantity}})",
+        "out": "Vyprodáno",
+        "expiring_from": "Po datu spotřeby od {{date}}",
+        "expiring_on": "Datum spotřeby: {{date}}",
+        "overdue": "Doplnění má zpoždění {{days}} dní"
+      },
+      "meta": {
+        "remaining_label": "Zbývá:",
+        "reorder_label": "Doplnit při:",
+        "expired_days": "Po datu spotřeby {{days}} dní",
+        "remaining_days": "Zbývá {{days}} dní",
+        "last_import_label": "Poslední doplnění:"
+      }
+    },
+    "screen_example": {
+      "hello_user": "Ahoj, jmenuji se {{name}}",
+      "title": "Vítejte v aplikaci $t(common_appName.full)",
+      "description": "Chcete objevit některé funkce? Stačí klepnout na jedno ze tří tlačítek ve spodní části obrazovky. První umožňuje zavolat REST API. Druhé umožňuje změnit barvu motivu. A třetí umožňuje změnit jazyk."
+    },
+    "screen_create_document": {
+      "title": "Vytvořit skladový doklad",
+      "subtype": "Typ dokladu",
+      "item": "Surovina",
+      "party": "Partner / oddělení",
+      "quantity": "Množství",
+      "unit_price": "Jednotková cena",
+      "note": "Poznámka",
+      "photo_title": "Fotografie příjmu",
+      "photo_hint": "Vyfoťte zboží nebo fakturu pro pozdější použití.",
+      "take_photo": "Pořídit fotografii",
+      "retake_photo": "Vyfotit znovu",
+      "remove_photo": "Odstranit fotografii příjmu",
+      "photo_preview": "Pořízená fotografie příjmu",
+      "photo_error": "Fotografii se nepodařilo pořídit. Zkuste to znovu.",
+      "photo_permission_error": "K pořízení fotografie je vyžadován přístup k fotoaparátu.",
+      "search_placeholder": "Rychle vyhledat surovinu...",
+      "search_empty": "Žádné odpovídající suroviny",
+      "selected_count": "Počet položek: {{count}}",
+      "lines_title": "Položky dokladu",
+      "editing": "Upravujete: {{name}}",
+      "available_stock": "K dispozici: {{quantity}} {{unit}}",
+      "remove_line": "Odstranit {{name}} z dokladu",
+      "total": "Odhadovaný součet",
+      "submit": "Vytvořit doklad",
+      "error": "Doklad se nepodařilo vytvořit. Zkontrolujte zásoby a zkuste to znovu.",
+      "validation": {
+        "item": "Vyberte surovinu",
+        "quantity": "Množství musí být větší než 0",
+        "unit_price": "Jednotková cena musí být nezáporná",
+        "stock": "Nelze vydat více než dostupné množství (zbývá {{quantity}} {{unit}})"
+      }
+    },
+    "screen_ingredients": {
+      "title": "Suroviny",
+      "subtitle": "Sklad restaurace",
+      "add": "Přidat surovinu",
+      "stock_label": "Skladem",
+      "value_label": "Hodnota",
+      "empty": "Nebyly nalezeny žádné suroviny",
+      "status_low": "Dochází zásoby",
+      "status_out": "Vyprodáno",
+      "status_expired": "Po datu spotřeby",
+      "status_ok": "Skladem",
+      "filter_title": "Filtrovat podle stavu",
+      "filters": {
+        "all": "Vše",
+        "ok": "Skladem",
+        "low": "Dochází zásoby",
+        "out": "Vyprodáno",
+        "expired": "Po datu spotřeby"
+      },
+      "categories": {
+        "all": "Vše",
+        "dairy": "Mléčné výrobky, vejce",
+        "meat": "Maso, ryby",
+        "spice": "Koření",
+        "starch": "Škroby",
+        "vegetable": "Zelenina"
+      },
+      "summary": {
+        "total_label": "Celkem surovin",
+        "total_unit": "Druhy",
+        "value_label": "Celkové zásoby",
+        "value_unit": "Hodnota",
+        "low_label": "Dochází zásoby",
+        "low_unit": "Druhy",
+        "expired_label": "Po datu spotřeby",
+        "expired_unit": "Druhy"
+      }
+    },
+    "screen_item_detail": {
+      "title": "Detail položky",
+      "path": "Umístění",
+      "stock": "Skladem",
+      "unit_price": "Jednotková cena",
+      "total_value": "Hodnota zásob",
+      "min_quantity": "Minimální zásoba",
+      "expires_at": "Datum spotřeby",
+      "note": "Poznámka",
+      "no_expiry": "Bez data spotřeby",
+      "no_note": "Bez poznámky",
+      "adjust_title": "Rychlá úprava",
+      "history_title": "Historie transakcí",
+      "history_empty": "Zatím žádné transakce",
+      "adjusting": "Aktualizace...",
+      "adjust_failed": "Aktualizace se nezdařila, zkuste to znovu.",
+      "status_low": "Nízká zásoba",
+      "status_out": "Vyprodáno",
+      "status_expired": "Po datu spotřeby",
+      "status_ok": "Skladem"
+    },
+    "screen_login": {
+      "title": "Přihlášení",
+      "subtitle": "Přihlaste se a pokračujte v používání aplikace",
+      "username_label": "Uživatelské jméno",
+      "username_placeholder": "Zadejte uživatelské jméno",
+      "password_label": "Heslo",
+      "password_placeholder": "Zadejte heslo",
+      "submit": "Přihlásit se",
+      "hint": "Použijte účet poskytnutý správcem",
+      "validation": {
+        "username_required": "Zadejte uživatelské jméno",
+        "username_too_short": "Uživatelské jméno musí mít alespoň 3 znaky",
+        "password_required": "Zadejte heslo",
+        "password_too_short": "Heslo musí mít alespoň 8 znaků"
+      },
+      "error": {
+        "invalid_credentials": "Nesprávné uživatelské jméno nebo heslo",
+        "network": "K serveru se nelze připojit. Zkontrolujte připojení a zkuste to znovu."
+      }
+    },
+    "screen_more": {
+      "title": "Více",
+      "operations": "Provozní příručka",
+      "settings": "Nastavení",
+      "sauces": "Recepty na omáčky",
+      "purchase_guide": "Nákupní seznam",
+      "prep_tasks": "Přípravné úkoly",
+      "theme": "Přepnout světlý / tmavý motiv",
+      "language": "Změnit jazyk",
+      "logout": "Odhlásit se",
+      "logging_out": "Odhlašování...",
+      "logout_error": "Odhlášení ze serveru se nezdařilo. Zkuste to znovu."
+    },
+    "operations_common": {
+      "all": "Vše",
+      "empty": "Žádný odpovídající obsah",
+      "progress": "Dokončeno {{completed}}/{{total}}",
+      "reset": "Obnovit"
+    },
+    "screen_prep_tasks": {
+      "title": "Přípravné úkoly",
+      "subtitle": "Postup teplé kuchyně a sushi se ukládá v tomto zařízení a následující den se resetuje",
+      "search_placeholder": "Najít úkol..."
+    },
+    "screen_purchase_guide": {
+      "title": "Nákupní seznam",
+      "subtitle": "Zaškrtnuté položky se ukládají v tomto zařízení a následující den se resetují",
+      "search_placeholder": "Najít položku ke kontrole..."
+    },
+    "screen_sauces": {
+      "title": "Recepty na omáčky",
+      "subtitle": "Referenční recepty z příručky 3F",
+      "search_placeholder": "Najít omáčku...",
+      "scale": "Velikost dávky",
+      "disclaimer": "Všechna množství jsou pouze orientační; ochutnejte, upravte a převezměte odpovědnost za konečný výsledek."
+    },
+    "screen_overview": {
+      "title": "Přehled",
+      "subtitle": "Sklad restaurace",
+      "stats": {
+        "total_label": "Celkem surovin",
+        "total_unit": "Druhy",
+        "value_label": "Hodnota zásob",
+        "value_unit": "VND",
+        "low_label": "Dochází zásoby",
+        "low_unit": "Druhy",
+        "expired_label": "Po datu spotřeby",
+        "expired_unit": "Druhy"
+      },
+      "chart": {
+        "title": "Hodnota zásob",
+        "range_7d": "Posledních 7 dní"
+      },
+      "alerts": {
+        "title": "Upozornění",
+        "see_all": "Zobrazit vše",
+        "low_stock": "Dochází zásoby ({{quantity}})",
+        "out_stock": "Vyprodáno",
+        "expired_on": "Po datu spotřeby {{date}}"
+      },
+      "inventory": {
+        "title": "Suroviny skladem",
+        "search_placeholder": "Hledat suroviny...",
+        "see_all": "Zobrazit všechny suroviny →",
+        "status_low": "Dochází zásoby",
+        "status_out": "Vyprodáno",
+        "status_expired": "Po datu spotřeby",
+        "status_ok": "Skladem"
+      },
+      "quick_actions": {
+        "title": "Rychlé akce",
+        "import": {
+          "label": "Příjem",
+          "caption": "Vytvořit příjemku"
+        },
+        "export": {
+          "label": "Výdej",
+          "caption": "Zaznamenat spotřebu kuchyně"
+        },
+        "item": {
+          "label": "Přidat novou",
+          "caption": "Vytvořit surovinu"
+        }
+      },
+      "tabs": {
+        "overview": "Přehled",
+        "ingredients": "Suroviny",
+        "transactions": "Příjem/Výdej",
+        "alerts": "Upozornění",
+        "more": "Více"
+      }
+    },
+    "screen_receipt_detail": {
+      "title": "Detail dokladu",
+      "partner": "Partner",
+      "user": "Vytvořil(a)",
+      "date": "Čas",
+      "total": "Celková hodnota",
+      "note": "Poznámka",
+      "photo_title": "Fotografie příjmu",
+      "photo_preview": "Fotografie příjmu k dokladu",
+      "no_note": "Bez poznámky",
+      "lines_title": "Položky",
+      "lines_empty": "Tento doklad nemá žádné položky",
+      "unit_price": "Jednotková cena",
+      "cancel": "Stornovat doklad",
+      "cancelling": "Stornování...",
+      "cancel_failed": "Stornování se nezdařilo, zkuste to znovu.",
+      "cancelled_notice": "Tento doklad je stornován."
+    },
+    "screen_transactions": {
+      "title": "Příjem / Výdej",
+      "history": "Historie",
+      "filter": "Filtr",
+      "search_placeholder": "Hledat doklady, dodavatele, poznámky...",
+      "range_today": "Dnes",
+      "period_title": "Rozsah dat",
+      "empty": "Nebyly nalezeny žádné doklady",
+      "tabs": {
+        "import": "Příjem",
+        "export": "Výdej"
+      },
+      "actions": {
+        "receive": {
+          "label": "Příjem",
+          "caption": "Od dodavatele"
+        },
+        "return": {
+          "label": "Vrácení",
+          "caption": "Zpět dodavateli"
+        },
+        "other": {
+          "label": "Jiný příjem",
+          "caption": "Interní"
+        },
+        "other_in": {
+          "label": "Jiný příjem",
+          "caption": "Interní"
+        },
+        "usage": {
+          "label": "Spotřeba",
+          "caption": "Kuchyně a bar"
+        },
+        "waste": {
+          "label": "Odpis",
+          "caption": "Poškozené nebo prošlé"
+        },
+        "other_out": {
+          "label": "Jiný výdej",
+          "caption": "Interní"
+        }
+      },
+      "periods": {
+        "today": "Dnes",
+        "week": "Posledních 7 dní",
+        "month": "Tento měsíc",
+        "all": "Celé období"
+      },
+      "today": {
+        "title": "Dnešní souhrn",
+        "import_label": "Celkový příjem",
+        "export_label": "Celkový výdej",
+        "receipt_count": "Počet dokladů: {{count}}"
+      },
+      "filters": {
+        "all": "Vše",
+        "purchase": "Nákup",
+        "return": "Vrácení",
+        "other_in": "Jiný příjem",
+        "usage": "Spotřeba",
+        "waste": "Odpis",
+        "other_out": "Jiný výdej"
+      },
+      "kinds": {
+        "import": "Příjem",
+        "export": "Výdej"
+      },
+      "statuses": {
+        "done": "Dokončeno",
+        "cancelled": "Stornováno"
+      }
+    }
+  }
+}

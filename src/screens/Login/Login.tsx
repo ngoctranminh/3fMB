@@ -110,7 +110,7 @@ function Login({ navigation }: RootScreenProps<Paths.Login>) {
   return (
     <SafeScreen>
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={[layout.flex_1]}
       >
         <ScrollView
