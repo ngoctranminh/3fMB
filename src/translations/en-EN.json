@@ -5,9 +5,13 @@
       "initials": "3F"
     },
     "common_error": "Oops! Something went wrong.",
+    "network_status": {
+      "offline": "No Internet connection. Some features will be unavailable."
+    },
     "error_boundary": {
       "title": "Oops! Something went wrong.",
       "description": "We are sorry for the inconvenience. Please try again later.",
+      "back_cta": "Go back",
       "cta": "Reload the screen"
     },
     "screen_add_ingredient": {

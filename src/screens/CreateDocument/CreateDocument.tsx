@@ -273,6 +273,9 @@ function CreateDocument({
     <SafeScreen
       edges={['top', 'left', 'right']}
       isError={catalogQuery.isError}
+      onGoBackError={() => {
+        navigation.goBack();
+      }}
       onResetError={() => {
         void catalogQuery.refetch();
       }}

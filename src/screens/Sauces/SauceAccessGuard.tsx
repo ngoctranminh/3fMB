@@ -33,6 +33,7 @@ function SauceAccessGuard({ children, onUnauthorized }: Properties) {
     return (
       <SafeScreen
         isError
+        onGoBackError={onUnauthorized}
         onResetError={() => {
           void currentUserQuery.refetch();
         }}

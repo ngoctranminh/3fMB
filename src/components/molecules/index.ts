@@ -6,6 +6,7 @@ export { default as DetailField } from './DetailField/DetailField';
 export { default as FormField } from './FormField/FormField';
 export { default as IngredientDetailRow } from './IngredientDetailRow/IngredientDetailRow';
 export { default as IngredientRow } from './IngredientRow/IngredientRow';
+export { default as NetworkStatusBanner } from './NetworkStatusBanner/NetworkStatusBanner';
 export { default as QuickActionTile } from './QuickActionTile/QuickActionTile';
 export { default as SearchBar } from './SearchBar/SearchBar';
 export { default as SectionHeader } from './SectionHeader/SectionHeader';

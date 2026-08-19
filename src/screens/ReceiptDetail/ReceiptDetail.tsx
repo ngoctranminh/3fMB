@@ -55,6 +55,9 @@ function ReceiptDetail({
     <SafeScreen
       edges={['top', 'left', 'right']}
       isError={documentQuery.isError}
+      onGoBackError={() => {
+        navigation.goBack();
+      }}
       onResetError={handleResetError}
     >
       <View

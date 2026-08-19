@@ -87,6 +87,7 @@ describe('CreateDocument screen', () => {
   });
 
   const renderScreen = (initialSubtype: DocumentSubtype = 'purchase') => {
+    const goBack = jest.fn();
     const replace = jest.fn();
     const queryClient = new QueryClient({
       defaultOptions: {
@@ -95,7 +96,7 @@ describe('CreateDocument screen', () => {
       },
     });
     const props = {
-      navigation: { goBack: jest.fn(), replace },
+      navigation: { goBack, replace },
       route: {
         key: 'create-document-test',
         name: Paths.CreateDocument,
@@ -115,7 +116,7 @@ describe('CreateDocument screen', () => {
       </SafeAreaProvider>,
     );
 
-    return { replace };
+    return { goBack, replace };
   };
 
   it.each([
@@ -328,5 +329,20 @@ describe('CreateDocument screen', () => {
       screen.getByText('Không thể xuất quá tồn kho (còn 2 kg)'),
     ).toBeOnTheScreen();
     expect(mockedServices.createDocument).not.toHaveBeenCalled();
+  });
+
+  it('can go back when loading the catalog fails', async () => {
+    mockedServices.fetchInventoryCatalog.mockRejectedValue(
+      new Error('Offline'),
+    );
+    const { goBack } = renderScreen();
+
+    await waitFor(() => {
+      expect(screen.getByTestId('error-go-back')).toBeOnTheScreen();
+    });
+
+    fireEvent.press(screen.getByTestId('error-go-back'));
+
+    expect(goBack).toHaveBeenCalled();
   });
 });

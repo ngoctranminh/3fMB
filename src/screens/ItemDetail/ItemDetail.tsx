@@ -121,6 +121,9 @@ function ItemDetail({ navigation, route }: RootScreenProps<Paths.ItemDetail>) {
     <SafeScreen
       edges={['top', 'left', 'right']}
       isError={itemQuery.isError}
+      onGoBackError={() => {
+        navigation.goBack();
+      }}
       onResetError={handleResetError}
     >
       <View

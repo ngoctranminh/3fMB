@@ -5,9 +5,13 @@
       "initials": "3F"
     },
     "common_error": "Jejda! Něco se pokazilo.",
+    "network_status": {
+      "offline": "Bez připojení k internetu. Některé funkce nebudou dostupné."
+    },
     "error_boundary": {
       "title": "Jejda! Něco se pokazilo.",
       "description": "Omlouváme se za komplikace. Zkuste to prosím znovu později.",
+      "back_cta": "Zpět",
       "cta": "Znovu načíst obrazovku"
     },
     "screen_add_ingredient": {

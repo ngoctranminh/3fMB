@@ -57,7 +57,8 @@ describe('AddIngredient screen', () => {
     jest.clearAllMocks();
   });
 
-  it('creates an ingredient and opens its detail', async () => {
+  const renderScreen = () => {
+    const goBack = jest.fn();
     const replace = jest.fn();
     const queryClient = new QueryClient({
       defaultOptions: {
@@ -66,7 +67,7 @@ describe('AddIngredient screen', () => {
       },
     });
     const props = {
-      navigation: { goBack: jest.fn(), replace },
+      navigation: { goBack, replace },
       route: { key: 'add-ingredient-test', name: Paths.AddIngredient },
     } as unknown as RootScreenProps<Paths.AddIngredient>;
 
@@ -81,6 +82,12 @@ describe('AddIngredient screen', () => {
         </QueryClientProvider>
       </SafeAreaProvider>,
     );
+
+    return { goBack, replace };
+  };
+
+  it('creates an ingredient and opens its detail', async () => {
+    const { replace } = renderScreen();
 
     await waitFor(() => {
       expect(screen.getByTestId('add-ingredient-group-1')).toBeOnTheScreen();
@@ -121,5 +128,20 @@ describe('AddIngredient screen', () => {
       );
       expect(replace).toHaveBeenCalledWith(Paths.ItemDetail, { itemId: '99' });
     });
+  });
+
+  it('can go back when loading the catalog fails', async () => {
+    mockedServices.fetchInventoryCatalog.mockRejectedValue(
+      new Error('Offline'),
+    );
+    const { goBack } = renderScreen();
+
+    await waitFor(() => {
+      expect(screen.getByTestId('error-go-back')).toBeOnTheScreen();
+    });
+
+    fireEvent.press(screen.getByTestId('error-go-back'));
+
+    expect(goBack).toHaveBeenCalled();
   });
 });

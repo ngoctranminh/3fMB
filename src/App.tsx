@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { createMMKV } from 'react-native-mmkv';
 
+import { NetworkStatusProvider } from '@/hooks';
 import ApplicationNavigator from '@/navigation/Application';
 import { ThemeProvider } from '@/theme';
 import '@/translations';
@@ -26,7 +27,9 @@ function App() {
     <GestureHandlerRootView>
       <QueryClientProvider client={queryClient}>
         <ThemeProvider storage={storage}>
-          <ApplicationNavigator />
+          <NetworkStatusProvider>
+            <ApplicationNavigator />
+          </NetworkStatusProvider>
         </ThemeProvider>
       </QueryClientProvider>
     </GestureHandlerRootView>

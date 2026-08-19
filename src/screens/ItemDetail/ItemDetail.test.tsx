@@ -238,4 +238,17 @@ describe('ItemDetail screen', () => {
 
     expect(goBack).toHaveBeenCalled();
   });
+
+  it('can go back when loading the item fails', async () => {
+    mockedServices.fetchItemDetail.mockRejectedValue(new Error('Offline'));
+    const { goBack } = renderScreen(storage);
+
+    await waitFor(() => {
+      expect(screen.getByTestId('error-go-back')).toBeOnTheScreen();
+    });
+
+    fireEvent.press(screen.getByTestId('error-go-back'));
+
+    expect(goBack).toHaveBeenCalled();
+  });
 });

@@ -6,12 +6,13 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { useTheme } from '@/theme';
 
-import { DefaultError } from '@/components/molecules';
+import { DefaultError, NetworkStatusBanner } from '@/components/molecules';
 import { ErrorBoundary } from '@/components/organisms';
 
 type Properties = PropsWithChildren<
   {
     readonly isError?: boolean;
+    readonly onGoBackError?: () => void;
     readonly onResetError?: () => void;
   } & Omit<SafeAreaViewProps, 'mode'>
 >;
@@ -19,6 +20,7 @@ type Properties = PropsWithChildren<
 function SafeScreen({
   children = undefined,
   isError = false,
+  onGoBackError = undefined,
   onResetError = undefined,
   style,
   ...props
@@ -31,8 +33,13 @@ function SafeScreen({
         backgroundColor={navigationTheme.colors.background}
         barStyle={variant === 'dark' ? 'light-content' : 'dark-content'}
       />
-      <ErrorBoundary onReset={onResetError}>
-        {isError ? <DefaultError onReset={onResetError} /> : children}
+      <NetworkStatusBanner />
+      <ErrorBoundary onGoBack={onGoBackError} onReset={onResetError}>
+        {isError ? (
+          <DefaultError onGoBack={onGoBackError} onReset={onResetError} />
+        ) : (
+          children
+        )}
       </ErrorBoundary>
     </SafeAreaView>
   );

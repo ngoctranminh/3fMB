@@ -127,6 +127,9 @@ function AddIngredient({ navigation }: RootScreenProps<Paths.AddIngredient>) {
     <SafeScreen
       edges={['top', 'left', 'right']}
       isError={catalogQuery.isError}
+      onGoBackError={() => {
+        navigation.goBack();
+      }}
       onResetError={() => {
         void catalogQuery.refetch();
       }}

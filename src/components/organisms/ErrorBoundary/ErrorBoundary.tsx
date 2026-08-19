@@ -8,12 +8,14 @@ import { DefaultError } from '@/components/molecules';
 type Optional<T, K extends keyof T> = Omit<T, K> & Pick<Partial<T>, K>;
 
 type Properties = {
+  readonly onGoBack?: () => void;
   readonly onReset?: () => void;
 } & Optional<ErrorBoundaryPropsWithFallback, 'fallback'>;
 
 function ErrorBoundary({
   fallback,
   onError,
+  onGoBack = undefined,
   onReset = undefined,
   ...props
 }: Properties) {
@@ -25,7 +27,9 @@ function ErrorBoundary({
   return (
     <DefaultErrorBoundary
       {...props}
-      fallback={fallback ?? <DefaultError onReset={onReset} />}
+      fallback={
+        fallback ?? <DefaultError onGoBack={onGoBack} onReset={onReset} />
+      }
       onError={onErrorReport}
     />
   );

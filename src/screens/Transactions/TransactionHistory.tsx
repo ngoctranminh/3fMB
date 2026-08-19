@@ -99,6 +99,9 @@ function TransactionHistory({
     <SafeScreen
       edges={['top', 'left', 'right']}
       isError={transactionsQuery.isError}
+      onGoBackError={() => {
+        navigation.goBack();
+      }}
       onResetError={() => {
         void transactionsQuery.refetch();
       }}

@@ -5,9 +5,13 @@
       "initials": "3F"
     },
     "common_error": "Rất tiếc! Đã có lỗi xảy ra.",
+    "network_status": {
+      "offline": "Không có kết nối Internet. Một số chức năng sẽ không hoạt động."
+    },
     "error_boundary": {
       "title": "Rất tiếc! Đã có lỗi xảy ra.",
       "description": "Chúng tôi xin lỗi vì sự bất tiện này. Vui lòng thử lại sau.",
+      "back_cta": "Quay lại",
       "cta": "Tải lại màn hình"
     },
     "screen_add_ingredient": {

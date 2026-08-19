@@ -7,10 +7,14 @@ import { useTheme } from '@/theme';
 import { IconByVariant } from '@/components/atoms';
 
 type Properties = {
+  readonly onGoBack?: () => void;
   readonly onReset?: () => void;
 };
 
-function DefaultErrorScreen({ onReset = undefined }: Properties) {
+function DefaultErrorScreen({
+  onGoBack = undefined,
+  onReset = undefined,
+}: Properties) {
   const { colors, fonts, gutters, layout } = useTheme();
   const { t } = useTranslation();
   const { resetBoundary } = useErrorBoundary();
@@ -38,12 +42,26 @@ function DefaultErrorScreen({ onReset = undefined }: Properties) {
         {t('error_boundary.description')}
       </Text>
 
+      {onGoBack ? (
+        <TouchableOpacity
+          accessibilityRole="button"
+          onPress={onGoBack}
+          testID="error-go-back"
+        >
+          <Text style={[fonts.gray800, fonts.size_16]}>
+            {t('error_boundary.back_cta')}
+          </Text>
+        </TouchableOpacity>
+      ) : undefined}
+
       {onReset ? (
         <TouchableOpacity
+          accessibilityRole="button"
           onPress={() => {
             resetBoundary();
             onReset();
           }}
+          testID="error-reset"
         >
           <Text style={[fonts.gray800, fonts.size_16]}>
             {t('error_boundary.cta')}

@@ -182,4 +182,17 @@ describe('TransactionHistory screen', () => {
     fireEvent.press(screen.getByTestId('transaction-history-back'));
     expect(goBack).toHaveBeenCalledTimes(1);
   });
+
+  it('can go back when loading the transaction history fails', async () => {
+    fetchTransactionsMock.mockRejectedValue(new Error('Offline'));
+    renderScreen();
+
+    await waitFor(() => {
+      expect(screen.getByTestId('error-go-back')).toBeOnTheScreen();
+    });
+
+    fireEvent.press(screen.getByTestId('error-go-back'));
+
+    expect(goBack).toHaveBeenCalled();
+  });
 });
